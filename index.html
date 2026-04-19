@@ -298,12 +298,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
 </div>
 
 <!-- MODALS -->
-<div class="overlay" id="apiModal">
+<div class="overlay hidden" id="apiModal">
   <div class="modal">
     <h2>Configure sua API Key</h2>
     <p class="m-desc">Para usar o Claude, você precisa de uma chave da Anthropic. Custo ~R$3-5/mês para uso pessoal.<br><br>1. Acesse <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>2. Crie conta → "API Keys" → crie uma chave<br>3. Cole abaixo</p>
     <input type="password" class="m-input" id="apiKeyInput" placeholder="sk-ant-..." style="margin-bottom:12px"/>
-    <button class="btn-primary" style="flex:none;width:100%" onclick="saveApiKey()">Salvar e começar</button>
+    <button class="btn-primary" style="flex:none;width:100%;margin-bottom:8px" onclick="saveApiKey()">Salvar e começar</button>
+    <button onclick="closeModal('apiModal')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;width:100%;padding:6px;font-family:'DM Sans',sans-serif;">Pular por agora</button>
   </div>
 </div>
 
@@ -464,7 +465,7 @@ async function init() {
   if (location.hash.includes('access_token')) handleOAuthCallback();
   await loadAll();
   document.getElementById('loadingScreen').classList.add('hidden');
-  if (!apiKey) showModal('apiModal');
+  if (!apiKey) showModal('apiModal'); // only shown if not found in Supabase or localStorage
   startPolling();
   checkOverdue();
   setInterval(checkOverdue, 60000);
@@ -472,14 +473,20 @@ async function init() {
 
 async function loadAll() {
   try {
-    const [a, p, t] = await Promise.all([
+    const [a, p, t, u] = await Promise.all([
       sb.query('areas', {select:'*'}),
       sb.query('projects', {select:'*'}),
-      sb.query('tasks', {select:'*'})
+      sb.query('tasks', {select:'*'}),
+      sb.query('users', {select:'*', filter:'email=eq.default'})
     ]);
     if (Array.isArray(a)) areas = a; else areas = [];
     if (Array.isArray(p)) projects = p; else projects = [];
     if (Array.isArray(t)) tasks = t.map(normalizeTask); else tasks = [];
+    // Load API key from Supabase if available
+    if (Array.isArray(u) && u.length > 0 && u[0].api_key) {
+      apiKey = u[0].api_key;
+      localStorage.setItem('foco_api_key', apiKey);
+    }
     // Seed if empty
     if (areas.length === 0) await seedData();
     render();
@@ -1146,7 +1153,23 @@ function clearChat(){claudeHistory=[];document.getElementById('claudeMsgs').inne
 function handleClaudeKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendClaude();}}
 function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,90)+'px';}
 function focusClaude(){document.getElementById('claudeInput').focus();}
-function saveApiKey(){const k=document.getElementById('apiKeyInput').value.trim();if(!k.startsWith('sk-ant-')){showNotif('Chave inválida');return;}apiKey=k;localStorage.setItem('foco_api_key',k);closeModal('apiModal');showNotif('Claude pronto!');}
+async function saveApiKey(){
+  const k=document.getElementById('apiKeyInput').value.trim();
+  if(!k.startsWith('sk-ant-')){showNotif('Chave inválida. Deve começar com sk-ant-');return;}
+  apiKey=k;
+  localStorage.setItem('foco_api_key',k);
+  // Save to Supabase so it syncs across devices
+  try {
+    const existing = await sb.query('users',{select:'email',filter:'email=eq.default'});
+    if(Array.isArray(existing)&&existing.length>0){
+      await sb.update('users','default',{api_key:k},'email');
+    } else {
+      await sb.insert('users',{email:'default',name:'Usuário',api_key:k});
+    }
+  } catch(e){}
+  closeModal('apiModal');
+  showNotif('Chave salva! Claude pronto em todos os dispositivos.');
+}
 
 function setMetricPeriod(p,btn){metricPeriod=p;document.querySelectorAll('.m-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMetrics();}
 function checkOverdue(){const today=new Date().toISOString().split('T')[0],n=tasks.filter(t=>!t.done&&t.date&&t.date<today).length;if(n>0)showNotif(`${n} tarefa${n>1?'s':''} atrasada${n>1?'s':''}!`);}
