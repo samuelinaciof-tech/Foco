@@ -2,98 +2,127 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="theme-color" content="#0f0f0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Foco</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#0f0f0f; --bg2:#161616; --bg3:#1e1e1e; --bg4:#252525; --bg5:#2c2c2c;
-  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.13); --border3:rgba(255,255,255,0.2);
-  --text:#f0ede8; --text2:#9e9b96; --text3:#5a5753; --text4:#3a3836;
-  --accent:#e8c547; --accent2:#d4b23a; --accent-bg:rgba(232,197,71,0.1);
-  --danger:#f87171; --danger-bg:rgba(248,113,113,0.1);
-  --success:#4ade80; --success-bg:rgba(74,222,128,0.1);
-  --info:#60a5fa; --info-bg:rgba(96,165,250,0.1);
-  --warning:#fb923c; --warning-bg:rgba(251,146,60,0.1);
-  --r:10px; --rl:14px; --rxl:18px;
+:root{
+  --bg:#0f0f0f;--bg2:#161616;--bg3:#1e1e1e;--bg4:#252525;--bg5:#2c2c2c;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#f0ede8;--text2:#9e9b96;--text3:#5a5753;--text4:#3a3836;
+  --accent:#e8c547;--accent2:#d4b23a;--accent-bg:rgba(232,197,71,0.1);
+  --danger:#f87171;--danger-bg:rgba(248,113,113,0.1);
+  --success:#4ade80;--success-bg:rgba(74,222,128,0.1);
+  --info:#60a5fa;--info-bg:rgba(96,165,250,0.1);
+  --warning:#fb923c;--warning-bg:rgba(251,146,60,0.1);
+  --r:10px;--rl:14px;--rxl:18px;
+  --sidebar-w:240px;--right-w:270px;--top-h:52px;--bottom-nav-h:60px;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;font-size:14px;}
-::-webkit-scrollbar{width:3px;} ::-webkit-scrollbar-track{background:transparent;} ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
-.app{display:grid;grid-template-rows:52px 1fr;height:100vh;}
-.main{display:grid;grid-template-columns:240px 1fr 270px;overflow:hidden;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;}
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+input,button,select,textarea{font-family:'DM Sans',sans-serif;}
+a{color:var(--accent);}
 
-/* TOPBAR */
-.topbar{display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid var(--border);background:var(--bg);}
-.logo{font-family:'Syne',sans-serif;font-size:19px;font-weight:700;color:var(--accent);letter-spacing:-0.03em;margin-right:6px;flex-shrink:0;}
-.breadcrumb{display:flex;align-items:center;gap:6px;flex:1;overflow:hidden;}
-.bc-item{font-size:12px;color:var(--text3);cursor:pointer;white-space:nowrap;transition:color .15s;}
-.bc-item:hover{color:var(--text2);} .bc-item.active{color:var(--text);}
-.bc-sep{color:var(--text4);font-size:12px;}
-.topbar-right{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0;}
-.date-chip{font-size:11px;color:var(--text3);white-space:nowrap;}
-.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--success);flex-shrink:0;transition:background .3s;}
-.sync-dot.syncing{background:var(--accent);animation:pulse 1s infinite;}
-.sync-dot.offline{background:var(--danger);}
+/* ── LOADING ── */
+.loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:500;flex-direction:column;gap:12px;}
+.loading-screen.hidden{display:none;}
+.loading-logo{font-family:'Syne',sans-serif;font-size:32px;font-weight:700;color:var(--accent);}
+.loading-sub{font-size:13px;color:var(--text3);}
+.loading-bar{width:120px;height:2px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-top:4px;}
+.loading-fill{height:100%;background:var(--accent);border-radius:2px;animation:loadbar 1.5s ease-in-out infinite;}
+@keyframes loadbar{0%{width:0;margin-left:0}50%{width:80px}100%{width:0;margin-left:120px}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.topbtn{display:flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:11px;font-family:'DM Sans',sans-serif;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
+
+/* ── APP SHELL ── */
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh;}
+.topbar{height:var(--top-h);display:flex;align-items:center;gap:8px;padding:0 16px;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0;z-index:20;}
+.logo{font-family:'Syne',sans-serif;font-size:19px;font-weight:700;color:var(--accent);letter-spacing:-0.03em;flex-shrink:0;}
+.topbar-center{flex:1;display:flex;align-items:center;gap:6px;overflow:hidden;padding:0 6px;}
+.bc-item{font-size:12px;color:var(--text3);cursor:pointer;white-space:nowrap;transition:color .15s;max-width:120px;overflow:hidden;text-overflow:ellipsis;}
+.bc-item:hover{color:var(--text2);}
+.bc-item.active{color:var(--text);}
+.bc-sep{color:var(--text4);font-size:12px;flex-shrink:0;}
+.topbar-right{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:auto;}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--success);flex-shrink:0;}
+.sync-dot.syncing{background:var(--accent);animation:pulse 1s infinite;}
+.topbtn{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
 .topbtn:hover{color:var(--text);background:var(--bg3);}
 .topbtn.gcal{border-color:rgba(96,165,250,.4);color:var(--info);background:var(--info-bg);}
 .topbtn.gcal.connected{border-color:rgba(74,222,128,.4);color:var(--success);background:var(--success-bg);}
 .topbtn.ai{border-color:rgba(232,197,71,.3);color:var(--accent);background:var(--accent-bg);}
+.user-badge{display:flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;border:1px solid var(--border);cursor:pointer;background:transparent;color:var(--text2);font-size:11px;transition:all .15s;}
+.user-badge:hover{background:var(--bg3);}
+.user-avatar{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;}
 
-/* SIDEBAR LEFT */
-.sidebar-left{border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;}
+/* ── MAIN LAYOUT ── */
+.main-body{flex:1;display:flex;overflow:hidden;position:relative;}
+
+/* ── SIDEBAR LEFT ── */
+.sidebar-left{width:var(--sidebar-w);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;flex-shrink:0;background:var(--bg);}
 .sb-header{padding:14px 14px 6px;display:flex;align-items:center;justify-content:space-between;}
 .sb-title{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;}
 .sb-add{background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;line-height:1;padding:0 2px;border-radius:4px;transition:color .12s;}
 .sb-add:hover{color:var(--accent);}
 .sb-section{padding:0 10px 8px;}
 .area-node{margin-bottom:2px;}
-.area-row{display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:var(--r);cursor:pointer;transition:background .12s;}
-.area-row:hover{background:var(--bg3);} .area-row.active{background:var(--bg3);}
+.area-row{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:var(--r);cursor:pointer;transition:background .12s;position:relative;}
+.area-row:hover{background:var(--bg3);}
+.area-row.active{background:var(--bg3);}
 .area-chevron{width:14px;height:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .2s;}
 .area-chevron.open{transform:rotate(90deg);}
 .area-chevron svg{width:10px;height:10px;color:var(--text3);}
 .area-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .area-name{flex:1;font-size:13px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.area-count{font-size:10px;color:var(--text3);background:var(--bg4);padding:1px 6px;border-radius:10px;flex-shrink:0;}
-.area-del{background:none;border:none;color:transparent;cursor:pointer;font-size:15px;line-height:1;flex-shrink:0;padding:0 2px;transition:color .12s;}
-.area-row:hover .area-del{color:var(--text3);} .area-del:hover{color:var(--danger)!important;}
-.proj-children{padding-left:20px;display:none;} .proj-children.open{display:block;}
-.proj-node{margin-bottom:1px;}
+.area-count{font-size:10px;color:var(--text3);background:var(--bg4);padding:1px 5px;border-radius:10px;flex-shrink:0;}
+.area-menu-btn{background:none;border:none;color:transparent;cursor:pointer;font-size:16px;line-height:1;padding:0 2px;transition:color .12s;flex-shrink:0;}
+.area-row:hover .area-menu-btn{color:var(--text3);}
+.area-menu-btn:hover{color:var(--text2)!important;}
+.proj-children{padding-left:20px;display:none;}
+.proj-children.open{display:block;}
 .proj-row{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:8px;cursor:pointer;transition:background .12s;}
-.proj-row:hover{background:var(--bg3);} .proj-row.active{background:var(--bg3);}
+.proj-row:hover{background:var(--bg3);}
+.proj-row.active{background:var(--bg3);}
 .proj-dot{width:5px;height:5px;border-radius:1px;flex-shrink:0;}
 .proj-name{flex:1;font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.proj-count{font-size:10px;color:var(--text3);margin-right:2px;}
-.proj-del{background:none;border:none;color:transparent;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0;transition:color .12s;}
-.proj-row:hover .proj-del{color:var(--text3);} .proj-del:hover{color:var(--danger)!important;}
-.proj-add{display:flex;align-items:center;gap:5px;padding:4px 8px;border-radius:7px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;font-family:'DM Sans',sans-serif;transition:color .12s;width:100%;}
+.proj-count{font-size:10px;color:var(--text3);}
+.proj-del{background:none;border:none;color:transparent;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0;}
+.proj-row:hover .proj-del{color:var(--text3);}
+.proj-del:hover{color:var(--danger)!important;}
+.proj-add{display:flex;align-items:center;gap:5px;padding:4px 8px;border-radius:7px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;transition:color .12s;width:100%;}
 .proj-add:hover{color:var(--accent);}
+.archived-section{padding:8px 14px 4px;}
+.archived-toggle{background:none;border:none;color:var(--text3);font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;padding:2px 0;}
+.archived-toggle:hover{color:var(--text2);}
 .gcal-sidebar-section{padding:10px 14px 4px;}
 .gcal-ev{padding:5px 8px;border-radius:7px;border-left:2px solid var(--info);background:var(--info-bg);margin-bottom:3px;}
 .gcal-ev-title{font-size:11px;color:var(--text2);line-height:1.3;}
 .gcal-ev-time{font-size:10px;color:var(--text3);margin-top:1px;}
 
-/* CENTER */
-.center{display:flex;flex-direction:column;overflow:hidden;}
-.context-bar{padding:12px 18px 10px;border-bottom:1px solid var(--border);flex-shrink:0;}
-.ctx-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+/* ── CENTER ── */
+.center{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+.context-bar{padding:12px 16px 10px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.ctx-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
 .ctx-left{flex:1;min-width:0;}
 .ctx-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .ctx-sub{font-size:12px;color:var(--text3);margin-top:2px;}
 .ctx-actions{display:flex;gap:6px;flex-shrink:0;}
-.act-btn{display:flex;align-items:center;gap:4px;padding:5px 12px;border-radius:20px;font-size:12px;font-family:'DM Sans',sans-serif;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.act-btn{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:20px;font-size:12px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
 .act-btn:hover{color:var(--text);background:var(--bg4);}
 .act-btn.primary{background:var(--accent);color:#0f0f0f;border-color:var(--accent);}
 .act-btn.primary:hover{background:var(--accent2);}
-.task-list{flex:1;overflow-y:auto;padding:10px 18px 20px;display:flex;flex-direction:column;gap:5px;}
-.tl-section{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;padding:8px 0 5px;display:flex;align-items:center;gap:6px;}
-.tl-section span{flex-shrink:0;} .tl-hr{flex:1;height:1px;background:var(--border);}
 
-/* TASK CARD */
+/* ── TASK LIST ── */
+.task-list{flex:1;overflow-y:auto;padding:10px 16px 20px;display:flex;flex-direction:column;gap:5px;}
+.tl-section{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;padding:8px 0 5px;display:flex;align-items:center;gap:6px;}
+.tl-section span{flex-shrink:0;}
+.tl-hr{flex:1;height:1px;background:var(--border);}
 .task-card{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border-radius:var(--rl);background:var(--bg2);border:1px solid var(--border);transition:all .15s;position:relative;}
 .task-card:hover{border-color:var(--border2);background:var(--bg3);}
 .task-card.urgent{border-left:3px solid var(--danger);}
@@ -107,7 +136,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
 .t-check.t-blocked{cursor:not-allowed;border-color:var(--border);background:var(--bg4);}
 .t-check.t-blocked::after{content:'';display:block;width:8px;height:2px;background:var(--text4);border-radius:1px;}
 .t-body{flex:1;min-width:0;}
-.t-title{font-size:13px;color:var(--text);line-height:1.4;}
+.t-title{font-size:13px;color:var(--text);line-height:1.4;word-break:break-word;}
 .task-card.done .t-title{text-decoration:line-through;color:var(--text3);}
 .task-card.blocked .t-title{color:var(--text3);}
 .t-meta{display:flex;gap:5px;align-items:center;margin-top:5px;flex-wrap:wrap;}
@@ -119,25 +148,40 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
 .t-dep.blocking{color:var(--warning);}
 .gcal-badge{font-size:10px;padding:1px 6px;border-radius:8px;background:var(--info-bg);color:var(--info);}
 .t-actions{display:flex;flex-direction:column;gap:3px;align-items:flex-end;flex-shrink:0;}
-.t-del{background:none;border:none;color:transparent;cursor:pointer;font-size:17px;line-height:1;transition:color .12s;padding:0 2px;}
-.task-card:hover .t-del{color:var(--text3);} .t-del:hover{color:var(--danger)!important;}
-.t-dep-btn{background:none;border:1px solid var(--border);color:var(--text3);cursor:pointer;font-size:10px;border-radius:6px;padding:2px 6px;font-family:'DM Sans',sans-serif;transition:all .12s;white-space:nowrap;}
+.t-del{background:none;border:none;color:transparent;cursor:pointer;font-size:18px;line-height:1;padding:0 2px;}
+.task-card:hover .t-del{color:var(--text3);}
+.t-del:hover{color:var(--danger)!important;}
+.t-dep-btn{background:none;border:1px solid var(--border);color:var(--text3);cursor:pointer;font-size:10px;border-radius:6px;padding:2px 6px;transition:all .12s;white-space:nowrap;}
 .t-dep-btn:hover{border-color:var(--border2);color:var(--text2);}
-.dep-order-badge{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);font-size:10px;font-weight:600;color:var(--text3);display:flex;align-items:center;justify-content:center;}
+.dep-order-badge{position:absolute;top:8px;right:8px;width:17px;height:17px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);font-size:10px;font-weight:600;color:var(--text3);display:flex;align-items:center;justify-content:center;}
 .empty-state{text-align:center;padding:48px 20px;color:var(--text3);font-size:13px;line-height:1.8;}
-.empty-state strong{color:var(--text2);display:block;margin-bottom:4px;font-size:15px;}
+.empty-state strong{color:var(--text2);display:block;margin-bottom:6px;font-size:15px;}
 
-/* HOME GRID */
-.home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;padding:14px 18px;}
-.home-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:14px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;}
-.home-card:hover{border-color:var(--border2);background:var(--bg3);transform:translateY(-1px);}
-.home-card-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:6px;}
-.home-card-stats{font-size:12px;color:var(--text3);}
-.home-card-bar{height:2px;background:var(--bg4);border-radius:2px;margin-top:10px;overflow:hidden;}
-.home-card-fill{height:100%;border-radius:2px;transition:width .5s;}
+/* ── DASHBOARD ── */
+.dash-tabs{display:flex;gap:4px;margin-bottom:16px;}
+.dash-tab{padding:5px 14px;border-radius:20px;font-size:12px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;}
+.dash-tab:hover{color:var(--text);background:var(--bg3);}
+.dash-tab.active{background:var(--bg3);color:var(--text);border-color:var(--border2);}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
+.stat-card{background:var(--bg3);border-radius:var(--r);padding:12px;border:1px solid var(--border);}
+.stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.stat-val{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;color:var(--text);}
+.stat-val.danger{color:var(--danger);}
+.stat-val.success{color:var(--success);}
+.stat-val.accent{color:var(--accent);}
+.stat-sub{font-size:10px;color:var(--text3);margin-top:2px;}
+.mini-bar{height:3px;background:var(--bg4);border-radius:2px;margin-top:6px;overflow:hidden;}
+.mini-bar-fill{height:100%;border-radius:2px;background:var(--accent);transition:width .5s;}
+.overdue-block{background:var(--danger-bg);border:1px solid rgba(248,113,113,.3);border-radius:var(--rl);padding:14px 16px;margin-bottom:16px;}
+.overdue-block-title{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.area-breakdown{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;}
+.area-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:14px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;}
+.area-card:hover{border-color:var(--border2);transform:translateY(-1px);}
+.area-card-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:5px;}
+.area-card-stats{font-size:12px;color:var(--text3);}
 
-/* SIDEBAR RIGHT */
-.sidebar-right{border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+/* ── SIDEBAR RIGHT ── */
+.sidebar-right{width:var(--right-w);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;background:var(--bg);}
 .metrics-section{padding:14px;border-bottom:1px solid var(--border);flex-shrink:0;}
 .metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px;}
 .metric-card{background:var(--bg3);border-radius:var(--r);padding:9px 11px;border:1px solid var(--border);}
@@ -148,46 +192,68 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
 .progress-bar{height:3px;background:var(--bg4);border-radius:2px;margin-top:5px;overflow:hidden;}
 .progress-fill{height:100%;border-radius:2px;background:var(--accent);transition:width .5s;}
 .metrics-tabs{display:flex;gap:3px;}
-.m-tab{padding:2px 9px;border-radius:12px;font-size:11px;border:none;background:transparent;color:var(--text3);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .12s;}
+.m-tab{padding:2px 9px;border-radius:12px;font-size:11px;border:none;background:transparent;color:var(--text3);cursor:pointer;transition:all .12s;}
 .m-tab.active{background:var(--bg4);color:var(--text);}
+
+/* ── CLAUDE PANEL ── */
 .claude-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;}
 .claude-hd{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;flex-shrink:0;}
 .claude-icon{width:22px;height:22px;border-radius:6px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;}
 .claude-lbl{font-size:12px;font-weight:500;color:var(--accent);}
 .claude-msgs{flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:7px;}
-.msg{padding:9px 11px;border-radius:var(--r);font-size:12px;line-height:1.6;white-space:pre-wrap;}
+.msg{padding:9px 11px;border-radius:var(--r);font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-word;}
 .msg.assistant{background:var(--bg3);color:var(--text);border:1px solid var(--border);}
 .msg.user{background:var(--accent-bg);color:var(--text2);border:1px solid rgba(232,197,71,.12);text-align:right;}
 .msg.loading{color:var(--text3);font-style:italic;}
 .quick-actions{padding:0 14px 8px;display:flex;flex-direction:column;gap:4px;flex-shrink:0;}
-.qa{padding:6px 9px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;text-align:left;font-family:'DM Sans',sans-serif;font-size:11px;transition:all .12s;}
+.qa{padding:6px 9px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;text-align:left;font-size:11px;transition:all .12s;}
 .qa:hover{border-color:rgba(232,197,71,.3);color:var(--accent);background:rgba(232,197,71,.05);}
 .claude-input-area{padding:8px 14px 12px;border-top:1px solid var(--border);display:flex;gap:7px;align-items:flex-end;flex-shrink:0;}
-.claude-input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--r);padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;resize:none;min-height:34px;max-height:90px;transition:border .15s;}
+.claude-input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--r);padding:7px 10px;font-size:12px;outline:none;resize:none;min-height:34px;max-height:90px;transition:border .15s;}
 .claude-input:focus{border-color:rgba(232,197,71,.4);}
 .claude-input::placeholder{color:var(--text3);}
-.claude-send{width:32px;height:32px;border-radius:8px;border:none;background:var(--accent);color:#0f0f0f;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+.claude-send{width:32px;height:32px;border-radius:8px;border:none;background:var(--accent);color:#0f0f0f;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .claude-send:hover{background:var(--accent2);}
 .claude-send:disabled{opacity:.4;cursor:not-allowed;}
 
-/* MODALS */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:100;}
+/* ── MOBILE BOTTOM NAV ── */
+.bottom-nav{display:none;height:var(--bottom-nav-h);background:var(--bg2);border-top:1px solid var(--border);flex-shrink:0;align-items:center;justify-content:space-around;padding:0 8px;}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;border-radius:10px;cursor:pointer;background:none;border:none;color:var(--text3);transition:color .15s;flex:1;}
+.bn-item.active{color:var(--accent);}
+.bn-item svg{width:20px;height:20px;}
+.bn-item span{font-size:10px;}
+
+/* ── MOBILE DRAWER ── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:none;}
+.drawer-overlay.open{display:block;}
+.drawer{position:fixed;left:0;top:0;bottom:0;width:280px;background:var(--bg);z-index:41;transform:translateX(-100%);transition:transform .25s ease;overflow-y:auto;display:flex;flex-direction:column;}
+.drawer.open{transform:translateX(0);}
+.drawer-header{padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.drawer-close{background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer;line-height:1;}
+
+/* ── MOBILE CLAUDE DRAWER ── */
+.claude-drawer{position:fixed;right:0;top:0;bottom:0;width:min(320px,100vw);background:var(--bg);z-index:41;transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column;border-left:1px solid var(--border);}
+.claude-drawer.open{transform:translateX(0);}
+
+/* ── MODALS ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px;}
 .overlay.hidden{display:none;}
-.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rxl);padding:24px;width:460px;max-width:calc(100vw - 32px);max-height:90vh;overflow-y:auto;}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rxl);padding:24px;width:100%;max-width:460px;max-height:90vh;overflow-y:auto;}
 .modal h2{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px;}
-.modal .m-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:16px;}
-.modal a{color:var(--accent);}
+.m-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:16px;}
 .m-label-text{font-size:11px;color:var(--text3);margin-bottom:6px;display:block;}
-.m-input,.m-select{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:var(--r);padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;margin-bottom:12px;transition:border .15s;}
+.m-input,.m-select{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:var(--r);padding:9px 12px;font-size:13px;outline:none;margin-bottom:12px;transition:border .15s;}
 .m-input:focus,.m-select:focus{border-color:rgba(232,197,71,.4);}
 .m-input::placeholder{color:var(--text3);}
 .m-select option{background:var(--bg3);}
 .m-row{display:flex;gap:8px;margin-bottom:12px;}
 .m-row .m-input,.m-row .m-select{margin-bottom:0;flex:1;}
-.m-actions{display:flex;gap:8px;margin-top:4px;}
-.btn-cancel{padding:9px 16px;border-radius:var(--r);border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;flex:1;}
-.btn-primary{padding:9px 16px;border-radius:var(--r);border:none;background:var(--accent);color:#0f0f0f;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;flex:2;transition:background .15s;}
+.m-actions{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;}
+.btn-cancel{padding:9px 16px;border-radius:var(--r);border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:13px;flex:1;min-width:80px;}
+.btn-primary{padding:9px 16px;border-radius:var(--r);border:none;background:var(--accent);color:#0f0f0f;font-size:13px;font-weight:500;cursor:pointer;flex:2;transition:background .15s;}
 .btn-primary:hover{background:var(--accent2);}
+.btn-danger{padding:9px 16px;border-radius:var(--r);border:1px solid rgba(248,113,113,.4);background:var(--danger-bg);color:var(--danger);font-size:13px;cursor:pointer;transition:all .15s;}
+.btn-danger:hover{background:rgba(248,113,113,.2);}
 .color-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
 .color-opt{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s;}
 .color-opt:hover{transform:scale(1.1);}
@@ -197,69 +263,99 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
 .dep-item:hover{border-color:var(--border2);}
 .dep-item.selected{border-color:var(--accent);background:var(--accent-bg);}
 .dep-item-title{flex:1;font-size:12px;color:var(--text2);}
-.dep-item-area{font-size:10px;padding:1px 6px;border-radius:8px;}
-.dep-check{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.dep-check{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--border2);flex-shrink:0;}
 .dep-item.selected .dep-check{background:var(--accent);border-color:var(--accent);}
-.dep-item.selected .dep-check::after{content:'';display:block;width:3px;height:6px;border:1.5px solid #0f0f0f;border-top:none;border-left:none;transform:rotate(45deg) translate(-1px,-1px);}
 .gcal-step{display:flex;gap:10px;margin-bottom:12px;}
 .gcal-sn{width:22px;height:22px;border-radius:50%;background:var(--accent-bg);color:var(--accent);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
 .gcal-st{font-size:12px;color:var(--text2);line-height:1.6;}
 .gcal-st code{background:var(--bg4);padding:1px 5px;border-radius:4px;font-size:11px;color:var(--text);}
-.notif{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 18px;border-radius:20px;font-size:13px;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
+
+/* ── CONTEXT MENU ── */
+.ctx-menu{position:fixed;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:4px;z-index:200;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.ctx-menu.hidden{display:none;}
+.ctx-menu-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer;font-size:13px;color:var(--text2);transition:all .12s;border:none;background:none;width:100%;text-align:left;}
+.ctx-menu-item:hover{background:var(--bg4);color:var(--text);}
+.ctx-menu-item.danger{color:var(--danger);}
+.ctx-menu-item.danger:hover{background:var(--danger-bg);}
+.ctx-divider{height:1px;background:var(--border);margin:4px 0;}
+
+/* ── NOTIF ── */
+.notif{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 18px;border-radius:20px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;max-width:calc(100vw - 32px);text-align:center;}
 .notif.show{opacity:1;}
 
-/* LOADING SCREEN */
-.loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:300;flex-direction:column;gap:12px;}
-.loading-screen.hidden{display:none;}
-.loading-logo{font-family:'Syne',sans-serif;font-size:32px;font-weight:700;color:var(--accent);}
-.loading-sub{font-size:13px;color:var(--text3);}
-.loading-bar{width:120px;height:2px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-top:4px;}
-.loading-fill{height:100%;background:var(--accent);border-radius:2px;animation:load 1.5s ease-in-out infinite;}
-@keyframes load{0%{width:0;margin-left:0}50%{width:80px}100%{width:0;margin-left:120px}}
-.dash-tab{padding:5px 14px;border-radius:20px;font-size:12px;font-family:'DM Sans',sans-serif;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;}
-.dash-tab:hover{color:var(--text);background:var(--bg3);}
-.dash-tab.active{background:var(--bg3);color:var(--text);border-color:var(--border2);}
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  :root{--top-h:48px;}
+  .sidebar-left{display:none;}
+  .sidebar-right{display:none;}
+  .bottom-nav{display:flex;}
+  .notif{bottom:72px;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .area-breakdown{grid-template-columns:1fr 1fr;}
+  .ctx-title{font-size:16px;}
+  .topbtn.gcal{display:none;}
+  .topbtn.ai{display:none;}
+  .date-chip-desktop{display:none;}
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root{--sidebar-w:200px;--right-w:240px;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media (min-width: 769px) {
+  .bottom-nav{display:none!important;}
+  .drawer{display:none!important;}
+  .drawer-overlay{display:none!important;}
+  .claude-drawer{display:none!important;}
+}
 </style>
 </head>
 <body>
 
-<!-- LOADING -->
 <div class="loading-screen" id="loadingScreen">
   <div class="loading-logo">Foco</div>
-  <div class="loading-sub">Sincronizando dados...</div>
+  <div class="loading-sub" id="loadingSub">Carregando...</div>
   <div class="loading-bar"><div class="loading-fill"></div></div>
 </div>
 
 <div class="app">
+  <!-- TOPBAR -->
   <div class="topbar">
+    <button class="sb-add" id="mobileMenuBtn" onclick="toggleDrawer()" style="display:none;font-size:22px;color:var(--text2);">☰</button>
     <span class="logo">Foco</span>
-    <div class="breadcrumb" id="breadcrumb"></div>
+    <div class="topbar-center">
+      <div class="breadcrumb" id="breadcrumb" style="display:flex;align-items:center;gap:6px;overflow:hidden;"></div>
+    </div>
     <div class="topbar-right">
-      <span class="date-chip" id="topDate"></span>
-      <span class="sync-dot" id="syncDot" title="Sincronizado"></span>
+      <span class="date-chip date-chip-desktop" id="topDate" style="font-size:11px;color:var(--text3);white-space:nowrap;"></span>
+      <span class="sync-dot" id="syncDot"></span>
       <button class="topbtn gcal" id="gcalBtn" onclick="openGcalModal()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 16H5V9h14v10zM5 7V5h14v2H5z"/></svg>
-        <span id="gcalBtnLbl">Google Agenda</span>
+        <span id="gcalBtnLbl">Agenda</span>
       </button>
-      <button class="topbtn ai" onclick="focusClaude()">
+      <button class="topbtn ai" onclick="openClaudeDrawer()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
         Claude
       </button>
+      <button class="user-badge" id="userBadge" onclick="openUserMenu()">
+        <div class="user-avatar" id="userAvatar" style="background:var(--accent-bg);color:var(--accent);">?</div>
+        <span id="userEmail" style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Entrar</span>
+      </button>
     </div>
   </div>
-  <div class="main">
-    <div class="sidebar-left">
-      <div class="sb-header">
-        <span class="sb-title">Minhas áreas</span>
-        <button class="sb-add" onclick="openAreaModal()" title="Nova área">+</button>
-      </div>
-      <div class="sb-section" id="areaTree"></div>
-      <div id="gcalSidebarSection"></div>
+
+  <div class="main-body">
+    <!-- SIDEBAR LEFT (desktop) -->
+    <div class="sidebar-left" id="sidebarLeft">
+      <div id="sidebarContent"></div>
     </div>
+
+    <!-- CENTER -->
     <div class="center">
       <div class="context-bar" id="contextBar"></div>
       <div id="centerContent" style="flex:1;overflow:hidden;display:flex;flex-direction:column;"></div>
     </div>
+
+    <!-- SIDEBAR RIGHT (desktop) -->
     <div class="sidebar-right">
       <div class="metrics-section">
         <div style="display:flex;align-items:center;justify-content:space-between;">
@@ -272,53 +368,105 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
         </div>
         <div class="metrics-grid" id="metricsGrid"></div>
       </div>
-      <div class="claude-panel">
-        <div class="claude-hd">
-          <div class="claude-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm-1-5h2v2h-2zm0-8h2v6h-2z"/></svg></div>
-          <span class="claude-lbl">Claude — Assistente</span>
-          <button onclick="clearChat()" style="margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;padding:2px 6px;border-radius:6px;">limpar</button>
-        </div>
-        <div class="claude-msgs" id="claudeMsgs">
-          <div class="msg assistant">Olá! Posso gerar rotinas, sugerir priorização, criar posts ou responder qualquer dúvida. Como posso ajudar?</div>
-        </div>
-        <div class="quick-actions" id="quickActions">
-          <button class="qa" onclick="sendQuick('Gere minha rotina de amanhã com base nas tarefas pendentes')">Gerar rotina de amanhã →</button>
-          <button class="qa" onclick="sendQuick('Quais tarefas devo priorizar hoje e por quê?')">Sugerir priorização →</button>
-          <button class="qa" onclick="sendQuick('Crie um post para LinkedIn sobre técnicas de CS e atendimento ao cliente')">Criar post de CS →</button>
-        </div>
-        <div class="claude-input-area">
-          <textarea class="claude-input" id="claudeInput" placeholder="Pergunte algo..." rows="1" onkeydown="handleClaudeKey(event)" oninput="autoResize(this)"></textarea>
-          <button class="claude-send" id="claudeSendBtn" onclick="sendClaude()">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-          </button>
-        </div>
+      <div class="claude-panel" id="claudePanelDesktop">
+        <div id="claudePanelInner"></div>
       </div>
     </div>
   </div>
+
+  <!-- BOTTOM NAV (mobile) -->
+  <div class="bottom-nav">
+    <button class="bn-item active" id="bn-home" onclick="mobileNav('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12L12 3l9 9M5 10v10h5v-5h4v5h5V10"/></svg>
+      <span>Início</span>
+    </button>
+    <button class="bn-item" id="bn-areas" onclick="mobileNav('areas')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="7" height="9" rx="1"/><rect x="15" y="3" width="7" height="5" rx="1"/><rect x="15" y="12" width="7" height="9" rx="1"/><rect x="2" y="16" width="7" height="5" rx="1"/></svg>
+      <span>Áreas</span>
+    </button>
+    <button class="bn-item" id="bn-tasks" onclick="openTaskModal(currentUser?.areaId||'','')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      <span>Nova</span>
+    </button>
+    <button class="bn-item" id="bn-metrics" onclick="mobileNav('metrics')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span>Métricas</span>
+    </button>
+    <button class="bn-item" id="bn-claude" onclick="openClaudeDrawer()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Claude</span>
+    </button>
+  </div>
 </div>
 
+<!-- MOBILE DRAWER (sidebar) -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+<div class="drawer" id="mobileDrawer">
+  <div class="drawer-header">
+    <span class="logo">Foco</span>
+    <button class="drawer-close" onclick="toggleDrawer()">×</button>
+  </div>
+  <div id="drawerSidebarContent" style="flex:1;overflow-y:auto;padding:8px;"></div>
+</div>
+
+<!-- MOBILE CLAUDE DRAWER -->
+<div class="claude-drawer" id="claudeDrawer">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);flex-shrink:0;">
+    <div style="display:flex;align-items:center;gap:7px;">
+      <div class="claude-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm-1-5h2v2h-2zm0-8h2v6h-2z"/></svg></div>
+      <span style="font-size:12px;font-weight:500;color:var(--accent);">Claude</span>
+    </div>
+    <button onclick="closeClaudeDrawer()" style="background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer;line-height:1;">×</button>
+  </div>
+  <div id="claudeMobileMsgs" class="claude-msgs"></div>
+  <div class="quick-actions" id="mobileQuickActions">
+    <button class="qa" onclick="sendQuick('Gere minha rotina de amanhã com base nas tarefas pendentes')">Gerar rotina de amanhã →</button>
+    <button class="qa" onclick="sendQuick('Quais tarefas devo priorizar hoje e por quê?')">Sugerir priorização →</button>
+    <button class="qa" onclick="sendQuick('Crie um post para LinkedIn sobre técnicas de CS e atendimento')">Criar post de CS →</button>
+  </div>
+  <div class="claude-input-area">
+    <textarea class="claude-input" id="claudeInputMobile" placeholder="Pergunte algo..." rows="1" onkeydown="handleClaudeKey(event,'mobile')" oninput="autoResize(this)"></textarea>
+    <button class="claude-send" onclick="sendClaude('mobile')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- CONTEXT MENU -->
+<div class="ctx-menu hidden" id="ctxMenu"></div>
+
 <!-- MODALS -->
+<div class="overlay hidden" id="loginModal">
+  <div class="modal">
+    <h2>Bem-vindo ao Foco</h2>
+    <p class="m-desc">Digite seu e-mail para entrar ou criar sua conta. Seus dados ficam separados dos outros usuários.</p>
+    <span class="m-label-text">Seu e-mail</span>
+    <input type="email" class="m-input" id="loginEmailInput" placeholder="voce@email.com" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="btn-primary" style="width:100%;flex:none;" onclick="doLogin()">Entrar / Criar conta</button>
+  </div>
+</div>
+
 <div class="overlay hidden" id="apiModal">
   <div class="modal">
-    <h2>Configure sua API Key</h2>
-    <p class="m-desc">Para usar o Claude, você precisa de uma chave da Anthropic. Custo ~R$3-5/mês para uso pessoal.<br><br>1. Acesse <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>2. Crie conta → "API Keys" → crie uma chave<br>3. Cole abaixo</p>
+    <h2>Configure o Claude</h2>
+    <p class="m-desc">Para usar o assistente Claude, você precisa de uma chave de API da Anthropic.<br><br>1. Acesse <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>2. Crie conta → "API Keys" → crie uma chave<br>3. Cole abaixo</p>
     <input type="password" class="m-input" id="apiKeyInput" placeholder="sk-ant-..." style="margin-bottom:12px"/>
-    <button class="btn-primary" style="flex:none;width:100%;margin-bottom:8px" onclick="saveApiKey()">Salvar e começar</button>
-    <button onclick="closeModal('apiModal')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;width:100%;padding:6px;font-family:'DM Sans',sans-serif;">Pular por agora</button>
+    <button class="btn-primary" style="width:100%;flex:none;margin-bottom:8px" onclick="saveApiKey()">Salvar e começar</button>
+    <button onclick="closeModal('apiModal')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;width:100%;padding:6px;text-align:center;">Pular por agora</button>
   </div>
 </div>
 
 <div class="overlay hidden" id="areaModal">
   <div class="modal">
-    <h2>Nova área de atuação</h2>
-    <p class="m-desc">As áreas são o nível mais alto. Dentro delas você cria projetos e tarefas.</p>
+    <h2 id="areaModalTitle">Nova área</h2>
+    <p class="m-desc">Áreas organizam seus projetos e tarefas por contexto de vida.</p>
     <span class="m-label-text">Nome da área</span>
-    <input type="text" class="m-input" id="areaNameInput" placeholder="Ex: Carreira, Família, Estudos..." />
-    <span class="m-label-text">Escolha uma cor</span>
+    <input type="text" class="m-input" id="areaNameInput" placeholder="Ex: Trabalho, Família, Estudos..."/>
+    <span class="m-label-text">Cor</span>
     <div class="color-row" id="areaColorPicker"></div>
     <div class="m-actions">
       <button class="btn-cancel" onclick="closeModal('areaModal')">Cancelar</button>
-      <button class="btn-primary" onclick="saveArea()">Criar área</button>
+      <button class="btn-primary" id="areaModalSaveBtn" onclick="saveArea()">Criar área</button>
     </div>
   </div>
 </div>
@@ -326,9 +474,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
 <div class="overlay hidden" id="projectModal">
   <div class="modal">
     <h2>Novo projeto</h2>
-    <p class="m-desc">Projetos vivem dentro de uma área e agrupam tarefas de uma mesma iniciativa.</p>
+    <p class="m-desc">Projetos agrupam tarefas de uma mesma iniciativa dentro de uma área.</p>
     <span class="m-label-text">Nome do projeto</span>
-    <input type="text" class="m-input" id="projectNameInput" placeholder="Ex: Lançamento produto X, Campanha Y..." />
+    <input type="text" class="m-input" id="projectNameInput" placeholder="Ex: Lançamento X, Campanha Y..."/>
     <span class="m-label-text">Área</span>
     <select class="m-select" id="projectAreaSelect" style="margin-bottom:12px;"></select>
     <div class="m-actions">
@@ -340,10 +488,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
 
 <div class="overlay hidden" id="taskModal">
   <div class="modal">
-    <h2 id="taskModalTitle">Nova tarefa</h2>
+    <h2>Nova tarefa</h2>
     <p class="m-desc" id="taskModalDesc"></p>
-    <span class="m-label-text">Título da tarefa</span>
-    <input type="text" class="m-input" id="taskTitleInput" placeholder="Descreva a tarefa..." />
+    <input type="text" class="m-input" id="taskTitleInput" placeholder="Descreva a tarefa..."/>
     <div class="m-row">
       <div style="flex:1;display:flex;flex-direction:column;"><span class="m-label-text">Prioridade</span>
         <select class="m-select" id="taskPriorityInput" style="margin-bottom:0;"><option value="normal">Normal</option><option value="urgent">Urgente</option></select></div>
@@ -377,7 +524,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
 
 <div class="overlay hidden" id="gcalModal">
   <div class="modal">
-    <h2 id="gcalModalTitle">Conectar Google Agenda</h2>
+    <h2 id="gcalModalTitle">Google Agenda</h2>
     <div id="gcalModalBody"></div>
   </div>
 </div>
@@ -385,222 +532,270 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
 <div class="notif" id="notif"></div>
 
 <script>
-// ─── SUPABASE CONFIG ─────────────────────────────────────
-const SB_URL = 'https://xlehduawhrnnmcpokgki.supabase.co';
-const SB_KEY = 'sb_publishable_PFMg1PkNhhgMCu0IePsYrA_fxh1P9nu';
+// ─── SUPABASE ────────────────────────────────────────────
+const SB_URL='https://xlehduawhrnnmcpokgki.supabase.co';
+const SB_KEY='sb_publishable_PFMg1PkNhhgMCu0IePsYrA_fxh1P9nu';
+const SB_HEADERS={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
 
-const sb = {
-  async query(table, opts={}) {
-    let url = `${SB_URL}/rest/v1/${table}?`;
-    if (opts.select) url += `select=${opts.select}&`;
-    if (opts.filter) url += `${opts.filter}&`;
-    url += 'order=created_at.asc';
-    const r = await fetch(url, { headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' } });
+const sb={
+  async query(table,opts={}){
+    let url=`${SB_URL}/rest/v1/${table}?select=${opts.select||'*'}`;
+    if(opts.filter)url+=`&${opts.filter}`;
+    url+='&order=created_at.asc';
+    const r=await fetch(url,{headers:SB_HEADERS});
+    if(!r.ok){console.error('SB query error',r.status,await r.text().catch(()=>''));return[];}
     return r.json();
   },
-  async insert(table, data) {
+  async insert(table,data){
     setSyncing(true);
-    const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
-      method: 'POST',
-      headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=representation' },
-      body: JSON.stringify(data)
-    });
+    const r=await fetch(`${SB_URL}/rest/v1/${table}`,{method:'POST',headers:{...SB_HEADERS,Prefer:'return=representation'},body:JSON.stringify(data)});
     setSyncing(false);
+    if(!r.ok)return null;
     return r.json();
   },
-  async update(table, id, data, idCol='id') {
+  async update(table,id,data,col='id'){
     setSyncing(true);
-    await fetch(`${SB_URL}/rest/v1/${table}?${idCol}=eq.${id}`, {
-      method: 'PATCH',
-      headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
+    await fetch(`${SB_URL}/rest/v1/${table}?${col}=eq.${encodeURIComponent(id)}`,{method:'PATCH',headers:SB_HEADERS,body:JSON.stringify(data)});
     setSyncing(false);
   },
-  async delete(table, id, idCol='id') {
+  async delete(table,id,col='id'){
     setSyncing(true);
-    await fetch(`${SB_URL}/rest/v1/${table}?${idCol}=eq.${id}`, {
-      method: 'DELETE',
-      headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` }
-    });
+    await fetch(`${SB_URL}/rest/v1/${table}?${col}=eq.${encodeURIComponent(id)}`,{method:'DELETE',headers:SB_HEADERS});
     setSyncing(false);
-  },
-  realtime(table, cb) {
-    // Poll every 8s for real-time-like updates
-    return setInterval(async () => {
-      try { cb(await sb.query(table, {select:'*'})); } catch(e){}
-    }, 8000);
   }
 };
 
-function setSyncing(v) {
-  const d = document.getElementById('syncDot');
-  if (!d) return;
-  d.className = 'sync-dot' + (v ? ' syncing' : '');
-  d.title = v ? 'Sincronizando...' : 'Sincronizado';
-}
+function setSyncing(v){const d=document.getElementById('syncDot');if(!d)return;d.className='sync-dot'+(v?' syncing':'');}
 
 // ─── PALETTE ─────────────────────────────────────────────
-const COLORS = ['#4ecdc4','#a78bfa','#fb923c','#f472b6','#60a5fa','#4ade80','#facc15','#f87171','#e879f9','#34d399','#fb7185','#38bdf8','#fbbf24','#c084fc','#6ee7b7','#fca5a5'];
+const COLORS=['#4ecdc4','#a78bfa','#fb923c','#f472b6','#60a5fa','#4ade80','#facc15','#f87171','#e879f9','#34d399','#fb7185','#38bdf8','#fbbf24','#c084fc','#6ee7b7','#fca5a5'];
 
 // ─── STATE ───────────────────────────────────────────────
+let currentUser=null; // {email, name, api_key}
 let areas=[], projects=[], tasks=[];
-let apiKey = localStorage.getItem('foco_api_key')||'';
-let gcalToken = localStorage.getItem('foco_gcal_token')||'';
-let gcalEvents = JSON.parse(localStorage.getItem('foco_gcal_events')||'[]');
-let gcalClientId = localStorage.getItem('foco_gcal_client_id')||'';
-let nav = {type:'home'};
-let metricPeriod = 'day';
-let selectedColor = COLORS[0];
-let claudeHistory = [];
-let isLoading = false;
-let depModalTaskId = null;
-let depModalSelected = [];
-let taskModalContext = null;
-let taskModalDepSelected = [];
+let gcalToken=localStorage.getItem('foco_gcal_token')||'';
+let gcalEvents=JSON.parse(localStorage.getItem('foco_gcal_events')||'[]');
+let gcalClientId=localStorage.getItem('foco_gcal_client_id')||'';
+let nav={type:'home'};
+let metricPeriod='day';
+let selectedColor=COLORS[0];
+let claudeHistory=[];
+let isLoading=false;
+let depModalTaskId=null;
+let depModalSelected=[];
+let taskModalContext=null;
+let taskModalDepSelected=[];
+let selectedColor_edit=null;
+let editingAreaId=null;
+let showArchived=false;
+let _dashTab='day';
+let pollTimer=null;
 
 // ─── INIT ────────────────────────────────────────────────
-async function init() {
+async function init(){
   updateDate();
-  if (location.hash.includes('access_token')) handleOAuthCallback();
-  await loadAll();
-  document.getElementById('loadingScreen').classList.add('hidden');
-  if (!apiKey) showModal('apiModal'); // only shown if not found in Supabase or localStorage
-  startPolling();
-  checkOverdue();
-  setInterval(checkOverdue, 60000);
-}
-
-async function loadAll() {
-  try {
-    const [a, p, t, u] = await Promise.all([
-      sb.query('areas', {select:'*'}),
-      sb.query('projects', {select:'*'}),
-      sb.query('tasks', {select:'*'}),
-      sb.query('users', {select:'*', filter:'email=eq.default'})
-    ]);
-    if (Array.isArray(a)) areas = a; else areas = [];
-    if (Array.isArray(p)) projects = p; else projects = [];
-    if (Array.isArray(t)) tasks = t.map(normalizeTask); else tasks = [];
-    // Load API key from Supabase if available
-    if (Array.isArray(u) && u.length > 0 && u[0].api_key) {
-      apiKey = u[0].api_key;
-      localStorage.setItem('foco_api_key', apiKey);
-    }
-    // Seed if empty
-    if (areas.length === 0) await seedData();
-    render();
-  } catch(e) {
-    showNotif('Erro ao carregar dados. Verifique a conexão.');
+  setupResponsive();
+  if(location.hash.includes('access_token'))handleOAuthCallback();
+  // Try to restore session
+  const savedEmail=localStorage.getItem('foco_user_email');
+  if(savedEmail){
+    document.getElementById('loadingSub').textContent='Restaurando sessão...';
+    await loginUser(savedEmail,false);
+  } else {
     document.getElementById('loadingScreen').classList.add('hidden');
+    showModal('loginModal');
   }
+  startPolling();
 }
 
-function normalizeTask(t) {
-  // Ensure deps is always an array
-  if (!t.deps) t.deps = [];
-  if (typeof t.deps === 'string') try { t.deps = JSON.parse(t.deps); } catch(e) { t.deps = []; }
-  return t;
+function setupResponsive(){
+  const isMobile=window.innerWidth<=768;
+  document.getElementById('mobileMenuBtn').style.display=isMobile?'flex':'none';
+  window.addEventListener('resize',()=>{
+    const m=window.innerWidth<=768;
+    document.getElementById('mobileMenuBtn').style.display=m?'flex':'none';
+  });
 }
 
-async function seedData() {
-  const today = new Date().toISOString().split('T')[0];
-  const defaultAreas = [
-    {id:'cs',name:'CS e suporte',color:'#4ecdc4'},
-    {id:'content',name:'Conteúdo digital',color:'#a78bfa'},
-    {id:'comercial',name:'Comercial',color:'#fb923c'},
-    {id:'pessoal',name:'Pessoal',color:'#f472b6'},
-  ];
-  const defaultProjects = [
-    {id:'p1',name:'Sistema de ponto',area_id:'comercial'},
-    {id:'p2',name:'Implantações',area_id:'cs'},
-    {id:'p3',name:'Série sobre CS',area_id:'content'},
-    {id:'p4',name:'Pipeline comercial',area_id:'comercial'},
-  ];
-  for (const a of defaultAreas) {
-    try { await sb.insert('areas', a); } catch(e){}
-  }
-  for (const p of defaultProjects) {
-    try { await sb.insert('projects', p); } catch(e){}
-  }
-  const defaultTasks = [
-    {id:Date.now()+1,title:'Definir proposta comercial do sistema de ponto',area_id:'comercial',project_id:'p1',priority:'urgent',date:today,time:'',deps:[],done:false},
-    {id:Date.now()+2,title:'Enviar proposta para cliente Construtora BH',area_id:'comercial',project_id:'p1',priority:'urgent',date:today,time:'18:00',deps:[Date.now()+1],done:false},
-    {id:Date.now()+3,title:'Retornar chamado escalado — cliente Alfa',area_id:'cs',project_id:'p2',priority:'urgent',date:today,time:'14:00',deps:[],done:false},
-    {id:Date.now()+4,title:'Roteiro do vídeo sobre gatilhos de fechamento',area_id:'content',project_id:'p3',priority:'normal',date:today,time:'',deps:[],done:false},
-    {id:Date.now()+5,title:'Gravar vídeo: "3 gatilhos de fechamento"',area_id:'content',project_id:'p3',priority:'normal',date:today,time:'',deps:[Date.now()+4],done:false},
-  ];
-  for (const t of defaultTasks) {
-    try { await sb.insert('tasks', {...t, deps: JSON.stringify(t.deps)}); } catch(e){}
-  }
-  await loadAll();
-}
-
-// ─── POLLING (real-time simulation) ──────────────────────
-let pollIntervals = [];
-function startPolling() {
-  // Poll every 10s and refresh data silently
-  pollIntervals.push(setInterval(async () => {
-    try {
-      const [a,p,t] = await Promise.all([
-        sb.query('areas',{select:'*'}),
-        sb.query('projects',{select:'*'}),
-        sb.query('tasks',{select:'*'})
-      ]);
-      let changed = false;
-      if (Array.isArray(a) && JSON.stringify(a)!==JSON.stringify(areas)) { areas=a; changed=true; }
-      if (Array.isArray(p) && JSON.stringify(p)!==JSON.stringify(projects)) { projects=p; changed=true; }
-      if (Array.isArray(t)) {
-        const nt = t.map(normalizeTask);
-        if (JSON.stringify(nt)!==JSON.stringify(tasks)) { tasks=nt; changed=true; }
-      }
-      if (changed) render();
-    } catch(e){}
-  }, 10000));
-}
-
-function updateDate() {
-  const n=new Date(), days=['domingo','segunda','terça','quarta','quinta','sexta','sábado'], months=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+function updateDate(){
+  const n=new Date(),days=['domingo','segunda','terça','quarta','quinta','sexta','sábado'],months=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
   document.getElementById('topDate').textContent=`${days[n.getDay()]}, ${n.getDate()} de ${months[n.getMonth()]}`;
 }
 
+// ─── LOGIN / USER ────────────────────────────────────────
+async function doLogin(){
+  const email=document.getElementById('loginEmailInput').value.trim().toLowerCase();
+  if(!email||!email.includes('@')){showNotif('Digite um e-mail válido');return;}
+  closeModal('loginModal');
+  document.getElementById('loadingScreen').classList.remove('hidden');
+  document.getElementById('loadingSub').textContent='Entrando...';
+  await loginUser(email,true);
+}
+
+async function loginUser(email,isNew){
+  try {
+    // Try to find user
+    let users=[];
+    try{ users=await sb.query('users',{select:'*',filter:`email=eq.${email}`}); }catch(e){ users=[]; }
+
+    if(Array.isArray(users)&&users.length>0){
+      currentUser=users[0];
+    } else {
+      // Create new user — if insert fails, still proceed with local object
+      try{
+        const inserted=await sb.insert('users',{email,name:email.split('@')[0],api_key:''});
+        if(Array.isArray(inserted)&&inserted.length>0){
+          currentUser=inserted[0];
+        } else {
+          currentUser={email,name:email.split('@')[0],api_key:''};
+        }
+      } catch(e){
+        currentUser={email,name:email.split('@')[0],api_key:''};
+      }
+    }
+
+    // Fallback: load api_key from localStorage if Supabase didn't return it
+    if(!currentUser.api_key){
+      currentUser.api_key=localStorage.getItem('foco_api_key')||'';
+    }
+
+    localStorage.setItem('foco_user_email',email);
+    updateUserBadge();
+    await loadUserData();
+    document.getElementById('loadingScreen').classList.add('hidden');
+    if(!currentUser.api_key) showModal('apiModal');
+    render();
+    checkOverdue();
+  } catch(e){
+    console.error('loginUser error:',e);
+    // Even on error, let the user in with local-only mode
+    currentUser={email,name:email.split('@')[0],api_key:localStorage.getItem('foco_api_key')||''};
+    localStorage.setItem('foco_user_email',email);
+    updateUserBadge();
+    document.getElementById('loadingScreen').classList.add('hidden');
+    showNotif('Entrando em modo offline...');
+    render();
+  }
+}
+
+function updateUserBadge(){
+  if(!currentUser)return;
+  const initial=(currentUser.name||currentUser.email||'?')[0].toUpperCase();
+  document.getElementById('userAvatar').textContent=initial;
+  const shortEmail=currentUser.email.length>14?currentUser.email.substring(0,14)+'…':currentUser.email;
+  document.getElementById('userEmail').textContent=shortEmail;
+}
+
+function openUserMenu(){
+  if(!currentUser){showModal('loginModal');return;}
+  showCtxMenu(document.getElementById('userBadge'),[
+    {label:`Logado como ${currentUser.email}`,disabled:true},
+    {divider:true},
+    {label:'Configurar Claude (API Key)',action:()=>showModal('apiModal')},
+    {divider:true},
+    {label:'Sair',danger:true,action:logout}
+  ]);
+}
+
+function logout(){
+  currentUser=null;
+  localStorage.removeItem('foco_user_email');
+  areas=[];projects=[];tasks=[];
+  nav={type:'home'};
+  render();
+  showModal('loginModal');
+  showNotif('Saiu da conta');
+}
+
+async function loadUserData(){
+  if(!currentUser)return;
+  const email=currentUser.email;
+  const [a,p,t]=await Promise.all([
+    sb.query('areas',{select:'*',filter:`user_email=eq.${email}`}),
+    sb.query('projects',{select:'*',filter:`user_email=eq.${email}`}),
+    sb.query('tasks',{select:'*',filter:`user_email=eq.${email}`})
+  ]);
+  areas=Array.isArray(a)?a.filter(x=>!x.archived):[];
+  projects=Array.isArray(p)?p:[];
+  tasks=Array.isArray(t)?t.map(normalizeTask):[];
+}
+
+function normalizeTask(t){
+  if(!t.deps)t.deps=[];
+  if(typeof t.deps==='string')try{t.deps=JSON.parse(t.deps);}catch(e){t.deps=[];}
+  return t;
+}
+
+// ─── POLLING ─────────────────────────────────────────────
+function startPolling(){
+  if(pollTimer)clearInterval(pollTimer);
+  pollTimer=setInterval(async()=>{
+    if(!currentUser)return;
+    try{
+      const email=currentUser.email;
+      const [a,p,t]=await Promise.all([
+        sb.query('areas',{select:'*',filter:`user_email=eq.${email}`}),
+        sb.query('projects',{select:'*',filter:`user_email=eq.${email}`}),
+        sb.query('tasks',{select:'*',filter:`user_email=eq.${email}`})
+      ]);
+      let changed=false;
+      const na=Array.isArray(a)?a.filter(x=>!x.archived):[];
+      const np=Array.isArray(p)?p:[];
+      const nt=Array.isArray(t)?t.map(normalizeTask):[];
+      if(JSON.stringify(na)!==JSON.stringify(areas)){areas=na;changed=true;}
+      if(JSON.stringify(np)!==JSON.stringify(projects)){projects=np;changed=true;}
+      if(JSON.stringify(nt)!==JSON.stringify(tasks)){tasks=nt;changed=true;}
+      if(changed)render();
+    }catch(e){}
+  },10000);
+}
+
 // ─── RENDER ──────────────────────────────────────────────
-function render() {
-  renderBreadcrumb();
-  renderTree();
+function render(){
+  renderSidebar();
   renderCenter();
   renderMetrics();
   renderGcalSidebar();
+  renderClaudePanel();
   updateGcalBtn();
+  renderBreadcrumb();
 }
 
-function renderBreadcrumb() {
-  let h = `<span class="bc-item ${nav.type==='home'?'active':''}" onclick="goHome()">Início</span>`;
-  if (nav.type!=='home') {
+function renderBreadcrumb(){
+  let h=`<span class="bc-item ${nav.type==='home'?'active':''}" onclick="goHome()">Início</span>`;
+  if(nav.type!=='home'){
     const a=areas.find(a=>a.id===nav.areaId);
-    h+=`<span class="bc-sep">›</span><span class="bc-item ${nav.type==='area'?'active':''}" onclick="goArea('${nav.areaId}')" style="color:${a?.color}">${a?.name||''}</span>`;
+    if(a)h+=`<span class="bc-sep">›</span><span class="bc-item ${nav.type==='area'?'active':''}" onclick="goArea('${a.id}')" style="color:${a.color}">${a.name}</span>`;
   }
-  if (nav.type==='project') {
+  if(nav.type==='project'){
     const p=projects.find(p=>p.id===nav.projectId);
-    h+=`<span class="bc-sep">›</span><span class="bc-item active">${p?.name||''}</span>`;
+    if(p)h+=`<span class="bc-sep">›</span><span class="bc-item active">${p.name}</span>`;
   }
   document.getElementById('breadcrumb').innerHTML=h;
 }
 
-function renderTree() {
+function sidebarHTML(){
   let h='';
+  // All tasks link
+  h+=`<div class="sb-header"><span class="sb-title">Minhas áreas</span><button class="sb-add" onclick="openAreaModal()" title="Nova área">+</button></div>`;
+  h+=`<div class="sb-section">`;
+  h+=`<button class="area-btn" style="display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:var(--r);background:transparent;border:none;color:var(--text2);cursor:pointer;width:100%;text-align:left;font-size:13px;transition:background .12s;" onclick="goHome()">
+    <span style="width:8px;height:8px;border-radius:50%;background:var(--text3);flex-shrink:0;display:inline-block;"></span>
+    <span style="flex:1;">Todas as tarefas</span>
+    <span style="font-size:10px;color:var(--text3);background:var(--bg4);padding:1px 5px;border-radius:10px;">${tasks.filter(t=>!t.done).length}</span>
+  </button>`;
+
   areas.forEach(a=>{
     const aProjs=projects.filter(p=>p.area_id===a.id);
-    const aCnt=tasks.filter(t=>t.area_id===a.id&&!t.done).length;
+    const cnt=tasks.filter(t=>t.area_id===a.id&&!t.done).length;
     const isOpen=nav.areaId===a.id;
-    const isDefault=['cs','content','comercial','pessoal'].includes(a.id);
     h+=`<div class="area-node">
       <div class="area-row ${nav.areaId===a.id&&nav.type!=='home'?'active':''}" onclick="goArea('${a.id}')">
         <span class="area-chevron ${isOpen?'open':''}"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 2l4 3-4 3"/></svg></span>
         <span class="area-dot" style="background:${a.color}"></span>
         <span class="area-name">${a.name}</span>
-        <span class="area-count">${aCnt}</span>
-        ${!isDefault?`<span class="area-del" onclick="deleteArea('${a.id}',event)">×</span>`:''}
+        <span class="area-count">${cnt}</span>
+        <button class="area-menu-btn" onclick="openAreaCtxMenu(event,'${a.id}')" title="Opções">⋯</button>
       </div>
       <div class="proj-children ${isOpen?'open':''}">
         ${aProjs.map(p=>{
@@ -609,7 +804,7 @@ function renderTree() {
             <span class="proj-dot" style="background:${a.color}"></span>
             <span class="proj-name">${p.name}</span>
             <span class="proj-count">${pCnt}</span>
-            <span class="proj-del" onclick="deleteProject('${p.id}',event)">×</span>
+            <button class="proj-del" onclick="deleteProject('${p.id}',event)" title="Excluir">×</button>
           </div></div>`;
         }).join('')}
         <button class="proj-add" onclick="openProjectModalFor('${a.id}')">
@@ -619,211 +814,36 @@ function renderTree() {
       </div>
     </div>`;
   });
-  document.getElementById('areaTree').innerHTML=h;
+
+  if(!areas.length&&currentUser){
+    h+=`<div style="padding:16px 8px;font-size:12px;color:var(--text3);text-align:center;line-height:1.7;">Nenhuma área ainda.<br><span style="color:var(--accent);cursor:pointer;" onclick="openAreaModal()">Criar primeira área →</span></div>`;
+  }
+  h+='</div>';
+  return h;
 }
 
-function greetingByHour() {
-  const h=new Date().getHours();
-  if(h<12) return'Bom dia'; if(h<18) return'Boa tarde'; return'Boa noite';
+function renderSidebar(){
+  const html=sidebarHTML();
+  document.getElementById('sidebarContent').innerHTML=html;
+  document.getElementById('drawerSidebarContent').innerHTML=html;
 }
 
-function renderCenter() {
+function renderCenter(){
   const bar=document.getElementById('contextBar');
   const content=document.getElementById('centerContent');
-  if (nav.type==='home') {
-    const today=new Date().toISOString().split('T')[0];
-    const weekAgo=new Date(Date.now()-7*86400000).toISOString().split('T')[0];
-    const monthAgo=new Date(Date.now()-30*86400000).toISOString().split('T')[0];
-    const todayTasks=tasks.filter(t=>t.date===today&&!t.done);
-    const overdue=tasks.filter(t=>t.date&&t.date<today&&!t.done);
-    const todayDone=tasks.filter(t=>t.date===today&&t.done);
-    const weekTasks=tasks.filter(t=>t.date&&t.date>=weekAgo&&t.date<=today);
-    const weekDone=weekTasks.filter(t=>t.done).length;
-    const monthTasks=tasks.filter(t=>t.date&&t.date>=monthAgo&&t.date<=today);
-    const monthDone=monthTasks.filter(t=>t.done).length;
-    const totalPending=tasks.filter(t=>!t.done).length;
-    const pctToday=todayTasks.length+todayDone.length>0?Math.round((todayDone.length/(todayTasks.length+todayDone.length))*100):0;
 
-    // Topbar header
-    const now=new Date(), days=['domingo','segunda','terça','quarta','quinta','sexta','sábado'], months=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-    bar.innerHTML=`<div class="ctx-header">
-      <div class="ctx-left">
-        <div class="ctx-title" style="font-size:20px;">${greetingByHour()}!</div>
-        <div class="ctx-sub">${days[now.getDay()]}, ${now.getDate()} de ${months[now.getMonth()]} · ${totalPending} tarefa${totalPending!==1?'s':''} pendente${totalPending!==1?'s':''}</div>
-      </div>
-    </div>`;
-
-    content.style.overflow='auto'; content.style.display='block';
-
-    // Build dashboard HTML
-    let h=`<div style="padding:16px 18px;display:flex;flex-direction:column;gap:20px;">`;
-
-    // ── PERIOD TABS ──
-    h+=`<div style="display:flex;gap:4px;">
-      <button class="dash-tab active" id="dtab-day" onclick="setDashTab('day')">Hoje</button>
-      <button class="dash-tab" id="dtab-week" onclick="setDashTab('week')">Esta semana</button>
-      <button class="dash-tab" id="dtab-month" onclick="setDashTab('month')">Este mês</button>
-    </div>`;
-
-    // ── OVERDUE ALERT — always visible ──
-    if (overdue.length>0) {
-      h+=`<div style="background:var(--danger-bg);border:1px solid rgba(248,113,113,.3);border-radius:var(--rl);padding:14px 16px;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--danger)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-          <span style="font-size:12px;font-weight:600;color:var(--danger);text-transform:uppercase;letter-spacing:.05em;">${overdue.length} tarefa${overdue.length!==1?'s':''} atrasada${overdue.length!==1?'s':''}</span>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:5px;">
-          ${overdue.map(t=>{
-            const a=areas.find(a=>a.id===t.area_id);
-            const blocked=isBlocked(t);
-            return`<div class="task-card urgent" style="background:var(--bg3);">
-              <div class="t-check ${blocked?'t-blocked':''}" onclick="${blocked?`showNotif('Conclua as dependências primeiro!')`:`toggleTask(${t.id})`}"></div>
-              <div class="t-body">
-                <div class="t-title">${t.title}</div>
-                <div class="t-meta">
-                  ${a?`<span class="t-tag" style="background:${a.color}18;color:${a.color}">${a.name}</span>`:''}
-                  <span class="t-time overdue">Atrasada desde ${formatDate(t.date)}</span>
-                  ${blocked?`<span class="t-dep blocking"><svg viewBox="0 0 24 24" fill="currentColor" style="width:10px;height:10px"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"/></svg>Bloqueada</span>`:''}
-                </div>
-              </div>
-              <span class="t-del" onclick="deleteTask(${t.id})">×</span>
-            </div>`;
-          }).join('')}
-        </div>
-      </div>`;
-    }
-
-    // ── DAY VIEW ──
-    h+=`<div id="dash-day">`;
-    // Stats row
-    h+=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;">
-      <div style="background:var(--bg3);border-radius:var(--r);padding:12px;border:1px solid var(--border);">
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Para hoje</div>
-        <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--text);">${todayTasks.length}</div>
-        <div style="font-size:10px;color:var(--text3);">pendente${todayTasks.length!==1?'s':''}</div>
-      </div>
-      <div style="background:var(--bg3);border-radius:var(--r);padding:12px;border:1px solid var(--border);">
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Concluídas</div>
-        <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--success);">${todayDone.length}</div>
-        <div style="font-size:10px;color:var(--text3);">hoje</div>
-      </div>
-      <div style="background:${overdue.length>0?'var(--danger-bg)':'var(--bg3)'};border-radius:var(--r);padding:12px;border:1px solid ${overdue.length>0?'rgba(248,113,113,.3)':'var(--border)'};">
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Atrasadas</div>
-        <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:${overdue.length>0?'var(--danger)':'var(--text)'};">${overdue.length}</div>
-        <div style="font-size:10px;color:var(--text3);">no total</div>
-      </div>
-      <div style="background:var(--bg3);border-radius:var(--r);padding:12px;border:1px solid var(--border);">
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Progresso</div>
-        <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--accent);">${pctToday}%</div>
-        <div style="height:3px;background:var(--bg4);border-radius:2px;margin-top:6px;overflow:hidden;"><div style="height:100%;width:${pctToday}%;background:var(--accent);border-radius:2px;"></div></div>
-      </div>
-    </div>`;
-
-    // Today's tasks
-    const urgentToday=todayTasks.filter(t=>t.priority==='urgent');
-    const normalToday=todayTasks.filter(t=>t.priority!=='urgent');
-    if (todayTasks.length===0&&overdue.length===0) {
-      h+=`<div class="empty-state"><strong>Nenhuma tarefa para hoje</strong>Adicione tarefas com data de hoje nos seus projetos</div>`;
-    } else {
-      if (urgentToday.length) {
-        h+=`<div class="tl-section"><span style="color:var(--danger)">Urgente — hoje</span><span class="tl-hr"></span></div>`;
-        urgentToday.forEach(t=>{h+=taskCardHTML(t);});
-      }
-      if (normalToday.length) {
-        h+=`<div class="tl-section"><span>Para fazer hoje</span><span class="tl-hr"></span></div>`;
-        normalToday.forEach(t=>{h+=taskCardHTML(t);});
-      }
-      if (todayDone.length) {
-        h+=`<div class="tl-section"><span>Concluído hoje</span><span class="tl-hr"></span></div>`;
-        todayDone.forEach(t=>{h+=taskCardHTML(t);});
-      }
-    }
-    h+=`</div>`; // end dash-day
-
-    // ── WEEK VIEW ──
-    h+=`<div id="dash-week" style="display:none;">`;
-    const wPct=weekTasks.length>0?Math.round((weekDone/weekTasks.length)*100):0;
-    h+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;">
-      <div style="background:var(--bg3);border-radius:var(--r);padding:12px;border:1px solid var(--border);">
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Total semana</div>
-        <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:700;">${weekTasks.length}</div>
-      </div>
-      <div style="background:var(--bg3);border-radius:var(--r);padding:12px;border:1px solid var(--border);">
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Concluídas</div>
-        <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--success);">${weekDone}</div>
-      </div>
-      <div style="background:var(--bg3);border-radius:var(--r);padding:12px;border:1px solid var(--border);">
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Progresso</div>
-        <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--accent);">${wPct}%</div>
-        <div style="height:3px;background:var(--bg4);border-radius:2px;margin-top:6px;overflow:hidden;"><div style="height:100%;width:${wPct}%;background:var(--accent);border-radius:2px;"></div></div>
-      </div>
-    </div>`;
-    // Break by area
-    areas.forEach(a=>{
-      const aTasks=weekTasks.filter(t=>t.area_id===a.id);
-      if(!aTasks.length)return;
-      const aDone=aTasks.filter(t=>t.done).length;
-      const aPct=Math.round((aDone/aTasks.length)*100);
-      h+=`<div style="margin-bottom:14px;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-          <span style="width:7px;height:7px;border-radius:50%;background:${a.color};flex-shrink:0;display:inline-block;"></span>
-          <span style="font-size:12px;font-weight:500;color:${a.color}">${a.name}</span>
-          <span style="font-size:11px;color:var(--text3);margin-left:auto;">${aDone}/${aTasks.length}</span>
-          <div style="width:60px;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;"><div style="height:100%;width:${aPct}%;background:${a.color};border-radius:2px;"></div></div>
-        </div>
-        ${aTasks.filter(t=>!t.done).slice(0,3).map(t=>taskCardHTML(t)).join('')}
-        ${aTasks.filter(t=>!t.done).length>3?`<div style="font-size:11px;color:var(--text3);padding:4px 12px;">+ ${aTasks.filter(t=>!t.done).length-3} mais pendente${aTasks.filter(t=>!t.done).length-3!==1?'s':''}</div>`:''}
-      </div>`;
-    });
-    if(!weekTasks.length) h+=`<div class="empty-state"><strong>Nenhuma tarefa esta semana</strong>Adicione datas às suas tarefas</div>`;
-    h+=`</div>`; // end dash-week
-
-    // ── MONTH VIEW ──
-    h+=`<div id="dash-month" style="display:none;">`;
-    const mPct=monthTasks.length>0?Math.round((monthDone/monthTasks.length)*100):0;
-    h+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;">
-      <div style="background:var(--bg3);border-radius:var(--r);padding:12px;border:1px solid var(--border);">
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Total mês</div>
-        <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:700;">${monthTasks.length}</div>
-      </div>
-      <div style="background:var(--bg3);border-radius:var(--r);padding:12px;border:1px solid var(--border);">
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Concluídas</div>
-        <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--success);">${monthDone}</div>
-      </div>
-      <div style="background:var(--bg3);border-radius:var(--r);padding:12px;border:1px solid var(--border);">
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Progresso</div>
-        <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--accent);">${mPct}%</div>
-        <div style="height:3px;background:var(--bg4);border-radius:2px;margin-top:6px;overflow:hidden;"><div style="height:100%;width:${mPct}%;background:var(--accent);border-radius:2px;"></div></div>
-      </div>
-    </div>`;
-    // Area breakdown cards
-    h+=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;">`;
-    areas.forEach(a=>{
-      const aTasks=monthTasks.filter(t=>t.area_id===a.id);
-      const aDone=aTasks.filter(t=>t.done).length;
-      const aPend=aTasks.length-aDone;
-      const aPct=aTasks.length>0?Math.round((aDone/aTasks.length)*100):0;
-      h+=`<div class="home-card" onclick="goArea('${a.id}')">
-        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:${a.color};border-radius:3px 0 0 3px;"></div>
-        <div class="home-card-name" style="color:${a.color}">${a.name}</div>
-        <div class="home-card-stats">${aDone} concluída${aDone!==1?'s':''} · ${aPend} pendente${aPend!==1?'s':''}</div>
-        <div class="home-card-bar"><div class="home-card-fill" style="width:${aPct}%;background:${a.color}"></div></div>
-      </div>`;
-    });
-    h+=`</div>`;
-    if(!monthTasks.length) h+=`<div class="empty-state"><strong>Nenhuma tarefa este mês</strong>Adicione datas às suas tarefas</div>`;
-    h+=`</div>`; // end dash-month
-
-    h+=`</div>`; // end padding wrapper
-    content.innerHTML=h;
-
-    // Apply active tab
-    applyDashTab(window._dashTab||'day');
+  if(nav.type==='home'){
+    renderDashboard(bar,content);
     return;
   }
-  content.style.overflow='hidden'; content.style.display='flex'; content.style.flexDirection='column';
-  if (nav.type==='area') {
+
+  content.style.overflow='hidden';
+  content.style.display='flex';
+  content.style.flexDirection='column';
+
+  if(nav.type==='area'){
     const area=areas.find(a=>a.id===nav.areaId);
+    if(!area){goHome();return;}
     const aProjs=projects.filter(p=>p.area_id===nav.areaId);
     const pendCnt=tasks.filter(t=>t.area_id===nav.areaId&&!t.done).length;
     bar.innerHTML=`<div class="ctx-header">
@@ -834,28 +854,30 @@ function renderCenter() {
       </div>
     </div>`;
     let h='<div class="task-list">';
-    if (aProjs.length===0) {
-      h+=`<div class="empty-state"><strong>Nenhum projeto nesta área</strong>Clique em "+ Projeto" para criar o primeiro</div>`;
+    if(!aProjs.length){
+      h+=`<div class="empty-state"><strong>Nenhum projeto ainda</strong>Clique em "+ Projeto" para criar o primeiro projeto desta área</div>`;
     } else {
       aProjs.forEach(p=>{
         const pT=tasks.filter(t=>t.project_id===p.id);
         const pP=pT.filter(t=>!t.done).length;
         h+=`<div class="tl-section"><span style="cursor:pointer;color:${area.color}" onclick="goProject('${area.id}','${p.id}')">${p.name}</span><span class="tl-hr"></span><span>${pP} pendente${pP!==1?'s':''}</span></div>`;
         pT.slice(0,3).forEach(t=>{h+=taskCardHTML(t);});
-        if (pT.length>3) h+=`<div style="padding:4px 12px;font-size:11px;color:var(--text3);cursor:pointer;" onclick="goProject('${area.id}','${p.id}')">+ ${pT.length-3} mais →</div>`;
+        if(pT.length>3)h+=`<div style="padding:4px 12px;font-size:11px;color:var(--text3);cursor:pointer;" onclick="goProject('${area.id}','${p.id}')">+ ${pT.length-3} mais →</div>`;
       });
     }
     h+='</div>'; content.innerHTML=h; return;
   }
-  if (nav.type==='project') {
+
+  if(nav.type==='project'){
     const area=areas.find(a=>a.id===nav.areaId);
     const proj=projects.find(p=>p.id===nav.projectId);
+    if(!proj){goArea(nav.areaId);return;}
     const pT=tasks.filter(t=>t.project_id===nav.projectId);
-    const pend=pT.filter(t=>!t.done).length, done=pT.filter(t=>t.done).length;
+    const pend=pT.filter(t=>!t.done).length,done=pT.filter(t=>t.done).length;
     bar.innerHTML=`<div class="ctx-header">
       <div class="ctx-left"><div class="ctx-title">${proj.name}</div>
-        <div class="ctx-sub" style="display:flex;align-items:center;gap:8px;">
-          <span style="color:${area.color};font-size:11px;">● ${area.name}</span>
+        <div class="ctx-sub" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span style="color:${area?.color};font-size:11px;">● ${area?.name}</span>
           <span>${pend} pendente${pend!==1?'s':''} · ${done} concluída${done!==1?'s':''}</span>
         </div>
       </div>
@@ -868,37 +890,153 @@ function renderCenter() {
     const today=new Date().toISOString().split('T')[0];
     const todayGcal=gcalToken?gcalEvents.filter(e=>e.date===today):[];
     let h='<div class="task-list">';
-    if (todayGcal.length) { h+=`<div class="tl-section"><span style="color:var(--info)">Google Agenda</span><span class="tl-hr"></span></div>`; todayGcal.forEach(e=>{h+=gcalCardHTML(e);}); }
-    if (urgent.length) { h+=`<div class="tl-section"><span>Urgente</span><span class="tl-hr"></span></div>`; urgent.forEach(t=>{h+=taskCardHTML(t);}); }
-    if (normal.length) { h+=`<div class="tl-section"><span>Pendente</span><span class="tl-hr"></span></div>`; normal.forEach(t=>{h+=taskCardHTML(t);}); }
-    if (doneT.length) { h+=`<div class="tl-section"><span>Concluído</span><span class="tl-hr"></span></div>`; doneT.forEach(t=>{h+=taskCardHTML(t);}); }
-    if (!ordered.length&&!todayGcal.length) h+=`<div class="empty-state"><strong>Projeto sem tarefas ainda</strong>Clique em "+ Tarefa" para adicionar a primeira</div>`;
+    if(todayGcal.length){h+=`<div class="tl-section"><span style="color:var(--info)">Google Agenda</span><span class="tl-hr"></span></div>`;todayGcal.forEach(e=>{h+=gcalCardHTML(e);});}
+    if(urgent.length){h+=`<div class="tl-section"><span>Urgente</span><span class="tl-hr"></span></div>`;urgent.forEach(t=>{h+=taskCardHTML(t);});}
+    if(normal.length){h+=`<div class="tl-section"><span>Pendente</span><span class="tl-hr"></span></div>`;normal.forEach(t=>{h+=taskCardHTML(t);});}
+    if(doneT.length){h+=`<div class="tl-section"><span>Concluído</span><span class="tl-hr"></span></div>`;doneT.forEach(t=>{h+=taskCardHTML(t);});}
+    if(!ordered.length&&!todayGcal.length)h+=`<div class="empty-state"><strong>Projeto sem tarefas</strong>Clique em "+ Tarefa" para adicionar a primeira</div>`;
     h+='</div>'; content.innerHTML=h;
   }
 }
 
-function orderByDeps(list) {
-  const map={}; list.forEach(t=>{map[t.id]=t;});
-  const visited=new Set(), result=[];
-  function visit(t) { if(visited.has(t.id))return; visited.add(t.id); (t.deps||[]).forEach(d=>{if(map[d])visit(map[d]);}); result.push(t); }
-  list.forEach(t=>visit(t)); return result;
-}
+function renderDashboard(bar,content){
+  const today=new Date().toISOString().split('T')[0];
+  const weekAgo=new Date(Date.now()-7*86400000).toISOString().split('T')[0];
+  const monthAgo=new Date(Date.now()-30*86400000).toISOString().split('T')[0];
+  const todayTasks=tasks.filter(t=>t.date===today&&!t.done);
+  const overdue=tasks.filter(t=>t.date&&t.date<today&&!t.done);
+  const todayDone=tasks.filter(t=>t.date===today&&t.done);
+  const weekT=tasks.filter(t=>t.date&&t.date>=weekAgo&&t.date<=today);
+  const monthT=tasks.filter(t=>t.date&&t.date>=monthAgo&&t.date<=today);
+  const totalPending=tasks.filter(t=>!t.done).length;
+  const pctToday=(todayTasks.length+todayDone.length)>0?Math.round((todayDone.length/(todayTasks.length+todayDone.length))*100):0;
+  const n=new Date(),days=['domingo','segunda','terça','quarta','quinta','sexta','sábado'],months=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const greet=n.getHours()<12?'Bom dia':n.getHours()<18?'Boa tarde':'Boa noite';
 
-function isBlocked(task) {
-  return (task.deps||[]).some(depId=>{ const d=tasks.find(t=>t.id==depId); return d&&!d.done; });
-}
-function getBlocker(task) {
-  return (task.deps||[]).map(depId=>tasks.find(t=>t.id==depId)).find(d=>d&&!d.done)||null;
-}
-function depOrder(task) {
-  let ord=1, cur=task, seen=new Set();
-  while(cur.deps&&cur.deps.length>0&&!seen.has(cur.id)){
-    seen.add(cur.id); const par=tasks.find(t=>t.id==cur.deps[0]); if(!par)break; ord++; cur=par;
+  bar.innerHTML=`<div class="ctx-header">
+    <div class="ctx-left">
+      <div class="ctx-title">${greet}${currentUser?', '+currentUser.name:''}!</div>
+      <div class="ctx-sub">${days[n.getDay()]}, ${n.getDate()} de ${months[n.getMonth()]} · ${totalPending} pendente${totalPending!==1?'s':''}</div>
+    </div>
+    ${currentUser?`<div class="ctx-actions"><button class="act-btn primary" onclick="openAreaModal()">+ Área</button></div>`:''}
+  </div>`;
+
+  content.style.overflow='auto';
+  content.style.display='block';
+  content.style.flexDirection='';
+
+  let h=`<div style="padding:14px 16px;display:flex;flex-direction:column;gap:16px;">`;
+
+  // Tabs
+  h+=`<div class="dash-tabs">
+    <button class="dash-tab ${_dashTab==='day'?'active':''}" onclick="setDashTab('day')">Hoje</button>
+    <button class="dash-tab ${_dashTab==='week'?'active':''}" onclick="setDashTab('week')">Semana</button>
+    <button class="dash-tab ${_dashTab==='month'?'active':''}" onclick="setDashTab('month')">Mês</button>
+  </div>`;
+
+  // Overdue alert - always visible
+  if(overdue.length){
+    h+=`<div class="overdue-block">
+      <div class="overdue-block-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--danger)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span style="font-size:12px;font-weight:600;color:var(--danger);text-transform:uppercase;letter-spacing:.05em;">${overdue.length} tarefa${overdue.length!==1?'s':''} atrasada${overdue.length!==1?'s':''}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;">
+        ${overdue.map(t=>{
+          const a=areas.find(a=>a.id===t.area_id);
+          const bl=isBlocked(t);
+          return`<div class="task-card urgent" style="background:var(--bg3);">
+            <div class="t-check ${bl?'t-blocked':''}" onclick="${bl?`showNotif('Conclua as dependências primeiro!')`:`toggleTask(${t.id})`}"></div>
+            <div class="t-body">
+              <div class="t-title">${t.title}</div>
+              <div class="t-meta">
+                ${a?`<span class="t-tag" style="background:${a.color}18;color:${a.color}">${a.name}</span>`:''}
+                <span class="t-time overdue">Atrasada desde ${formatDate(t.date)}</span>
+              </div>
+            </div>
+            <span class="t-del" onclick="deleteTask(${t.id})">×</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
   }
-  return ord>1?ord:null;
+
+  // DAY
+  h+=`<div id="dash-day" ${_dashTab!=='day'?'style="display:none"':''}>`;
+  h+=`<div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">Para hoje</div><div class="stat-val">${todayTasks.length}</div><div class="stat-sub">pendente${todayTasks.length!==1?'s':''}</div></div>
+    <div class="stat-card"><div class="stat-label">Concluídas</div><div class="stat-val success">${todayDone.length}</div><div class="stat-sub">hoje</div></div>
+    <div class="stat-card" style="${overdue.length?'background:var(--danger-bg);border-color:rgba(248,113,113,.3);':''}"><div class="stat-label">Atrasadas</div><div class="stat-val ${overdue.length?'danger':''}">${overdue.length}</div><div class="stat-sub">no total</div></div>
+    <div class="stat-card"><div class="stat-label">Progresso</div><div class="stat-val accent">${pctToday}%</div><div class="mini-bar"><div class="mini-bar-fill" style="width:${pctToday}%"></div></div></div>
+  </div>`;
+  const urgToday=todayTasks.filter(t=>t.priority==='urgent');
+  const normToday=todayTasks.filter(t=>t.priority!=='urgent');
+  if(!todayTasks.length&&!overdue.length){
+    h+=`<div class="empty-state"><strong>Nenhuma tarefa para hoje</strong>Adicione tarefas com a data de hoje nos seus projetos</div>`;
+  } else {
+    if(urgToday.length){h+=`<div class="tl-section"><span style="color:var(--danger)">Urgente — hoje</span><span class="tl-hr"></span></div>`;urgToday.forEach(t=>{h+=taskCardHTML(t);});}
+    if(normToday.length){h+=`<div class="tl-section"><span>Para fazer hoje</span><span class="tl-hr"></span></div>`;normToday.forEach(t=>{h+=taskCardHTML(t);});}
+    if(todayDone.length){h+=`<div class="tl-section"><span>Concluído hoje</span><span class="tl-hr"></span></div>`;todayDone.forEach(t=>{h+=taskCardHTML(t);});}
+  }
+  h+=`</div>`;
+
+  // WEEK
+  const wDone=weekT.filter(t=>t.done).length,wPct=weekT.length?Math.round((wDone/weekT.length)*100):0;
+  h+=`<div id="dash-week" ${_dashTab!=='week'?'style="display:none"':''}>`;
+  h+=`<div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
+    <div class="stat-card"><div class="stat-label">Total semana</div><div class="stat-val">${weekT.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Concluídas</div><div class="stat-val success">${wDone}</div></div>
+    <div class="stat-card"><div class="stat-label">Progresso</div><div class="stat-val accent">${wPct}%</div><div class="mini-bar"><div class="mini-bar-fill" style="width:${wPct}%"></div></div></div>
+  </div>`;
+  if(!weekT.length){h+=`<div class="empty-state"><strong>Nenhuma tarefa esta semana</strong>Adicione datas às suas tarefas</div>`;}
+  else {
+    areas.forEach(a=>{
+      const aT=weekT.filter(t=>t.area_id===a.id);if(!aT.length)return;
+      const aDone=aT.filter(t=>t.done).length,aPct=Math.round((aDone/aT.length)*100);
+      h+=`<div style="margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:${a.color};display:inline-block;"></span>
+          <span style="font-size:12px;font-weight:500;color:${a.color}">${a.name}</span>
+          <span style="font-size:11px;color:var(--text3);margin-left:auto;">${aDone}/${aT.length}</span>
+          <div style="width:60px;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;"><div style="height:100%;width:${aPct}%;background:${a.color};border-radius:2px;"></div></div>
+        </div>
+        ${aT.filter(t=>!t.done).slice(0,3).map(t=>taskCardHTML(t)).join('')}
+      </div>`;
+    });
+  }
+  h+=`</div>`;
+
+  // MONTH
+  const mDone=monthT.filter(t=>t.done).length,mPct=monthT.length?Math.round((mDone/monthT.length)*100):0;
+  h+=`<div id="dash-month" ${_dashTab!=='month'?'style="display:none"':''}>`;
+  h+=`<div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
+    <div class="stat-card"><div class="stat-label">Total mês</div><div class="stat-val">${monthT.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Concluídas</div><div class="stat-val success">${mDone}</div></div>
+    <div class="stat-card"><div class="stat-label">Progresso</div><div class="stat-val accent">${mPct}%</div><div class="mini-bar"><div class="mini-bar-fill" style="width:${mPct}%"></div></div></div>
+  </div>`;
+  h+=`<div class="area-breakdown">`;
+  areas.forEach(a=>{
+    const aT=monthT.filter(t=>t.area_id===a.id);
+    const aDone=aT.filter(t=>t.done).length,aPend=aT.length-aDone,aPct=aT.length?Math.round((aDone/aT.length)*100):0;
+    h+=`<div class="area-card" onclick="goArea('${a.id}')">
+      <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:${a.color};border-radius:3px 0 0 3px;"></div>
+      <div class="area-card-name" style="color:${a.color}">${a.name}</div>
+      <div class="area-card-stats">${aDone} concluída${aDone!==1?'s':''} · ${aPend} pendente${aPend!==1?'s':''}</div>
+      <div class="mini-bar" style="margin-top:8px;"><div class="mini-bar-fill" style="width:${aPct}%;background:${a.color}"></div></div>
+    </div>`;
+  });
+  if(!areas.length)h+=`<div class="empty-state" style="grid-column:span 2;"><strong>Nenhuma área criada</strong><span style="color:var(--accent);cursor:pointer;" onclick="openAreaModal()">Criar primeira área →</span></div>`;
+  h+=`</div>`;
+  if(!monthT.length&&areas.length)h+=`<div class="empty-state"><strong>Nenhuma tarefa este mês</strong>Adicione datas às suas tarefas</div>`;
+  h+=`</div>`;
+
+  h+=`</div>`;
+  content.innerHTML=h;
 }
 
-function taskCardHTML(t) {
+function setDashTab(tab){_dashTab=tab;renderCenter();}
+
+function taskCardHTML(t){
   const area=areas.find(a=>a.id===t.area_id);
   const today=new Date().toISOString().split('T')[0];
   const isOverdue=t.date&&t.date<today&&!t.done;
@@ -906,16 +1044,16 @@ function taskCardHTML(t) {
   const blocker=blocked?getBlocker(t):null;
   const ord=depOrder(t);
   const hasDepsOnIt=tasks.filter(tx=>(tx.deps||[]).includes(t.id)&&!tx.done).length>0;
-  return `<div class="task-card ${t.priority==='urgent'?'urgent':''} ${t.done?'done':''} ${blocked?'blocked':''}">
+  return`<div class="task-card ${t.priority==='urgent'?'urgent':''} ${t.done?'done':''} ${blocked?'blocked':''}">
     ${ord?`<div class="dep-order-badge">${ord}</div>`:''}
-    <div class="t-check ${t.done?'checked':''} ${blocked?'t-blocked':''}" onclick="${blocked?`showNotif('Conclua primeiro: \\"${(blocker?.title||'').substring(0,25)}...\\"')`:`toggleTask(${t.id})`}"></div>
+    <div class="t-check ${t.done?'checked':''} ${blocked?'t-blocked':''}" onclick="${blocked?`showNotif('Conclua primeiro: \\"${(blocker?.title||'').substring(0,20)}...\\"')`:`toggleTask(${t.id})`}"></div>
     <div class="t-body">
       <div class="t-title">${t.title}</div>
       <div class="t-meta">
         ${area&&nav.type!=='project'?`<span class="t-tag" style="background:${area.color}18;color:${area.color}">${area.name}</span>`:''}
-        ${blocked&&blocker?`<span class="t-dep blocking"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>Aguarda: ${(blocker.title||'').substring(0,20)}…</span>`:''}
-        ${!blocked&&(t.deps||[]).length>0?`<span class="t-dep"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Deps. concluídas</span>`:''}
-        ${hasDepsOnIt?`<span class="t-dep" style="color:var(--info)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Desbloqueia outra</span>`:''}
+        ${blocked&&blocker?`<span class="t-dep blocking"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"/></svg>Aguarda: ${(blocker.title||'').substring(0,18)}…</span>`:''}
+        ${!blocked&&(t.deps||[]).length>0?`<span class="t-dep"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Deps. ok</span>`:''}
+        ${hasDepsOnIt?`<span class="t-dep" style="color:var(--info)">Desbloqueia outra</span>`:''}
         ${t.date?`<span class="t-time ${isOverdue?'overdue':''}">${isOverdue?'Atrasada — ':''}${formatDate(t.date)}${t.time?' às '+t.time:''}</span>`:''}
       </div>
     </div>
@@ -926,28 +1064,28 @@ function taskCardHTML(t) {
   </div>`;
 }
 
-function gcalCardHTML(e) {
-  return `<div class="task-card gcal-card"><div class="t-body"><div class="t-title">${e.title}</div><div class="t-meta"><span class="gcal-badge">Google Agenda</span>${e.time?`<span class="t-time">${e.time}</span>`:''}</div></div></div>`;
+function gcalCardHTML(e){
+  return`<div class="task-card gcal-card"><div class="t-body"><div class="t-title">${e.title}</div><div class="t-meta"><span class="gcal-badge">Google Agenda</span>${e.time?`<span class="t-time">${e.time}</span>`:''}</div></div></div>`;
 }
 
-function formatDate(d) {
-  const today=new Date().toISOString().split('T')[0], tom=new Date(Date.now()+86400000).toISOString().split('T')[0];
-  if(d===today)return'Hoje'; if(d===tom)return'Amanhã';
-  const[y,m,day]=d.split('-'); return`${day}/${m}`;
+function formatDate(d){
+  const today=new Date().toISOString().split('T')[0],tom=new Date(Date.now()+86400000).toISOString().split('T')[0];
+  if(d===today)return'Hoje';if(d===tom)return'Amanhã';
+  const[y,m,day]=d.split('-');return`${day}/${m}`;
 }
 
-function renderMetrics() {
+function renderMetrics(){
   const today=new Date().toISOString().split('T')[0];
   const wk=new Date(Date.now()-7*86400000).toISOString().split('T')[0];
   const mo=new Date(Date.now()-30*86400000).toISOString().split('T')[0];
   let sc=tasks;
-  if(nav.type==='area') sc=tasks.filter(t=>t.area_id===nav.areaId);
-  if(nav.type==='project') sc=tasks.filter(t=>t.project_id===nav.projectId);
+  if(nav.type==='area')sc=tasks.filter(t=>t.area_id===nav.areaId);
+  if(nav.type==='project')sc=tasks.filter(t=>t.project_id===nav.projectId);
   let pt=sc;
-  if(metricPeriod==='day') pt=sc.filter(t=>t.date===today||!t.date);
-  else if(metricPeriod==='week') pt=sc.filter(t=>!t.date||t.date>=wk);
+  if(metricPeriod==='day')pt=sc.filter(t=>t.date===today||!t.date);
+  else if(metricPeriod==='week')pt=sc.filter(t=>!t.date||t.date>=wk);
   else pt=sc.filter(t=>!t.date||t.date>=mo);
-  const total=pt.length, done=pt.filter(t=>t.done).length, pct=total>0?Math.round((done/total)*100):0;
+  const total=pt.length,done=pt.filter(t=>t.done).length,pct=total?Math.round((done/total)*100):0;
   const overdue=sc.filter(t=>!t.done&&t.date&&t.date<today).length;
   const blocked=sc.filter(t=>!t.done&&isBlocked(t)).length;
   document.getElementById('metricsGrid').innerHTML=`
@@ -956,133 +1094,266 @@ function renderMetrics() {
     <div class="metric-card"><div class="m-label">Bloqueadas</div><div class="m-val ${blocked>0?'danger':''}">${blocked}</div><div class="m-sub">aguardando dep.</div></div>`;
 }
 
-function renderGcalSidebar() {
+function renderGcalSidebar(){
   const today=new Date().toISOString().split('T')[0];
   const evs=gcalToken?gcalEvents.filter(e=>e.date===today):[];
-  if(!evs.length){document.getElementById('gcalSidebarSection').innerHTML='';return;}
-  let h=`<div class="gcal-sidebar-section"><div class="sb-title" style="color:var(--info);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Agenda hoje</div>`;
-  evs.forEach(e=>{h+=`<div class="gcal-ev"><div class="gcal-ev-title">${e.title}</div><div class="gcal-ev-time">${e.time||'Dia todo'}</div></div>`;});
-  h+='</div>';
-  document.getElementById('gcalSidebarSection').innerHTML=h;
+  const el=document.getElementById('gcalSidebarSection');
+  if(el)el.innerHTML='';
+}
+
+function renderClaudePanel(){
+  const panel=document.getElementById('claudePanelInner');
+  if(!panel)return;
+  panel.innerHTML=`
+    <div class="claude-hd">
+      <div class="claude-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm-1-5h2v2h-2zm0-8h2v6h-2z"/></svg></div>
+      <span class="claude-lbl">Claude</span>
+      <button onclick="clearChat('desktop')" style="margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;padding:2px 6px;border-radius:6px;">limpar</button>
+    </div>
+    <div class="claude-msgs" id="claudeMsgsDesktop" style="flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:7px;">
+      <div class="msg assistant">Olá! Posso gerar rotinas, sugerir priorização, criar posts ou responder dúvidas.</div>
+    </div>
+    <div class="quick-actions" id="desktopQuickActions">
+      <button class="qa" onclick="sendQuick('Gere minha rotina de amanhã com base nas tarefas pendentes','desktop')">Gerar rotina →</button>
+      <button class="qa" onclick="sendQuick('Quais tarefas devo priorizar hoje?','desktop')">Priorizar →</button>
+      <button class="qa" onclick="sendQuick('Crie um post para LinkedIn sobre CS e atendimento','desktop')">Post de CS →</button>
+    </div>
+    <div class="claude-input-area">
+      <textarea class="claude-input" id="claudeInputDesktop" placeholder="Pergunte algo..." rows="1" onkeydown="handleClaudeKey(event,'desktop')" oninput="autoResize(this)"></textarea>
+      <button class="claude-send" onclick="sendClaude('desktop')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      </button>
+    </div>`;
+  // re-apply flex to panel
+  const cp=document.getElementById('claudePanelDesktop');
+  if(cp){cp.style.display='flex';cp.style.flexDirection='column';cp.style.overflow='hidden';cp.style.flex='1';}
 }
 
 // ─── NAV ─────────────────────────────────────────────────
-function goHome()                       { nav={type:'home'};            render(); }
-function goArea(areaId)                 { nav={type:'area',areaId};     render(); }
-function goProject(areaId,projectId)    { nav={type:'project',areaId,projectId}; render(); }
+function goHome(){nav={type:'home'};render();}
+function goArea(id){nav={type:'area',areaId:id};render();}
+function goProject(aId,pId){nav={type:'project',areaId:aId,projectId:pId};toggleDrawer(true);render();}
+
+function mobileNav(view){
+  document.querySelectorAll('.bn-item').forEach(b=>b.classList.remove('active'));
+  if(view==='home'){document.getElementById('bn-home').classList.add('active');goHome();}
+  else if(view==='areas'){document.getElementById('bn-areas').classList.add('active');toggleDrawer();}
+  else if(view==='metrics'){document.getElementById('bn-metrics').classList.add('active');/* show metrics panel */}
+}
+
+// ─── DRAWER ──────────────────────────────────────────────
+function toggleDrawer(forceClose=false){
+  const d=document.getElementById('mobileDrawer'),o=document.getElementById('drawerOverlay');
+  const isOpen=d.classList.contains('open');
+  if(forceClose||isOpen){d.classList.remove('open');o.classList.remove('open');}
+  else{d.classList.add('open');o.classList.add('open');renderSidebar();}
+}
+
+function openClaudeDrawer(){
+  document.getElementById('claudeDrawer').classList.add('open');
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawerOverlay').onclick=closeClaudeDrawer;
+  const msgs=document.getElementById('claudeMobileMsgs');
+  if(!msgs.innerHTML.trim())msgs.innerHTML='<div class="msg assistant">Olá! Como posso ajudar?</div>';
+}
+function closeClaudeDrawer(){
+  document.getElementById('claudeDrawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.getElementById('drawerOverlay').onclick=toggleDrawer;
+}
+
+// ─── AREA CONTEXT MENU ───────────────────────────────────
+function openAreaCtxMenu(e,areaId){
+  e.stopPropagation();
+  const area=areas.find(a=>a.id===areaId);
+  showCtxMenu(e.currentTarget,[
+    {label:'Editar área',action:()=>openEditAreaModal(areaId)},
+    {label:'Arquivar área',action:()=>archiveArea(areaId)},
+    {divider:true},
+    {label:'Excluir área',danger:true,action:()=>deleteArea(areaId)}
+  ]);
+}
+
+function showCtxMenu(anchor,items){
+  const menu=document.getElementById('ctxMenu');
+  menu.innerHTML=items.map(item=>{
+    if(item.divider)return`<div class="ctx-divider"></div>`;
+    if(item.disabled)return`<div class="ctx-menu-item" style="opacity:.5;cursor:default;pointer-events:none;">${item.label}</div>`;
+    return`<button class="ctx-menu-item ${item.danger?'danger':''}" onclick="this.closest('.ctx-menu').classList.add('hidden');(${item.action.toString()})()">${item.label}</button>`;
+  }).join('');
+  menu.classList.remove('hidden');
+  const rect=anchor.getBoundingClientRect();
+  let top=rect.bottom+6,left=rect.left;
+  if(left+180>window.innerWidth)left=window.innerWidth-188;
+  if(top+items.length*40>window.innerHeight)top=rect.top-items.length*40-6;
+  menu.style.top=top+'px';menu.style.left=left+'px';
+  setTimeout(()=>document.addEventListener('click',()=>menu.classList.add('hidden'),{once:true}),0);
+}
 
 // ─── AREA CRUD ───────────────────────────────────────────
-function openAreaModal() {
+function openAreaModal(){
+  editingAreaId=null;
   selectedColor=COLORS[0];
+  document.getElementById('areaModalTitle').textContent='Nova área';
+  document.getElementById('areaModalSaveBtn').textContent='Criar área';
   document.getElementById('areaNameInput').value='';
   document.getElementById('areaColorPicker').innerHTML=COLORS.map(c=>`<div class="color-opt${c===selectedColor?' sel':''}" style="background:${c}" onclick="pickColor('${c}',this)"></div>`).join('');
   showModal('areaModal');
   setTimeout(()=>document.getElementById('areaNameInput').focus(),100);
 }
+
+function openEditAreaModal(areaId){
+  const area=areas.find(a=>a.id===areaId);
+  if(!area)return;
+  editingAreaId=areaId;
+  selectedColor=area.color||COLORS[0];
+  document.getElementById('areaModalTitle').textContent='Editar área';
+  document.getElementById('areaModalSaveBtn').textContent='Salvar alterações';
+  document.getElementById('areaNameInput').value=area.name;
+  document.getElementById('areaColorPicker').innerHTML=COLORS.map(c=>`<div class="color-opt${c===selectedColor?' sel':''}" style="background:${c}" onclick="pickColor('${c}',this)"></div>`).join('');
+  showModal('areaModal');
+  setTimeout(()=>document.getElementById('areaNameInput').focus(),100);
+}
+
 function pickColor(c,el){selectedColor=c;document.querySelectorAll('.color-opt').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');}
-async function saveArea() {
+
+async function saveArea(){
   const name=document.getElementById('areaNameInput').value.trim();
   if(!name){showNotif('Digite o nome da área');return;}
-  const id='area_'+Date.now();
-  const obj={id,name,color:selectedColor};
-  areas.push(obj); closeModal('areaModal'); render();
-  await sb.insert('areas',obj);
-  showNotif(`Área "${name}" criada!`);
+  if(!currentUser){showNotif('Faça login primeiro');return;}
+  if(editingAreaId){
+    // Edit
+    const area=areas.find(a=>a.id===editingAreaId);
+    if(area){area.name=name;area.color=selectedColor;}
+    closeModal('areaModal');render();
+    await sb.update('areas',editingAreaId,{name,color:selectedColor});
+    showNotif('Área atualizada!');
+  } else {
+    // Create
+    const id='area_'+Date.now();
+    const obj={id,name,color:selectedColor,user_email:currentUser.email,archived:false};
+    areas.push(obj);closeModal('areaModal');render();
+    await sb.insert('areas',obj);
+    showNotif(`Área "${name}" criada!`);
+  }
 }
-async function deleteArea(id,e) {
-  e.stopPropagation();
-  if(!confirm('Excluir esta área?'))return;
+
+async function archiveArea(id){
+  if(!confirm('Arquivar esta área? Ela ficará oculta mas pode ser restaurada.'))return;
   areas=areas.filter(a=>a.id!==id);
-  if(nav.areaId===id) nav={type:'home'};
-  render(); await sb.delete('areas',id); showNotif('Área excluída');
+  if(nav.areaId===id)nav={type:'home'};
+  render();
+  await sb.update('areas',id,{archived:true});
+  showNotif('Área arquivada');
+}
+
+async function deleteArea(id){
+  if(!confirm('Excluir permanentemente esta área e todos os seus projetos e tarefas?'))return;
+  areas=areas.filter(a=>a.id!==id);
+  projects=projects.filter(p=>p.area_id!==id);
+  tasks=tasks.filter(t=>t.area_id!==id);
+  if(nav.areaId===id)nav={type:'home'};
+  render();
+  await sb.delete('areas',id);
+  showNotif('Área excluída');
 }
 
 // ─── PROJECT CRUD ────────────────────────────────────────
-function openProjectModalFor(areaId) {
+function openProjectModalFor(areaId){
   document.getElementById('projectNameInput').value='';
   const sel=document.getElementById('projectAreaSelect');
   sel.innerHTML=areas.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
-  if(areaId) sel.value=areaId;
+  if(areaId)sel.value=areaId;
   showModal('projectModal');
   setTimeout(()=>document.getElementById('projectNameInput').focus(),100);
 }
-async function saveProject() {
+
+async function saveProject(){
   const name=document.getElementById('projectNameInput').value.trim();
   if(!name){showNotif('Digite o nome do projeto');return;}
+  if(!currentUser)return;
   const areaId=document.getElementById('projectAreaSelect').value;
   const id='proj_'+Date.now();
-  const obj={id,name,area_id:areaId};
-  projects.push(obj); closeModal('projectModal');
-  goProject(areaId,id); render();
+  const obj={id,name,area_id:areaId,user_email:currentUser.email};
+  projects.push(obj);closeModal('projectModal');
+  goProject(areaId,id);
   await sb.insert('projects',obj);
   showNotif(`Projeto "${name}" criado!`);
 }
-async function deleteProject(id,e) {
+
+async function deleteProject(id,e){
   e.stopPropagation();
   if(!confirm('Excluir este projeto?'))return;
   projects=projects.filter(p=>p.id!==id);
-  if(nav.projectId===id) goArea(nav.areaId); else render();
-  await sb.delete('projects',id); showNotif('Projeto excluído');
+  if(nav.projectId===id)goArea(nav.areaId);else render();
+  await sb.delete('projects',id);
+  showNotif('Projeto excluído');
 }
 
 // ─── TASK CRUD ───────────────────────────────────────────
-function openTaskModal(areaId,projectId) {
+function openTaskModal(areaId,projectId){
+  if(!currentUser){showModal('loginModal');return;}
   taskModalContext={areaId,projectId};
   taskModalDepSelected=[];
   const area=areas.find(a=>a.id===areaId);
   const proj=projects.find(p=>p.id===projectId);
-  document.getElementById('taskModalTitle').textContent='Nova tarefa';
-  document.getElementById('taskModalDesc').textContent=proj?`Em: ${area?.name} › ${proj.name}`:area?`Em: ${area?.name}`:'';
+  document.getElementById('taskModalDesc').textContent=proj?`Em: ${area?.name} › ${proj.name}`:area?`Em: ${area?.name}`:'Escolha uma área ao salvar';
   document.getElementById('taskTitleInput').value='';
   document.getElementById('taskPriorityInput').value='normal';
   document.getElementById('taskDateInput').value=new Date().toISOString().split('T')[0];
   document.getElementById('taskTimeInput').value='';
   const candidates=tasks.filter(t=>(!projectId||t.project_id===projectId)&&!t.done);
-  const dl=document.getElementById('depList');
-  dl.innerHTML=candidates.length===0?'<div style="font-size:12px;color:var(--text3);padding:4px 0;">Nenhuma tarefa disponível para dependência</div>':
-    candidates.map(t=>{const a=areas.find(a=>a.id===t.area_id); return`<div class="dep-item" data-id="${t.id}" onclick="toggleDepSel(this,${t.id},'task')"><div class="dep-check"></div><div class="dep-item-title">${t.title}</div>${a?`<span class="dep-item-area" style="background:${a.color}18;color:${a.color}">${a.name}</span>`:''}</div>`;}).join('');
+  document.getElementById('depList').innerHTML=candidates.length===0?'<div style="font-size:12px;color:var(--text3);padding:4px 0;">Nenhuma tarefa disponível para dependência</div>':
+    candidates.map(t=>{const a=areas.find(a=>a.id===t.area_id);return`<div class="dep-item" onclick="toggleDepSel(this,${t.id},'task')"><div class="dep-check"></div><div class="dep-item-title">${t.title}</div>${a?`<span class="t-tag" style="background:${a.color}18;color:${a.color};font-size:10px;">${a.name}</span>`:''}</div>`;}).join('');
   showModal('taskModal');
   setTimeout(()=>document.getElementById('taskTitleInput').focus(),100);
 }
-function toggleDepSel(el,id,ctx) {
+
+function toggleDepSel(el,id,ctx){
   el.classList.toggle('selected');
   const arr=ctx==='task'?taskModalDepSelected:depModalSelected;
   if(el.classList.contains('selected')){if(!arr.includes(id))arr.push(id);}
   else{const i=arr.indexOf(id);if(i>-1)arr.splice(i,1);}
 }
-async function saveTask() {
+
+async function saveTask(){
   const title=document.getElementById('taskTitleInput').value.trim();
   if(!title){showNotif('Digite o título da tarefa');return;}
+  if(!currentUser)return;
   const id=Date.now();
-  const obj={id,title,area_id:taskModalContext?.areaId||areas[0]?.id,project_id:taskModalContext?.projectId||'',priority:document.getElementById('taskPriorityInput').value,date:document.getElementById('taskDateInput').value,time:document.getElementById('taskTimeInput').value,deps:[...taskModalDepSelected],done:false};
+  const areaId=taskModalContext?.areaId||areas[0]?.id||'';
+  const obj={id,title,area_id:areaId,project_id:taskModalContext?.projectId||'',priority:document.getElementById('taskPriorityInput').value,date:document.getElementById('taskDateInput').value,time:document.getElementById('taskTimeInput').value,deps:[...taskModalDepSelected],done:false,user_email:currentUser.email};
   tasks.push(normalizeTask({...obj}));
-  closeModal('taskModal'); render();
+  closeModal('taskModal');render();
   await sb.insert('tasks',{...obj,deps:JSON.stringify(obj.deps)});
   showNotif('Tarefa criada!');
 }
-async function toggleTask(id) {
-  const t=tasks.find(t=>t.id==id); if(!t)return;
+
+async function toggleTask(id){
+  const t=tasks.find(t=>t.id==id);if(!t)return;
   if(!t.done&&isBlocked(t)){showNotif('Conclua as dependências primeiro!');return;}
-  t.done=!t.done; render();
+  t.done=!t.done;render();
   await sb.update('tasks',id,{done:t.done});
 }
-async function deleteTask(id) {
-  tasks=tasks.filter(t=>t.id!=id); render();
-  await sb.delete('tasks',id); showNotif('Tarefa excluída');
+
+async function deleteTask(id){
+  tasks=tasks.filter(t=>t.id!=id);render();
+  await sb.delete('tasks',id);
 }
 
 // ─── DEP MODAL ───────────────────────────────────────────
-function openDepModal(taskId) {
+function openDepModal(taskId){
   depModalTaskId=taskId;
   const task=tasks.find(t=>t.id==taskId);
   depModalSelected=[...(task.deps||[])];
   const candidates=tasks.filter(t=>t.id!=taskId&&t.area_id===task.area_id&&!t.done);
-  document.getElementById('depModalList').innerHTML=candidates.length===0?'<div style="font-size:12px;color:var(--text3)">Nenhuma tarefa disponível</div>':
-    candidates.map(t=>{const a=areas.find(a=>a.id===t.area_id);const sel=depModalSelected.includes(t.id)||depModalSelected.includes(String(t.id));
-      return`<div class="dep-item ${sel?'selected':''}" data-id="${t.id}" onclick="toggleDepSel(this,${t.id},'dep')"><div class="dep-check"></div><div class="dep-item-title">${t.title}</div>${a?`<span class="dep-item-area" style="background:${a.color}18;color:${a.color}">${a.name}</span>`:''}</div>`;}).join('');
+  document.getElementById('depModalList').innerHTML=candidates.length===0?'<div style="font-size:12px;color:var(--text3);">Nenhuma tarefa disponível</div>':
+    candidates.map(t=>{const a=areas.find(a=>a.id===t.area_id);const sel=depModalSelected.some(d=>d==t.id);
+      return`<div class="dep-item ${sel?'selected':''}" onclick="toggleDepSel(this,${t.id},'dep')"><div class="dep-check"></div><div class="dep-item-title">${t.title}</div>${a?`<span class="t-tag" style="background:${a.color}18;color:${a.color};font-size:10px;">${a.name}</span>`:''}</div>`;}).join('');
   showModal('depModal');
 }
-async function saveDependency() {
+
+async function saveDependency(){
   const t=tasks.find(t=>t.id==depModalTaskId);
   if(t){t.deps=[...depModalSelected];render();}
   closeModal('depModal');
@@ -1090,102 +1361,136 @@ async function saveDependency() {
   showNotif('Dependências salvas!');
 }
 
-// ─── GOOGLE CALENDAR ─────────────────────────────────────
-function updateGcalBtn(){document.getElementById('gcalBtn').classList.toggle('connected',!!gcalToken);document.getElementById('gcalBtnLbl').textContent=gcalToken?'Agenda conectada':'Google Agenda';}
+// ─── DEP HELPERS ────────────────────────────────────────
+function isBlocked(t){return(t.deps||[]).some(d=>{const dep=tasks.find(x=>x.id==d);return dep&&!dep.done;});}
+function getBlocker(t){return(t.deps||[]).map(d=>tasks.find(x=>x.id==d)).find(d=>d&&!d.done)||null;}
+function depOrder(t){let o=1,cur=t,seen=new Set();while(cur.deps&&cur.deps.length&&!seen.has(cur.id)){seen.add(cur.id);const p=tasks.find(x=>x.id==cur.deps[0]);if(!p)break;o++;cur=p;}return o>1?o:null;}
+function orderByDeps(list){const map={};list.forEach(t=>{map[t.id]=t;});const vis=new Set(),res=[];function v(t){if(vis.has(t.id))return;vis.add(t.id);(t.deps||[]).forEach(d=>{if(map[d])v(map[d]);});res.push(t);}list.forEach(t=>v(t));return res;}
+
+// ─── API KEY ─────────────────────────────────────────────
+async function saveApiKey(){
+  const k=document.getElementById('apiKeyInput').value.trim();
+  if(!k.startsWith('sk-ant-')){showNotif('Chave inválida. Deve começar com sk-ant-');return;}
+  if(currentUser)currentUser.api_key=k;
+  localStorage.setItem('foco_api_key',k);
+  closeModal('apiModal');
+  // Save to Supabase
+  if(currentUser){
+    await sb.update('users',currentUser.email,{api_key:k},'email');
+  }
+  showNotif('Chave salva em todos os dispositivos!');
+}
+
+function getApiKey(){
+  return(currentUser&&currentUser.api_key)||localStorage.getItem('foco_api_key')||'';
+}
+
+// ─── GOOGLE CALENDAR ────────────────────────────────────
+function updateGcalBtn(){document.getElementById('gcalBtn').classList.toggle('connected',!!gcalToken);document.getElementById('gcalBtnLbl').textContent=gcalToken?'Conectada':'Agenda';}
 function openGcalModal(){
   showModal('gcalModal');
   if(gcalToken){
     document.getElementById('gcalModalTitle').textContent='Google Agenda conectada';
-    document.getElementById('gcalModalBody').innerHTML=`<p class="m-desc" style="color:var(--success)">Agenda conectada!</p><button class="btn-primary" style="flex:none;width:100%;margin-bottom:10px" onclick="fetchGcalEvents()">Atualizar eventos</button><button onclick="disconnectGcal()" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:13px;display:block;margin-bottom:8px;">Desconectar</button><button onclick="closeModal('gcalModal')" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:13px;">Fechar</button>`;
+    document.getElementById('gcalModalBody').innerHTML=`<p class="m-desc" style="color:var(--success)">Sua agenda está conectada!</p><button class="btn-primary" style="width:100%;margin-bottom:10px;" onclick="fetchGcalEvents()">Atualizar eventos</button><button onclick="disconnectGcal()" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:13px;display:block;margin-bottom:8px;">Desconectar</button><button onclick="closeModal('gcalModal')" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:13px;display:block;width:100%;text-align:center;">Fechar</button>`;
   } else {
     document.getElementById('gcalModalTitle').textContent='Conectar Google Agenda';
     document.getElementById('gcalModalBody').innerHTML=`<p class="m-desc">Crie um Client ID gratuito no Google Cloud (~5 min).</p>
       <div class="gcal-step"><div class="gcal-sn">1</div><div class="gcal-st">Acesse <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a> → crie um projeto</div></div>
       <div class="gcal-step"><div class="gcal-sn">2</div><div class="gcal-st"><strong style="color:var(--text)">APIs → Biblioteca</strong> → ative <strong style="color:var(--text)">Google Calendar API</strong></div></div>
-      <div class="gcal-step"><div class="gcal-sn">3</div><div class="gcal-st"><strong style="color:var(--text)">Credenciais → Criar → ID do cliente OAuth</strong>. Tipo: <code>Aplicativo da Web</code>. Adicione a URL do app em "origens autorizadas"</div></div>
-      <div class="gcal-step"><div class="gcal-sn">4</div><div class="gcal-st">Copie o <strong style="color:var(--text)">Client ID</strong> e cole abaixo</div></div>
+      <div class="gcal-step"><div class="gcal-sn">3</div><div class="gcal-st"><strong style="color:var(--text)">Credenciais → Criar → ID do cliente OAuth</strong>. Tipo: Aplicativo da Web. Adicione a URL do app em origens autorizadas</div></div>
+      <div class="gcal-step"><div class="gcal-sn">4</div><div class="gcal-st">Cole o Client ID abaixo</div></div>
       <input type="text" class="m-input" id="gcalCidInput" placeholder="...apps.googleusercontent.com" value="${gcalClientId}" style="margin-bottom:12px;"/>
-      <button class="btn-primary" style="flex:none;width:100%;margin-bottom:8px;" onclick="startGcalOAuth()">Conectar com Google</button>
+      <button class="btn-primary" style="width:100%;margin-bottom:8px;" onclick="startGcalOAuth()">Conectar com Google</button>
       <button onclick="closeModal('gcalModal')" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:13px;display:block;width:100%;text-align:center;">Cancelar</button>`;
   }
 }
-function startGcalOAuth(){const cid=document.getElementById('gcalCidInput').value.trim();if(!cid){showNotif('Cole o Client ID');return;}gcalClientId=cid;localStorage.setItem('foco_gcal_client_id',cid);window.location.href=`https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(cid)}&redirect_uri=${encodeURIComponent(location.origin+location.pathname)}&response_type=token&scope=${encodeURIComponent('https://www.googleapis.com/auth/calendar.readonly')}&prompt=consent`;}
-function handleOAuthCallback(){const p=new URLSearchParams(location.hash.substring(1)),token=p.get('access_token');if(token){gcalToken=token;localStorage.setItem('foco_gcal_token',token);history.replaceState(null,null,location.pathname);showNotif('Agenda conectada!');fetchGcalEvents();}}
-async function fetchGcalEvents(){if(!gcalToken)return;closeModal('gcalModal');showNotif('Carregando eventos...');try{const start=new Date(new Date().setHours(0,0,0,0)).toISOString(),end=new Date(Date.now()+7*86400000).toISOString();const res=await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${encodeURIComponent(start)}&timeMax=${encodeURIComponent(end)}&singleEvents=true&orderBy=startTime`,{headers:{Authorization:`Bearer ${gcalToken}`}});if(res.status===401){disconnectGcal();showNotif('Sessão expirada. Reconecte.');return;}const data=await res.json();gcalEvents=(data.items||[]).map(e=>({id:e.id,title:e.summary||'(sem título)',date:(e.start.dateTime||e.start.date||'').split('T')[0],time:e.start.dateTime?new Date(e.start.dateTime).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):null}));localStorage.setItem('foco_gcal_events',JSON.stringify(gcalEvents));render();showNotif(`${gcalEvents.length} evento(s) carregado(s)!`);}catch{showNotif('Erro ao carregar eventos.');}}
+function startGcalOAuth(){const c=document.getElementById('gcalCidInput').value.trim();if(!c){showNotif('Cole o Client ID');return;}gcalClientId=c;localStorage.setItem('foco_gcal_client_id',c);window.location.href=`https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(c)}&redirect_uri=${encodeURIComponent(location.origin+location.pathname)}&response_type=token&scope=${encodeURIComponent('https://www.googleapis.com/auth/calendar.readonly')}&prompt=consent`;}
+function handleOAuthCallback(){const p=new URLSearchParams(location.hash.substring(1)),t=p.get('access_token');if(t){gcalToken=t;localStorage.setItem('foco_gcal_token',t);history.replaceState(null,null,location.pathname);showNotif('Agenda conectada!');fetchGcalEvents();}}
+async function fetchGcalEvents(){if(!gcalToken)return;closeModal('gcalModal');showNotif('Carregando eventos...');try{const s=new Date(new Date().setHours(0,0,0,0)).toISOString(),e=new Date(Date.now()+7*86400000).toISOString();const r=await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${encodeURIComponent(s)}&timeMax=${encodeURIComponent(e)}&singleEvents=true&orderBy=startTime`,{headers:{Authorization:`Bearer ${gcalToken}`}});if(r.status===401){disconnectGcal();showNotif('Sessão expirada. Reconecte.');return;}const d=await r.json();gcalEvents=(d.items||[]).map(e=>({id:e.id,title:e.summary||'(sem título)',date:(e.start.dateTime||e.start.date||'').split('T')[0],time:e.start.dateTime?new Date(e.start.dateTime).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):null}));localStorage.setItem('foco_gcal_events',JSON.stringify(gcalEvents));render();showNotif(`${gcalEvents.length} evento(s) carregado(s)!`);}catch{showNotif('Erro ao carregar eventos.');}}
 function disconnectGcal(){gcalToken='';gcalEvents=[];localStorage.removeItem('foco_gcal_token');localStorage.removeItem('foco_gcal_events');closeModal('gcalModal');render();showNotif('Agenda desconectada');}
 
 // ─── CLAUDE ──────────────────────────────────────────────
 function getCtx(){
   const today=new Date().toISOString().split('T')[0];
-  const pend=tasks.filter(t=>!t.done),over=tasks.filter(t=>!t.done&&t.date&&t.date<today),urg=tasks.filter(t=>t.priority==='urgent'&&!t.done),blk=tasks.filter(t=>!t.done&&isBlocked(t));
+  const pend=tasks.filter(t=>!t.done),over=tasks.filter(t=>!t.done&&t.date&&t.date<today);
+  const urg=tasks.filter(t=>t.priority==='urgent'&&!t.done),blk=tasks.filter(t=>!t.done&&isBlocked(t));
   const bd=areas.map(a=>`${a.name}=${pend.filter(t=>t.area_id===a.id).length}`).join(', ');
-  const gc=gcalEvents.length?`\nAgenda hoje: ${gcalEvents.filter(e=>e.date===today).map(e=>`"${e.title}"${e.time?' às '+e.time:''}`).join(', ')||'sem eventos'}`:'';
-  return`Foco — ${new Date().toLocaleDateString('pt-BR')}:
+  return`Foco — ${new Date().toLocaleDateString('pt-BR')} — Usuário: ${currentUser?.email||'desconhecido'}
 ${areas.length} áreas → ${projects.length} projetos → ${tasks.length} tarefas
 Pendentes: ${pend.length} | ${bd}
 Urgentes: ${urg.map(t=>`"${t.title}"`).join(', ')||'nenhuma'}
 Atrasadas: ${over.map(t=>`"${t.title}"`).join(', ')||'nenhuma'}
 Bloqueadas: ${blk.map(t=>`"${t.title}"`).join(', ')||'nenhuma'}
-Lista: ${pend.map(t=>`"${t.title}" [${areas.find(a=>a.id===t.area_id)?.name}${(t.deps||[]).length?' ⛓':''}]`).join('; ')}${gc}
-Perfil: Gerente CS/Suporte, Influenciador digital (vendas/atendimento/CS), Sócio software house (comercial, produto: sistema de ponto).`;
-}
-async function sendClaude(){
-  if(isLoading)return;
-  const inp=document.getElementById('claudeInput'),msg=inp.value.trim();
-  if(!msg)return;
-  if(!apiKey){showModal('apiModal');return;}
-  inp.value='';autoResize(inp);
-  addMsg('user',msg);claudeHistory.push({role:'user',content:msg});
-  document.getElementById('quickActions').style.display='none';
-  isLoading=true;document.getElementById('claudeSendBtn').disabled=true;
-  const lEl=addMsg('loading','Pensando...');
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:`Você é assistente pessoal de produtividade no Foco. Responda em português do Brasil, direto e prático.\n${getCtx()}`,messages:claudeHistory.slice(-10)})});
-    const data=await res.json();lEl.remove();
-    const reply=data.error?`Erro: ${data.error.message}`:data.content[0].text;
-    addMsg('assistant',reply);if(!data.error)claudeHistory.push({role:'assistant',content:reply});
-  }catch{lEl.remove();addMsg('assistant','Erro de conexão.');}
-  isLoading=false;document.getElementById('claudeSendBtn').disabled=false;
-}
-function addMsg(t,txt){const m=document.getElementById('claudeMsgs'),el=document.createElement('div');el.className=`msg ${t}`;el.textContent=txt;m.appendChild(el);m.scrollTop=m.scrollHeight;return el;}
-function sendQuick(msg){document.getElementById('claudeInput').value=msg;sendClaude();}
-function clearChat(){claudeHistory=[];document.getElementById('claudeMsgs').innerHTML='<div class="msg assistant">Conversa reiniciada. Como posso ajudar?</div>';document.getElementById('quickActions').style.display='flex';}
-function handleClaudeKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendClaude();}}
-function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,90)+'px';}
-function focusClaude(){document.getElementById('claudeInput').focus();}
-async function saveApiKey(){
-  const k=document.getElementById('apiKeyInput').value.trim();
-  if(!k.startsWith('sk-ant-')){showNotif('Chave inválida. Deve começar com sk-ant-');return;}
-  apiKey=k;
-  localStorage.setItem('foco_api_key',k);
-  // Save to Supabase so it syncs across devices
-  try {
-    const existing = await sb.query('users',{select:'email',filter:'email=eq.default'});
-    if(Array.isArray(existing)&&existing.length>0){
-      await sb.update('users','default',{api_key:k},'email');
-    } else {
-      await sb.insert('users',{email:'default',name:'Usuário',api_key:k});
-    }
-  } catch(e){}
-  closeModal('apiModal');
-  showNotif('Chave salva! Claude pronto em todos os dispositivos.');
+Lista: ${pend.slice(0,15).map(t=>`"${t.title}" [${areas.find(a=>a.id===t.area_id)?.name||'?'}]`).join('; ')}
+Perfil: Gerente CS/Suporte, Influenciador digital (vendas/atendimento/CS), Sócio software house (comercial).`;
 }
 
+async function sendClaude(ctx='desktop'){
+  if(isLoading)return;
+  const inputId=ctx==='mobile'?'claudeInputMobile':'claudeInputDesktop';
+  const msgsId=ctx==='mobile'?'claudeMobileMsgs':'claudeMsgsDesktop';
+  const qaId=ctx==='mobile'?'mobileQuickActions':'desktopQuickActions';
+  const inp=document.getElementById(inputId);
+  if(!inp)return;
+  const msg=inp.value.trim();if(!msg)return;
+  const apiKey=getApiKey();
+  if(!apiKey){showModal('apiModal');return;}
+  inp.value='';autoResize(inp);
+  addMsg(msgsId,'user',msg);
+  claudeHistory.push({role:'user',content:msg});
+  const qa=document.getElementById(qaId);if(qa)qa.style.display='none';
+  isLoading=true;
+  const lEl=addMsg(msgsId,'loading','Pensando...');
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:`Você é assistente pessoal de produtividade no Foco. Responda em português do Brasil, direto e prático.\n${getCtx()}`,messages:claudeHistory.slice(-10)})});
+    const d=await r.json();lEl.remove();
+    const reply=d.error?`Erro: ${d.error.message}`:d.content[0].text;
+    addMsg(msgsId,'assistant',reply);
+    if(!d.error)claudeHistory.push({role:'assistant',content:reply});
+  }catch{lEl.remove();addMsg(msgsId,'assistant','Erro de conexão.');}
+  isLoading=false;
+}
+
+function addMsg(containerId,type,text){
+  const c=document.getElementById(containerId);if(!c)return null;
+  const el=document.createElement('div');el.className=`msg ${type}`;el.textContent=text;
+  c.appendChild(el);c.scrollTop=c.scrollHeight;return el;
+}
+
+function sendQuick(msg,ctx='desktop'){
+  const id=ctx==='mobile'?'claudeInputMobile':'claudeInputDesktop';
+  const el=document.getElementById(id);if(el){el.value=msg;sendClaude(ctx);}
+}
+
+function clearChat(ctx){
+  const msgsId=ctx==='mobile'?'claudeMobileMsgs':'claudeMsgsDesktop';
+  const qaId=ctx==='mobile'?'mobileQuickActions':'desktopQuickActions';
+  claudeHistory=[];
+  const c=document.getElementById(msgsId);if(c)c.innerHTML='<div class="msg assistant">Conversa reiniciada. Como posso ajudar?</div>';
+  const qa=document.getElementById(qaId);if(qa)qa.style.display='flex';
+}
+
+function handleClaudeKey(e,ctx){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendClaude(ctx);}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,90)+'px';}
+function openClaudeDrawer_ai(){openClaudeDrawer();}
+
+// ─── METRICS ─────────────────────────────────────────────
 function setMetricPeriod(p,btn){metricPeriod=p;document.querySelectorAll('.m-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMetrics();}
-function checkOverdue(){const today=new Date().toISOString().split('T')[0],n=tasks.filter(t=>!t.done&&t.date&&t.date<today).length;if(n>0)showNotif(`${n} tarefa${n>1?'s':''} atrasada${n>1?'s':''}!`);}
+
+// ─── UTILS ───────────────────────────────────────────────
+function checkOverdue(){if(!currentUser)return;const today=new Date().toISOString().split('T')[0],n=tasks.filter(t=>!t.done&&t.date&&t.date<today).length;if(n>0)showNotif(`${n} tarefa${n>1?'s':''} atrasada${n>1?'s':''}!`);}
 function showNotif(msg){const el=document.getElementById('notif');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3500);}
 function showModal(id){document.getElementById(id).classList.remove('hidden');}
 function closeModal(id){document.getElementById(id).classList.add('hidden');}
 
-function setDashTab(tab){window._dashTab=tab;applyDashTab(tab);}
-function applyDashTab(tab){
-  ["day","week","month"].forEach(t=>{
-    const el=document.getElementById("dash-"+t);
-    const btn=document.getElementById("dtab-"+t);
-    if(el) el.style.display=t===tab?"block":"none";
-    if(btn) btn.classList.toggle("active",t===tab);
-  });
-}
+// SQL needed in Supabase:
+// alter table areas    add column if not exists user_email text not null default '';
+// alter table areas    add column if not exists archived boolean default false;
+// alter table projects add column if not exists user_email text not null default '';
+// alter table tasks    add column if not exists user_email text not null default '';
+// create table if not exists users (email text primary key, name text, api_key text, created_at timestamptz default now());
+// alter table users enable row level security;
+// create policy "allow all" on users for all using (true) with check (true);
 
 init();
 </script>
