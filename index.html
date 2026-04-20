@@ -9,14 +9,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0f0f0f;--bg2:#161616;--bg3:#1e1e1e;--bg4:#252525;--bg5:#2c2c2c;
+  --bg:#0f0f0f;--bg2:#161616;--bg3:#1e1e1e;--bg4:#252525;
   --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
   --text:#f0ede8;--text2:#9e9b96;--text3:#5a5753;--text4:#3a3836;
   --accent:#e8c547;--accent2:#d4b23a;--accent-bg:rgba(232,197,71,0.1);
   --danger:#f87171;--danger-bg:rgba(248,113,113,0.1);
   --success:#4ade80;--success-bg:rgba(74,222,128,0.1);
   --info:#60a5fa;--info-bg:rgba(96,165,250,0.1);
-  --warning:#fb923c;--warning-bg:rgba(251,146,60,0.1);
+  --warning:#fb923c;
   --r:10px;--rl:14px;--rxl:18px;
   --top-h:52px;--bottom-nav-h:62px;
 }
@@ -28,8 +28,8 @@ input,button,select,textarea{font-family:'DM Sans',sans-serif;}
 a{color:var(--accent);}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 @keyframes loadbar{0%{width:0;margin-left:0}50%{width:80px}100%{width:0;margin-left:120px}}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
 /* LOADING */
 .loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:500;flex-direction:column;gap:12px;}
@@ -52,72 +52,71 @@ a{color:var(--accent);}
 .sync-dot.syncing{background:var(--accent);animation:pulse 1s infinite;}
 .topbtn{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
 .topbtn:hover{color:var(--text);background:var(--bg3);}
-.topbtn.gcal{border-color:rgba(96,165,250,.4);color:var(--info);background:var(--info-bg);}
-.topbtn.gcal.connected{border-color:rgba(74,222,128,.4);color:var(--success);background:var(--success-bg);}
 .topbtn.ai{border-color:rgba(232,197,71,.3);color:var(--accent);background:var(--accent-bg);}
+.topbtn.notif-btn{border-color:rgba(74,222,128,.3);color:var(--success);background:var(--success-bg);}
+.topbtn.notif-btn.off{border-color:var(--border2);color:var(--text3);background:transparent;}
 .user-badge{display:flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;border:1px solid var(--border);cursor:pointer;background:transparent;color:var(--text2);font-size:11px;transition:all .15s;}
 .user-badge:hover{background:var(--bg3);}
 .user-avatar{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;}
 
 /* MAIN */
-.main-body{flex:1;display:flex;overflow:hidden;position:relative;}
+.main-body{flex:1;display:flex;overflow:hidden;}
 
 /* SIDEBAR LEFT */
 .sidebar-left{width:240px;border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;flex-shrink:0;background:var(--bg);}
-.sb-header{padding:14px 14px 6px;display:flex;align-items:center;justify-content:space-between;}
+.sb-hdr{padding:14px 14px 6px;display:flex;align-items:center;justify-content:space-between;}
 .sb-title{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;}
 .sb-add{background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;line-height:1;padding:0 2px;border-radius:4px;transition:color .12s;}
 .sb-add:hover{color:var(--accent);}
+.sb-sec{padding:0 10px 8px;}
 .area-node{margin-bottom:2px;}
-.area-row{display:flex;align-items:center;gap:6px;padding:6px 8px 6px 14px;border-radius:var(--r);cursor:pointer;transition:background .12s;}
-.area-row:hover{background:var(--bg3);}.area-row.active{background:var(--bg3);}
-.area-chevron{width:14px;height:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .2s;margin-left:-8px;}
-.area-chevron.open{transform:rotate(90deg);}
-.area-chevron svg{width:10px;height:10px;color:var(--text3);}
+.area-row{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:var(--r);cursor:pointer;transition:background .12s;}
+.area-row:hover,.area-row.active{background:var(--bg3);}
+.chevron{width:14px;height:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .2s;}
+.chevron.open{transform:rotate(90deg);}
+.chevron svg{width:10px;height:10px;color:var(--text3);}
 .area-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .area-name{flex:1;font-size:13px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .area-count{font-size:10px;color:var(--text3);background:var(--bg4);padding:1px 5px;border-radius:10px;flex-shrink:0;}
-.area-menu-btn{background:none;border:none;color:transparent;cursor:pointer;font-size:16px;line-height:1;padding:0 2px;transition:color .12s;flex-shrink:0;}
-.area-row:hover .area-menu-btn{color:var(--text3);}.area-menu-btn:hover{color:var(--text2)!important;}
-.proj-children{padding-left:22px;display:none;}.proj-children.open{display:block;}
+.area-menu-btn{background:none;border:none;color:transparent;cursor:pointer;font-size:16px;line-height:1;padding:0 2px;flex-shrink:0;}
+.area-row:hover .area-menu-btn{color:var(--text3);}
+.area-menu-btn:hover{color:var(--text2)!important;}
+.proj-children{padding-left:20px;display:none;}.proj-children.open{display:block;}
 .proj-row{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:8px;cursor:pointer;transition:background .12s;}
-.proj-row:hover{background:var(--bg3);}.proj-row.active{background:var(--bg3);}
+.proj-row:hover,.proj-row.active{background:var(--bg3);}
 .proj-icon{font-size:11px;flex-shrink:0;}
 .proj-name{flex:1;font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .proj-count{font-size:10px;color:var(--text3);}
 .proj-del{background:none;border:none;color:transparent;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0;}
-.proj-row:hover .proj-del{color:var(--text3);}.proj-del:hover{color:var(--danger)!important;}
+.proj-row:hover .proj-del{color:var(--text3);}
+.proj-del:hover{color:var(--danger)!important;}
 .proj-add{display:flex;align-items:center;gap:5px;padding:4px 8px;border-radius:7px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;transition:color .12s;width:100%;}
 .proj-add:hover{color:var(--accent);}
-.gcal-ev{padding:5px 8px;border-radius:7px;border-left:2px solid var(--info);background:var(--info-bg);margin-bottom:3px;}
-.gcal-ev-title{font-size:11px;color:var(--text2);}
-.gcal-ev-time{font-size:10px;color:var(--text3);margin-top:1px;}
 
 /* CENTER */
 .center{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
-.context-bar{padding:12px 16px 10px;border-bottom:1px solid var(--border);flex-shrink:0;}
-.ctx-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.ctx-bar{padding:12px 16px 10px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.ctx-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
 .ctx-left{flex:1;min-width:0;}
-.ctx-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ctx-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .ctx-sub{font-size:12px;color:var(--text3);margin-top:2px;}
 .ctx-actions{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;}
 .act-btn{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:20px;font-size:12px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
 .act-btn:hover{color:var(--text);background:var(--bg4);}
 .act-btn.primary{background:var(--accent);color:#0f0f0f;border-color:var(--accent);}
 .act-btn.primary:hover{background:var(--accent2);}
-.act-btn.mic{border-color:rgba(248,113,113,.4);color:var(--danger);background:var(--danger-bg);}
-.act-btn.mic.recording{animation:pulse .6s infinite;}
 
 /* TASK LIST */
 .task-list{flex:1;overflow-y:auto;padding:10px 16px 80px;display:flex;flex-direction:column;gap:5px;}
-.tl-section{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;padding:8px 0 5px;display:flex;align-items:center;gap:6px;}
-.tl-section span{flex-shrink:0;}.tl-hr{flex:1;height:1px;background:var(--border);}
-.task-card{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border-radius:var(--rl);background:var(--bg2);border:1px solid var(--border);transition:all .15s;position:relative;animation:fadeIn .2s ease;}
+.tl-sec{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;padding:8px 0 5px;display:flex;align-items:center;gap:6px;}
+.tl-sec span{flex-shrink:0;}.tl-hr{flex:1;height:1px;background:var(--border);}
+
+/* TASK CARD */
+.task-card{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border-radius:var(--rl);background:var(--bg2);border:1px solid var(--border);transition:all .15s;position:relative;cursor:pointer;animation:fadeIn .2s ease;}
 .task-card:hover{border-color:var(--border2);background:var(--bg3);}
 .task-card.urgent{border-left:3px solid var(--danger);}
 .task-card.done{opacity:.38;}
 .task-card.blocked{opacity:.55;border-style:dashed;}
-.task-card.gcal-card{border-left:2px solid var(--info);}
 .task-card.income{border-left:3px solid var(--success);}
 .task-card.expense{border-left:3px solid var(--danger);}
 .t-check{width:17px;height:17px;border-radius:5px;border:1.5px solid var(--border2);flex-shrink:0;margin-top:2px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;}
@@ -129,39 +128,59 @@ a{color:var(--accent);}
 .t-body{flex:1;min-width:0;}
 .t-title{font-size:13px;color:var(--text);line-height:1.4;word-break:break-word;}
 .task-card.done .t-title{text-decoration:line-through;color:var(--text3);}
+.task-card.blocked .t-title{color:var(--text3);}
 .t-meta{display:flex;gap:5px;align-items:center;margin-top:5px;flex-wrap:wrap;}
 .t-tag{padding:2px 7px;border-radius:10px;font-size:11px;}
 .t-time{font-size:11px;color:var(--text3);}
 .t-time.overdue{color:var(--danger);}
-.t-amount{font-size:13px;font-weight:500;}
-.t-amount.income{color:var(--success);}
-.t-amount.expense{color:var(--danger);}
-.t-recur{font-size:10px;color:var(--info);padding:2px 6px;border-radius:8px;background:var(--info-bg);}
 .t-dep{display:flex;align-items:center;gap:3px;font-size:11px;color:var(--text3);padding:2px 7px;border-radius:10px;background:var(--bg4);}
 .t-dep.blocking{color:var(--warning);}
-.gcal-badge{font-size:10px;padding:1px 6px;border-radius:8px;background:var(--info-bg);color:var(--info);}
+.t-recur{font-size:10px;color:var(--info);padding:2px 6px;border-radius:8px;background:var(--info-bg);}
+.t-notes-preview{font-size:11px;color:var(--text3);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;}
 .t-actions{display:flex;flex-direction:column;gap:3px;align-items:flex-end;flex-shrink:0;}
 .t-del{background:none;border:none;color:transparent;cursor:pointer;font-size:18px;line-height:1;padding:0 2px;}
-.task-card:hover .t-del{color:var(--text3);}.t-del:hover{color:var(--danger)!important;}
-.t-dep-btn{background:none;border:1px solid var(--border);color:var(--text3);cursor:pointer;font-size:10px;border-radius:6px;padding:2px 6px;transition:all .12s;white-space:nowrap;}
-.t-dep-btn:hover{border-color:var(--border2);color:var(--text2);}
+.task-card:hover .t-del{color:var(--text3);}
+.t-del:hover{color:var(--danger)!important;}
+.t-edit{background:none;border:none;color:transparent;cursor:pointer;font-size:13px;line-height:1;padding:2px 4px;border-radius:5px;}
+.task-card:hover .t-edit{color:var(--text3);}
+.t-edit:hover{color:var(--accent)!important;}
 .dep-order-badge{position:absolute;top:8px;right:8px;width:17px;height:17px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);font-size:10px;font-weight:600;color:var(--text3);display:flex;align-items:center;justify-content:center;}
 .empty-state{text-align:center;padding:48px 20px;color:var(--text3);font-size:13px;line-height:1.8;}
 .empty-state strong{color:var(--text2);display:block;margin-bottom:6px;font-size:15px;}
 
+/* TASK DETAIL PANEL */
+.task-detail{position:fixed;top:0;right:0;bottom:0;width:min(480px,100vw);background:var(--bg);border-left:1px solid var(--border2);z-index:50;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s ease;box-shadow:-8px 0 32px rgba(0,0,0,.4);}
+.task-detail.open{transform:translateX(0);}
+.td-header{padding:16px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px;flex-shrink:0;}
+.td-title-input{flex:1;background:transparent;border:none;color:var(--text);font-family:'Syne',sans-serif;font-size:17px;font-weight:700;outline:none;resize:none;min-height:28px;line-height:1.4;padding:0;}
+.td-title-input::placeholder{color:var(--text4);}
+.td-close{background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer;line-height:1;flex-shrink:0;padding:2px;}
+.td-close:hover{color:var(--text);}
+.td-meta-bar{padding:10px 18px;border-bottom:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+.td-meta-item{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);cursor:pointer;font-size:12px;color:var(--text2);transition:all .15s;}
+.td-meta-item:hover{border-color:var(--border2);color:var(--text);}
+.td-meta-item select,.td-meta-item input{background:transparent;border:none;color:inherit;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;max-width:120px;}
+.td-notes{flex:1;overflow-y:auto;padding:16px 18px;}
+.td-notes-area{width:100%;min-height:200px;background:transparent;border:none;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;line-height:1.7;outline:none;resize:none;}
+.td-notes-area::placeholder{color:var(--text4);}
+.td-footer{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;}
+.td-save-btn{flex:1;padding:9px;border-radius:var(--r);border:none;background:var(--accent);color:#0f0f0f;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s;}
+.td-save-btn:hover{background:var(--accent2);}
+.td-delete-btn{padding:9px 16px;border-radius:var(--r);border:1px solid rgba(248,113,113,.3);background:var(--danger-bg);color:var(--danger);font-size:13px;cursor:pointer;transition:all .15s;}
+.td-delete-btn:hover{background:rgba(248,113,113,.2);}
+.td-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:49;display:none;}
+.td-overlay.open{display:block;}
+
 /* KANBAN */
 .kanban-board{flex:1;overflow-x:auto;overflow-y:hidden;display:flex;gap:12px;padding:14px 16px 80px;align-items:flex-start;}
 .kanban-col{min-width:240px;max-width:260px;background:var(--bg2);border-radius:var(--rl);border:1px solid var(--border);display:flex;flex-direction:column;max-height:100%;}
-.kanban-col-header{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;}
+.kanban-col-hdr{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;}
 .kanban-col-title{font-size:12px;font-weight:500;color:var(--text);}
-.kanban-col-count{font-size:11px;color:var(--text3);background:var(--bg4);padding:1px 7px;border-radius:10px;}
-.kanban-col-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;line-height:1;}
-.kanban-col-del:hover{color:var(--danger);}
+.kanban-col-cnt{font-size:11px;color:var(--text3);background:var(--bg4);padding:1px 7px;border-radius:10px;}
 .kanban-col-body{overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:5px;flex:1;}
-.kanban-card{padding:10px 12px;border-radius:var(--r);background:var(--bg3);border:1px solid var(--border);cursor:grab;transition:all .15s;animation:fadeIn .2s ease;}
+.kanban-card{padding:10px 12px;border-radius:var(--r);background:var(--bg3);border:1px solid var(--border);cursor:pointer;transition:all .15s;animation:fadeIn .2s ease;}
 .kanban-card:hover{border-color:var(--border2);}
-.kanban-card.dragging{opacity:.5;cursor:grabbing;}
-.kanban-card.drag-over{border-color:var(--accent);}
+.kanban-card.dragging{opacity:.5;}
 .kanban-card-title{font-size:13px;color:var(--text);line-height:1.4;margin-bottom:6px;}
 .kanban-card-meta{display:flex;gap:5px;flex-wrap:wrap;align-items:center;}
 .kanban-add{padding:8px 12px;border-radius:var(--r);background:transparent;border:1px dashed var(--border2);color:var(--text3);cursor:pointer;font-size:12px;text-align:left;width:100%;transition:all .15s;margin-top:4px;}
@@ -174,11 +193,9 @@ a{color:var(--accent);}
 .fin-header{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 16px;flex-shrink:0;}
 .fin-stat{background:var(--bg3);border-radius:var(--r);padding:12px;border:1px solid var(--border);}
 .fin-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
-.fin-value{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;}
-.fin-value.income{color:var(--success);}
-.fin-value.expense{color:var(--danger);}
-.fin-value.balance.positive{color:var(--success);}
-.fin-value.balance.negative{color:var(--danger);}
+.fin-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;}
+.fin-val.inc{color:var(--success);}.fin-val.exp{color:var(--danger);}
+.fin-val.pos{color:var(--success);}.fin-val.neg{color:var(--danger);}
 
 /* DASHBOARD */
 .dash-tabs{display:flex;gap:4px;margin-bottom:16px;}
@@ -194,25 +211,9 @@ a{color:var(--accent);}
 .mini-bar{height:3px;background:var(--bg4);border-radius:2px;margin-top:6px;overflow:hidden;}
 .mini-bar-fill{height:100%;border-radius:2px;background:var(--accent);transition:width .5s;}
 .overdue-block{background:var(--danger-bg);border:1px solid rgba(248,113,113,.3);border-radius:var(--rl);padding:14px 16px;margin-bottom:16px;}
-.area-breakdown{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;}
+.area-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;}
 .area-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:14px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;}
 .area-card:hover{border-color:var(--border2);transform:translateY(-1px);}
-
-/* AGENDA */
-.agenda-view{flex:1;overflow-y:auto;padding:10px 16px 80px;}
-.agenda-day{margin-bottom:20px;}
-.agenda-day-header{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--text);padding:8px 0 10px;display:flex;align-items:center;gap:8px;}
-.agenda-day-header.today{color:var(--accent);}
-.agenda-day-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);flex-shrink:0;}
-.agenda-day-dot.today{background:var(--accent);}
-.agenda-event{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:var(--r);background:var(--bg2);border:1px solid var(--border);margin-bottom:5px;}
-.agenda-event.gcal{border-left:3px solid var(--info);}
-.agenda-event.task{border-left:3px solid var(--accent);}
-.agenda-event.urgent{border-left:3px solid var(--danger);}
-.agenda-event-time{font-size:11px;color:var(--text3);min-width:42px;flex-shrink:0;margin-top:2px;}
-.agenda-event-body{flex:1;}
-.agenda-event-title{font-size:13px;color:var(--text);}
-.agenda-event-sub{font-size:11px;color:var(--text3);margin-top:2px;}
 
 /* SIDEBAR RIGHT */
 .sidebar-right{width:270px;border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;background:var(--bg);}
@@ -254,29 +255,16 @@ a{color:var(--accent);}
 .bn-item.active{color:var(--accent);}
 .bn-item svg{width:20px;height:20px;}
 .bn-item span{font-size:9px;white-space:nowrap;}
-.bn-item.add-btn{background:var(--accent);border-radius:50%;width:40px;height:40px;flex:none;padding:0;color:#0f0f0f;margin:0 4px;}
-.bn-item.add-btn svg{width:22px;height:22px;}
 
 /* DRAWERS */
 .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:none;}
 .drawer-overlay.open{display:block;}
 .drawer{position:fixed;left:0;top:0;bottom:0;width:280px;background:var(--bg);z-index:41;transform:translateX(-100%);transition:transform .25s ease;overflow-y:auto;display:flex;flex-direction:column;}
 .drawer.open{transform:translateX(0);}
-.drawer-header{padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.drawer-hdr{padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
 .drawer-close{background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer;}
 .claude-drawer{position:fixed;right:0;top:0;bottom:0;width:min(340px,100vw);background:var(--bg);z-index:41;transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column;border-left:1px solid var(--border);}
 .claude-drawer.open{transform:translateX(0);}
-
-/* VOICE */
-.voice-btn{width:36px;height:36px;border-radius:50%;border:none;background:var(--danger-bg);color:var(--danger);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;border:1px solid rgba(248,113,113,.3);}
-.voice-btn:hover{background:rgba(248,113,113,.2);}
-.voice-btn.recording{background:var(--danger);color:#fff;animation:pulse .6s infinite;}
-.voice-wave{display:flex;gap:2px;align-items:center;height:20px;}
-.voice-wave span{width:3px;background:var(--danger);border-radius:2px;animation:wave .8s ease-in-out infinite;}
-.voice-wave span:nth-child(2){animation-delay:.1s;}
-.voice-wave span:nth-child(3){animation-delay:.2s;}
-.voice-wave span:nth-child(4){animation-delay:.3s;}
-@keyframes wave{0%,100%{height:4px}50%{height:16px}}
 
 /* MODALS */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px;}
@@ -284,7 +272,7 @@ a{color:var(--accent);}
 .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rxl);padding:24px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;}
 .modal h2{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px;}
 .m-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:16px;}
-.m-label-text{font-size:11px;color:var(--text3);margin-bottom:6px;display:block;}
+.m-lbl{font-size:11px;color:var(--text3);margin-bottom:6px;display:block;}
 .m-input,.m-select{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:var(--r);padding:9px 12px;font-size:13px;outline:none;margin-bottom:12px;transition:border .15s;}
 .m-input:focus,.m-select:focus{border-color:rgba(232,197,71,.4);}
 .m-input::placeholder{color:var(--text3);}
@@ -306,14 +294,12 @@ a{color:var(--accent);}
 .dep-item.selected .dep-check{background:var(--accent);border-color:var(--accent);}
 .proj-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
 .proj-type-card{padding:12px 8px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg3);cursor:pointer;text-align:center;transition:all .15s;}
-.proj-type-card:hover{border-color:var(--border2);background:var(--bg4);}
 .proj-type-card.selected{border-color:var(--accent);background:var(--accent-bg);}
 .proj-type-icon{font-size:22px;margin-bottom:6px;}
 .proj-type-name{font-size:12px;font-weight:500;color:var(--text);}
 .proj-type-sub{font-size:10px;color:var(--text3);margin-top:2px;}
 .recur-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;}
 .recur-opt{padding:7px 4px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);cursor:pointer;text-align:center;font-size:11px;color:var(--text2);transition:all .15s;}
-.recur-opt:hover{border-color:var(--border2);color:var(--text);}
 .recur-opt.selected{border-color:var(--accent);background:var(--accent-bg);color:var(--accent);}
 .weekday-grid{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;}
 .wd-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;font-size:11px;transition:all .15s;}
@@ -327,23 +313,31 @@ a{color:var(--accent);}
 .ctx-divider{height:1px;background:var(--border);margin:4px 0;}
 .notif{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 18px;border-radius:20px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;max-width:calc(100vw - 32px);text-align:center;}
 .notif.show{opacity:1;}
-.gcal-step{display:flex;gap:10px;margin-bottom:12px;}
-.gcal-sn{width:22px;height:22px;border-radius:50%;background:var(--accent-bg);color:var(--accent);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
-.gcal-st{font-size:12px;color:var(--text2);line-height:1.6;}
-.gcal-st code{background:var(--bg4);padding:1px 5px;border-radius:4px;font-size:11px;color:var(--text);}
+
+/* NOTIFICATION BANNER */
+.push-banner{position:fixed;top:60px;right:16px;background:var(--bg3);border:1px solid var(--accent);border-radius:var(--rl);padding:14px 16px;z-index:250;max-width:320px;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:slideUp .3s ease;display:none;}
+.push-banner.show{display:block;}
+.push-banner-title{font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px;}
+.push-banner-msg{font-size:13px;color:var(--text);margin-bottom:10px;line-height:1.4;}
+.push-banner-actions{display:flex;gap:8px;}
+.push-banner-btn{padding:5px 12px;border-radius:8px;border:none;font-size:12px;cursor:pointer;}
+.push-banner-btn.primary{background:var(--accent);color:#0f0f0f;}
+.push-banner-btn.sec{background:var(--bg4);color:var(--text2);}
+.push-banner-close{position:absolute;top:10px;right:12px;background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;line-height:1;}
 
 /* RESPONSIVE */
 @media(max-width:768px){
   :root{--top-h:48px;}
-  .sidebar-left{display:none;}.sidebar-right{display:none;}
+  .sidebar-left,.sidebar-right{display:none;}
   .bottom-nav{display:flex;}
   .notif{bottom:72px;}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
-  .area-breakdown{grid-template-columns:1fr 1fr;}
+  .area-grid{grid-template-columns:1fr 1fr;}
   .fin-header{grid-template-columns:1fr 1fr 1fr;}
-  .topbtn.gcal{display:none;}.topbtn.ai{display:none;}
-  .date-chip-desktop{display:none;}
+  .topbtn.ai{display:none;}
+  .date-chip-d{display:none;}
   .ctx-title{font-size:16px;}
+  .task-detail{width:100vw;border-left:none;}
 }
 @media(min-width:769px){
   .bottom-nav{display:none!important;}
@@ -356,22 +350,24 @@ a{color:var(--accent);}
 </style>
 </head>
 <body>
+
 <div class="loading-screen" id="loadingScreen">
   <div class="loading-logo">Foco</div>
   <div class="loading-sub" id="loadingSub">Carregando...</div>
   <div class="loading-bar"><div class="loading-fill"></div></div>
 </div>
+
 <div class="app">
   <div class="topbar">
-    <button id="mobileMenuBtn" onclick="toggleDrawer()" style="display:none;background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;line-height:1;padding:0 2px;">☰</button>
+    <button id="mobileMenuBtn" onclick="toggleDrawer()" style="display:none;background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;line-height:1;">☰</button>
     <span class="logo">Foco</span>
     <div class="topbar-center"><div id="breadcrumb" style="display:flex;align-items:center;gap:6px;overflow:hidden;"></div></div>
     <div class="topbar-right">
-      <span class="date-chip-desktop" id="topDate" style="font-size:11px;color:var(--text3);white-space:nowrap;"></span>
+      <span class="date-chip-d" id="topDate" style="font-size:11px;color:var(--text3);white-space:nowrap;"></span>
       <span class="sync-dot" id="syncDot"></span>
-      <button class="topbtn gcal" id="gcalBtn" onclick="openGcalModal()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 16H5V9h14v10zM5 7V5h14v2H5z"/></svg>
-        <span id="gcalBtnLbl">Agenda</span>
+      <button class="topbtn notif-btn off" id="notifBtn" onclick="toggleNotifications()" title="Ativar alertas de tarefas">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+        <span id="notifBtnLabel">Alertas</span>
       </button>
       <button class="topbtn ai" onclick="openClaudeDrawer()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
@@ -383,10 +379,11 @@ a{color:var(--accent);}
       </button>
     </div>
   </div>
+
   <div class="main-body">
-    <div class="sidebar-left" id="sidebarLeft"><div id="sidebarContent"></div></div>
+    <div class="sidebar-left"><div id="sidebarContent"></div></div>
     <div class="center">
-      <div class="context-bar" id="contextBar"></div>
+      <div class="ctx-bar" id="ctxBar"></div>
       <div id="centerContent" style="flex:1;overflow:hidden;display:flex;flex-direction:column;"></div>
     </div>
     <div class="sidebar-right">
@@ -406,25 +403,23 @@ a{color:var(--accent);}
           <div class="claude-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm-1-5h2v2h-2zm0-8h2v6h-2z"/></svg></div>
           <span class="claude-lbl">Claude</span>
           <button onclick="clearChat('desktop')" style="margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;padding:2px 6px;border-radius:6px;">limpar</button>
-          <button class="voice-btn" id="voiceBtnDesktop" onclick="toggleVoice('desktop')" title="Criar tarefa por voz">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V5a4 4 0 0 1 4-4zm0 2a2 2 0 0 0-2 2v6a2 2 0 0 0 4 0V5a2 2 0 0 0-2-2zm-6 8a6 6 0 0 0 12 0h2a8 8 0 0 1-7 7.93V21h2v2H9v-2h2v-2.07A8 8 0 0 1 4 11h2z"/></svg>
-          </button>
         </div>
         <div class="claude-msgs" id="claudeMsgsDesktop">
-          <div class="msg assistant">Olá! Posso criar tarefas por voz, gerar rotinas, sugerir priorização e criar posts. Como posso ajudar?</div>
+          <div class="msg assistant">Olá! Posso gerar rotinas, sugerir priorização e criar conteúdo. Como posso ajudar?</div>
         </div>
         <div class="quick-actions" id="desktopQA">
           <button class="qa" onclick="sendQuick('Gere minha rotina de amanhã com base nas tarefas pendentes','desktop')">Gerar rotina →</button>
-          <button class="qa" onclick="sendQuick('Quais tarefas devo priorizar hoje?','desktop')">Priorizar →</button>
-          <button class="qa" onclick="sendQuick('Crie um post LinkedIn sobre CS e atendimento','desktop')">Post de CS →</button>
+          <button class="qa" onclick="sendQuick('Quais tarefas devo priorizar hoje e por quê?','desktop')">Priorizar →</button>
+          <button class="qa" onclick="sendQuick('Crie um post LinkedIn sobre CS e atendimento ao cliente','desktop')">Post de CS →</button>
         </div>
         <div class="claude-input-area">
-          <textarea class="claude-input" id="claudeInputDesktop" placeholder="Pergunte algo ou descreva uma tarefa..." rows="1" onkeydown="handleClaudeKey(event,'desktop')" oninput="autoResize(this)"></textarea>
+          <textarea class="claude-input" id="claudeInputDesktop" placeholder="Pergunte algo..." rows="1" onkeydown="handleClaudeKey(event,'desktop')" oninput="autoResize(this)"></textarea>
           <button class="claude-send" onclick="sendClaude('desktop')"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
         </div>
       </div>
     </div>
   </div>
+
   <div class="bottom-nav">
     <button class="bn-item active" id="bn-home" onclick="mobileNav('home')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12L12 3l9 9M5 10v10h5v-5h4v5h5V10"/></svg><span>Início</span>
@@ -432,11 +427,11 @@ a{color:var(--accent);}
     <button class="bn-item" id="bn-areas" onclick="mobileNav('areas')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="7" height="9" rx="1"/><rect x="15" y="3" width="7" height="5" rx="1"/><rect x="15" y="12" width="7" height="9" rx="1"/><rect x="2" y="16" width="7" height="5" rx="1"/></svg><span>Áreas</span>
     </button>
-    <button class="bn-item" id="bn-agenda" onclick="mobileNav('agenda')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>Agenda</span>
+    <button class="bn-item" id="bn-add" onclick="openTaskModal(lastAreaId,'')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>Nova</span>
     </button>
-    <button class="bn-item" id="bn-voice" onclick="toggleVoice('mobile')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V5a4 4 0 0 1 4-4z"/><path d="M19 11a7 7 0 0 1-14 0M12 19v4M8 23h8"/></svg><span>Voz</span>
+    <button class="bn-item" id="bn-notif" onclick="toggleNotifications()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg><span>Alertas</span>
     </button>
     <button class="bn-item" id="bn-claude" onclick="openClaudeDrawer()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Claude</span>
@@ -444,10 +439,39 @@ a{color:var(--accent);}
   </div>
 </div>
 
+<!-- TASK DETAIL PANEL -->
+<div class="td-overlay" id="tdOverlay" onclick="closeTaskDetail()"></div>
+<div class="task-detail" id="taskDetail">
+  <div class="td-header">
+    <textarea class="td-title-input" id="tdTitle" placeholder="Título da tarefa..." rows="1" oninput="autoResize(this)"></textarea>
+    <button class="td-close" onclick="closeTaskDetail()">×</button>
+  </div>
+  <div class="td-meta-bar" id="tdMetaBar"></div>
+  <div class="td-notes">
+    <div style="font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;font-weight:600;">Notas</div>
+    <textarea class="td-notes-area" id="tdNotes" placeholder="Escreva notas, detalhes, links, checklists...&#10;&#10;Dica: use - para listas e [ ] para checklists"></textarea>
+  </div>
+  <div class="td-footer">
+    <button class="td-save-btn" onclick="saveTaskDetail()">Salvar alterações</button>
+    <button class="td-delete-btn" onclick="deleteFromDetail()">Excluir</button>
+  </div>
+</div>
+
+<!-- PUSH BANNER -->
+<div class="push-banner" id="pushBanner">
+  <button class="push-banner-close" onclick="closePushBanner()">×</button>
+  <div class="push-banner-title">⏰ Tarefa vencendo agora</div>
+  <div class="push-banner-msg" id="pushBannerMsg"></div>
+  <div class="push-banner-actions">
+    <button class="push-banner-btn primary" onclick="openTaskFromBanner()">Ver tarefa</button>
+    <button class="push-banner-btn sec" onclick="closePushBanner()">Dispensar</button>
+  </div>
+</div>
+
 <!-- DRAWERS -->
 <div class="drawer-overlay" id="drawerOverlay" onclick="closeAllDrawers()"></div>
 <div class="drawer" id="mobileDrawer">
-  <div class="drawer-header"><span class="logo">Foco</span><button class="drawer-close" onclick="toggleDrawer()">×</button></div>
+  <div class="drawer-hdr"><span class="logo">Foco</span><button class="drawer-close" onclick="toggleDrawer()">×</button></div>
   <div id="drawerSidebarContent" style="flex:1;overflow-y:auto;padding:8px;"></div>
 </div>
 <div class="claude-drawer" id="claudeDrawer">
@@ -456,20 +480,17 @@ a{color:var(--accent);}
       <div class="claude-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm-1-5h2v2h-2zm0-8h2v6h-2z"/></svg></div>
       <span style="font-size:12px;font-weight:500;color:var(--accent);">Claude</span>
     </div>
-    <div style="display:flex;gap:6px;align-items:center;">
-      <button class="voice-btn" id="voiceBtnMobile" onclick="toggleVoice('mobile')" title="Criar tarefa por voz"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V5a4 4 0 0 1 4-4zm0 2a2 2 0 0 0-2 2v6a2 2 0 0 0 4 0V5a2 2 0 0 0-2-2zm-6 8a6 6 0 0 0 12 0h2a8 8 0 0 1-7 7.93V21h2v2H9v-2h2v-2.07A8 8 0 0 1 4 11h2z"/></svg></button>
-      <button onclick="closeAllDrawers()" style="background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer;line-height:1;">×</button>
-    </div>
+    <button onclick="closeAllDrawers()" style="background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer;line-height:1;">×</button>
   </div>
   <div class="claude-msgs" id="claudeMsgsMobile" style="flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:7px;">
-    <div class="msg assistant">Olá! Posso criar tarefas por voz, gerar rotinas e responder dúvidas. Como posso ajudar?</div>
+    <div class="msg assistant">Olá! Como posso ajudar?</div>
   </div>
   <div class="quick-actions" id="mobileQA">
     <button class="qa" onclick="sendQuick('Gere minha rotina de amanhã','mobile')">Gerar rotina →</button>
     <button class="qa" onclick="sendQuick('Quais tarefas priorizar hoje?','mobile')">Priorizar →</button>
   </div>
   <div class="claude-input-area">
-    <textarea class="claude-input" id="claudeInputMobile" placeholder="Descreva uma tarefa ou pergunte algo..." rows="1" onkeydown="handleClaudeKey(event,'mobile')" oninput="autoResize(this)"></textarea>
+    <textarea class="claude-input" id="claudeInputMobile" placeholder="Pergunte algo..." rows="1" onkeydown="handleClaudeKey(event,'mobile')" oninput="autoResize(this)"></textarea>
     <button class="claude-send" onclick="sendClaude('mobile')"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
   </div>
 </div>
@@ -481,7 +502,7 @@ a{color:var(--accent);}
 <div class="overlay hidden" id="loginModal">
   <div class="modal">
     <h2>Bem-vindo ao Foco</h2>
-    <p class="m-desc">Digite seu e-mail para entrar ou criar sua conta. Seus dados ficam separados dos outros usuários.</p>
+    <p class="m-desc">Digite seu e-mail para entrar ou criar sua conta.</p>
     <input type="email" class="m-input" id="loginEmailInput" placeholder="voce@email.com" onkeydown="if(event.key==='Enter')doLogin()"/>
     <button class="btn-primary" style="width:100%;flex:none;" onclick="doLogin()">Entrar / Criar conta</button>
   </div>
@@ -490,7 +511,7 @@ a{color:var(--accent);}
 <div class="overlay hidden" id="apiModal">
   <div class="modal">
     <h2>Configure o Claude</h2>
-    <p class="m-desc">Para usar o assistente, você precisa de uma chave de API da Anthropic.<br><br>1. Acesse <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>2. Crie conta → "API Keys" → crie uma chave<br>3. Cole abaixo</p>
+    <p class="m-desc">Para usar o assistente Claude, você precisa de uma chave de API da Anthropic.<br><br>1. Acesse <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>2. Crie conta → "API Keys" → crie uma chave<br>3. Cole abaixo</p>
     <input type="password" class="m-input" id="apiKeyInput" placeholder="sk-ant-..." style="margin-bottom:12px"/>
     <button class="btn-primary" style="width:100%;flex:none;margin-bottom:8px" onclick="saveApiKey()">Salvar e começar</button>
     <button onclick="closeModal('apiModal')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;width:100%;padding:6px;text-align:center;">Pular por agora</button>
@@ -502,7 +523,7 @@ a{color:var(--accent);}
     <h2 id="areaModalTitle">Nova área</h2>
     <p class="m-desc">Áreas organizam seus projetos e tarefas por contexto de vida.</p>
     <input type="text" class="m-input" id="areaNameInput" placeholder="Ex: Trabalho, Família, Estudos..."/>
-    <span class="m-label-text">Cor</span>
+    <span class="m-lbl">Cor</span>
     <div class="color-row" id="areaColorPicker"></div>
     <div class="m-actions">
       <button class="btn-cancel" onclick="closeModal('areaModal')">Cancelar</button>
@@ -516,9 +537,9 @@ a{color:var(--accent);}
     <h2>Novo projeto</h2>
     <p class="m-desc">Escolha o tipo de projeto para definir como ele vai funcionar.</p>
     <input type="text" class="m-input" id="projectNameInput" placeholder="Nome do projeto..."/>
-    <span class="m-label-text">Área</span>
+    <span class="m-lbl">Área</span>
     <select class="m-select" id="projectAreaSelect" style="margin-bottom:16px;"></select>
-    <span class="m-label-text">Tipo de projeto</span>
+    <span class="m-lbl">Tipo de projeto</span>
     <div class="proj-type-grid">
       <div class="proj-type-card selected" data-type="list" onclick="selectProjType(this,'list')">
         <div class="proj-type-icon">📋</div>
@@ -537,8 +558,8 @@ a{color:var(--accent);}
       </div>
     </div>
     <div id="kanbanColsConfig" style="display:none;">
-      <span class="m-label-text">Colunas do Kanban (uma por linha)</span>
-      <textarea class="m-input" id="kanbanColsInput" rows="4" style="resize:vertical;" placeholder="A fazer&#10;Em andamento&#10;Revisão&#10;Concluído">A fazer
+      <span class="m-lbl">Colunas do Kanban (uma por linha)</span>
+      <textarea class="m-input" id="kanbanColsInput" rows="4" style="resize:vertical;">A fazer
 Em andamento
 Concluído</textarea>
     </div>
@@ -554,10 +575,8 @@ Concluído</textarea>
     <h2>Nova tarefa</h2>
     <p class="m-desc" id="taskModalDesc"></p>
     <input type="text" class="m-input" id="taskTitleInput" placeholder="Descreva a tarefa..."/>
-
-    <!-- Financial fields -->
     <div id="financialFields" style="display:none;">
-      <span class="m-label-text">Tipo</span>
+      <span class="m-lbl">Tipo</span>
       <div class="m-row" style="margin-bottom:12px;">
         <select class="m-select" id="finTypeInput" style="margin-bottom:0;">
           <option value="income">Receita / Entrada</option>
@@ -567,25 +586,20 @@ Concluído</textarea>
         <input type="number" class="m-input" id="amountInput" placeholder="Valor R$" style="margin-bottom:0;" step="0.01" min="0"/>
       </div>
     </div>
-
-    <!-- Kanban column field -->
     <div id="kanbanFields" style="display:none;">
-      <span class="m-label-text">Coluna</span>
+      <span class="m-lbl">Coluna</span>
       <select class="m-select" id="kanbanColInput" style="margin-bottom:12px;"></select>
     </div>
-
     <div class="m-row">
-      <div style="flex:1;display:flex;flex-direction:column;"><span class="m-label-text">Prioridade</span>
+      <div style="flex:1;display:flex;flex-direction:column;"><span class="m-lbl">Prioridade</span>
         <select class="m-select" id="taskPriorityInput" style="margin-bottom:0;"><option value="normal">Normal</option><option value="urgent">Urgente</option></select></div>
-      <div style="flex:1;display:flex;flex-direction:column;"><span class="m-label-text">Data</span>
+      <div style="flex:1;display:flex;flex-direction:column;"><span class="m-lbl">Data</span>
         <input type="date" class="m-input" id="taskDateInput" style="margin-bottom:0;"/></div>
-      <div style="flex:1;display:flex;flex-direction:column;"><span class="m-label-text">Horário</span>
+      <div style="flex:1;display:flex;flex-direction:column;"><span class="m-lbl">Horário</span>
         <input type="time" class="m-input" id="taskTimeInput" style="margin-bottom:0;"/></div>
     </div>
-
-    <!-- Recurrence -->
     <div style="margin-top:12px;">
-      <span class="m-label-text">Recorrência</span>
+      <span class="m-lbl">Recorrência</span>
       <div class="recur-grid">
         <div class="recur-opt selected" data-recur="none" onclick="selectRecur(this,'none')">Sem repetição</div>
         <div class="recur-opt" data-recur="daily" onclick="selectRecur(this,'daily')">Diária</div>
@@ -593,7 +607,7 @@ Concluído</textarea>
         <div class="recur-opt" data-recur="monthly" onclick="selectRecur(this,'monthly')">Mensal</div>
       </div>
       <div id="weekdayConfig" style="display:none;margin-bottom:12px;">
-        <span class="m-label-text">Dias da semana</span>
+        <span class="m-lbl">Dias da semana</span>
         <div class="weekday-grid">
           <button class="wd-btn" data-d="1" onclick="toggleWD(this)">S</button>
           <button class="wd-btn" data-d="2" onclick="toggleWD(this)">T</button>
@@ -606,16 +620,15 @@ Concluído</textarea>
       </div>
       <div id="recurEndConfig" style="display:none;">
         <div class="m-row">
-          <div style="flex:1;display:flex;flex-direction:column;"><span class="m-label-text">Termina em</span>
-            <input type="date" class="m-input" id="recurEndDate" style="margin-bottom:0;" placeholder="Sem fim"/></div>
-          <div style="flex:1;display:flex;flex-direction:column;"><span class="m-label-text">Ou após N vezes</span>
+          <div style="flex:1;display:flex;flex-direction:column;"><span class="m-lbl">Termina em</span>
+            <input type="date" class="m-input" id="recurEndDate" style="margin-bottom:0;"/></div>
+          <div style="flex:1;display:flex;flex-direction:column;"><span class="m-lbl">Ou após N vezes</span>
             <input type="number" class="m-input" id="recurCount" placeholder="Ex: 12" min="1" style="margin-bottom:0;"/></div>
         </div>
       </div>
     </div>
-
-    <div id="depSection" style="margin-top:12px;">
-      <span class="m-label-text">Depende de (opcional):</span>
+    <div style="margin-top:12px;">
+      <span class="m-lbl">Depende de (opcional):</span>
       <div class="dep-list" id="depList"></div>
     </div>
     <div class="m-actions" style="margin-top:12px;">
@@ -635,10 +648,6 @@ Concluído</textarea>
       <button class="btn-primary" onclick="saveDependency()">Salvar</button>
     </div>
   </div>
-</div>
-
-<div class="overlay hidden" id="gcalModal">
-  <div class="modal"><h2 id="gcalModalTitle">Google Agenda</h2><div id="gcalModalBody"></div></div>
 </div>
 
 <div class="notif" id="notif"></div>
@@ -676,11 +685,8 @@ const COLORS=['#4ecdc4','#a78bfa','#fb923c','#f472b6','#60a5fa','#4ade80','#facc
 const PROJ_ICONS={list:'📋',kanban:'🗂️',financial:'💰'};
 
 // ─── STATE ───────────────────────────────────────────────
-let CU=null; // currentUser
+let CU=null;
 let areas=[],projects=[],tasks=[];
-let gcalToken=localStorage.getItem('foco_gcal_token')||'';
-let gcalEvents=JSON.parse(localStorage.getItem('foco_gcal_events')||'[]');
-let gcalClientId=localStorage.getItem('foco_gcal_client_id')||'';
 let nav={type:'home'};
 let metricPeriod='day';
 let selColor=COLORS[0];
@@ -694,16 +700,16 @@ let pollTimer=null;
 let projType='list';
 let recurType='none';
 let recurWDs=[];
-let isRecording=false;
-let mediaRecorder=null;
-let audioChunks=[];
-let mobileView='home';
+let lastAreaId='';
+let notificationsEnabled=localStorage.getItem('foco_notif')==='true';
+let alertedTaskIds=new Set();
+let currentDetailTaskId=null;
+let bannerTaskId=null;
 
 // ─── INIT ────────────────────────────────────────────────
 async function init(){
   updateDate();
   setupResponsive();
-  if(location.hash.includes('access_token'))handleOAuthCallback();
   const saved=localStorage.getItem('foco_user_email');
   if(saved){
     document.getElementById('loadingSub').textContent='Restaurando sessão...';
@@ -713,6 +719,9 @@ async function init(){
     showModal('loginModal');
   }
   startPolling();
+  updateNotifBtn();
+  if(notificationsEnabled)requestNotifPermission();
+  startAlertChecker();
 }
 
 function setupResponsive(){
@@ -737,15 +746,10 @@ async function doLogin(){
 async function loginUser(email){
   try{
     let user=null;
-    try{
-      const res=await sb.q('users',`email=eq.${email}`);
-      if(Array.isArray(res)&&res.length>0)user=res[0];
-    }catch{}
+    try{const res=await sb.q('users',`email=eq.${email}`);if(Array.isArray(res)&&res.length>0)user=res[0];}catch{}
     if(!user){
-      try{
-        const ins=await sb.ins('users',{email,name:email.split('@')[0],api_key:''});
-        user=Array.isArray(ins)&&ins.length>0?ins[0]:{email,name:email.split('@')[0],api_key:''};
-      }catch{user={email,name:email.split('@')[0],api_key:''};}
+      try{const ins=await sb.ins('users',{email,name:email.split('@')[0],api_key:''});user=Array.isArray(ins)&&ins.length>0?ins[0]:{email,name:email.split('@')[0],api_key:''};}
+      catch{user={email,name:email.split('@')[0],api_key:''};}
     }
     if(!user.api_key)user.api_key=localStorage.getItem('foco_api_key')||'';
     CU=user;
@@ -754,10 +758,8 @@ async function loginUser(email){
     await loadData();
     document.getElementById('loadingScreen').classList.add('hidden');
     if(!CU.api_key)showModal('apiModal');
-    render();
-    checkOverdue();
+    render();checkOverdue();
   }catch(e){
-    console.error('loginUser error:',e);
     CU={email,name:email.split('@')[0],api_key:localStorage.getItem('foco_api_key')||''};
     localStorage.setItem('foco_user_email',email);
     updateUserBadge();
@@ -780,7 +782,6 @@ function openUserMenu(){
     {label:CU.email,disabled:true},
     {divider:true},
     {label:'Configurar Claude (API Key)',action:()=>showModal('apiModal')},
-    {label:'Conectar Google Agenda',action:()=>openGcalModal()},
     {divider:true},
     {label:'Sair',danger:true,action:logout}
   ]);
@@ -789,7 +790,7 @@ function openUserMenu(){
 function logout(){
   CU=null;localStorage.removeItem('foco_user_email');
   areas=[];projects=[];tasks=[];nav={type:'home'};
-  render();showModal('loginModal');showNotif('Saiu da conta');
+  render();showModal('loginModal');
 }
 
 async function loadData(){
@@ -812,6 +813,7 @@ function normalizeTask(t){
   if(typeof t.deps==='string')try{t.deps=JSON.parse(t.deps);}catch{t.deps=[];}
   if(!t.recurrence)t.recurrence=null;
   if(typeof t.recurrence==='string')try{t.recurrence=JSON.parse(t.recurrence);}catch{t.recurrence=null;}
+  if(!t.notes)t.notes='';
   return t;
 }
 
@@ -826,21 +828,112 @@ function startPolling(){
       const na=Array.isArray(a)?a.filter(x=>!x.archived):[];
       const np=Array.isArray(p)?p:[];
       const nt=Array.isArray(t)?t.map(normalizeTask):[];
-      let changed=JSON.stringify(na)!==JSON.stringify(areas)||JSON.stringify(np)!==JSON.stringify(projects)||JSON.stringify(nt)!==JSON.stringify(tasks);
-      if(changed){areas=na;projects=np;tasks=nt;render();}
+      if(JSON.stringify(na)!==JSON.stringify(areas)||JSON.stringify(np)!==JSON.stringify(projects)||JSON.stringify(nt)!==JSON.stringify(tasks)){
+        areas=na;projects=np;tasks=nt;render();
+      }
     }catch{}
   },10000);
 }
 
+// ─── PUSH NOTIFICATIONS ──────────────────────────────────
+function updateNotifBtn(){
+  const btn=document.getElementById('notifBtn');
+  const lbl=document.getElementById('notifBtnLabel');
+  if(notificationsEnabled){
+    btn.classList.remove('off');
+    if(lbl)lbl.textContent='Alertas on';
+  } else {
+    btn.classList.add('off');
+    if(lbl)lbl.textContent='Alertas';
+  }
+}
+
+async function toggleNotifications(){
+  if(!notificationsEnabled){
+    const granted=await requestNotifPermission();
+    if(granted){
+      notificationsEnabled=true;
+      localStorage.setItem('foco_notif','true');
+      updateNotifBtn();
+      showNotif('Alertas ativados! Você será avisado quando uma tarefa vencer.');
+    }
+  } else {
+    notificationsEnabled=false;
+    localStorage.setItem('foco_notif','false');
+    updateNotifBtn();
+    showNotif('Alertas desativados');
+  }
+}
+
+async function requestNotifPermission(){
+  if(!('Notification' in window)){showNotif('Este navegador não suporta notificações');return false;}
+  if(Notification.permission==='granted')return true;
+  const perm=await Notification.requestPermission();
+  return perm==='granted';
+}
+
+function startAlertChecker(){
+  // Check every 30 seconds
+  setInterval(checkTaskAlerts,30000);
+  checkTaskAlerts();
+}
+
+function checkTaskAlerts(){
+  if(!CU||!tasks.length)return;
+  const now=new Date();
+  const nowStr=`${now.toISOString().split('T')[0]}T${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  tasks.forEach(t=>{
+    if(t.done||!t.date||!t.time)return;
+    const taskDateTime=`${t.date}T${t.time}`;
+    // Check if task is due in the next minute
+    const taskDate=new Date(`${t.date}T${t.time}`);
+    const diffMs=taskDate-now;
+    const diffMin=Math.floor(diffMs/60000);
+    if(diffMin<=1&&diffMin>=-5&&!alertedTaskIds.has(t.id)){
+      alertedTaskIds.add(t.id);
+      fireAlert(t);
+    }
+  });
+}
+
+function fireAlert(task){
+  const area=areas.find(a=>a.id===task.area_id);
+  const msg=`${task.title}${area?' · '+area.name:''}${task.time?' às '+task.time:''}`;
+  // Try native push notification first
+  if(notificationsEnabled&&Notification.permission==='granted'){
+    try{
+      const n=new Notification('⏰ Foco — Tarefa vencendo!',{
+        body:msg,
+        icon:'/favicon.ico',
+        badge:'/favicon.ico',
+        tag:'foco-task-'+task.id,
+        requireInteraction:true
+      });
+      n.onclick=()=>{window.focus();openTaskDetail(task.id);n.close();};
+    }catch{}
+  }
+  // Always show in-app banner
+  showPushBanner(msg,task.id);
+}
+
+function showPushBanner(msg,taskId){
+  bannerTaskId=taskId;
+  document.getElementById('pushBannerMsg').textContent=msg;
+  document.getElementById('pushBanner').classList.add('show');
+  setTimeout(()=>closePushBanner(),15000);
+}
+
+function closePushBanner(){document.getElementById('pushBanner').classList.remove('show');}
+function openTaskFromBanner(){closePushBanner();if(bannerTaskId)openTaskDetail(bannerTaskId);}
+
 // ─── RENDER ──────────────────────────────────────────────
 function render(){
-  renderSidebar();renderBreadcrumb();renderCenter();renderMetrics();updateGcalBtn();
+  renderSidebar();renderBreadcrumb();renderCenter();renderMetrics();
 }
 
 function renderBreadcrumb(){
   let h=`<span class="bc-item ${nav.type==='home'?'active':''}" onclick="goHome()">Início</span>`;
-  if(nav.type==='agenda')h+=`<span class="bc-sep">›</span><span class="bc-item active" style="color:var(--info)">Agenda</span>`;
-  if(nav.type!=='home'&&nav.type!=='agenda'){
+  if(nav.type!=='home'){
     const a=areas.find(x=>x.id===nav.areaId);
     if(a)h+=`<span class="bc-sep">›</span><span class="bc-item ${nav.type==='area'?'active':''}" onclick="goArea('${a.id}')" style="color:${a.color}">${a.name}</span>`;
   }
@@ -860,22 +953,17 @@ function buildSidebarHTML(){
     <span style="font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;">Minhas áreas</span>
     <button style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;line-height:1;" onclick="openAreaModal()">+</button>
   </div><div style="padding:0 10px 8px;">`;
-  h+=`<button style="display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:var(--r);background:transparent;border:none;color:${nav.type==='home'?'var(--text)':'var(--text2)'};cursor:pointer;width:100%;text-align:left;font-size:13px;${nav.type==='home'?'background:var(--bg3);':''}" onclick="goHome()">
+  h+=`<button style="display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:var(--r);${nav.type==='home'?'background:var(--bg3);':''}background-color:${nav.type==='home'?'var(--bg3)':'transparent'};border:none;color:${nav.type==='home'?'var(--text)':'var(--text2)'};cursor:pointer;width:100%;text-align:left;font-size:13px;" onclick="goHome()">
     <span style="width:8px;height:8px;border-radius:50%;background:var(--text3);display:inline-block;"></span>
     <span style="flex:1;">Todas as tarefas</span>
     <span style="font-size:10px;color:var(--text3);background:var(--bg4);padding:1px 5px;border-radius:10px;">${tasks.filter(t=>!t.done).length}</span>
-  </button>
-  <button style="display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:var(--r);background:transparent;border:none;color:${nav.type==='agenda'?'var(--info)':'var(--text2)'};cursor:pointer;width:100%;text-align:left;font-size:13px;${nav.type==='agenda'?'background:var(--bg3);':''}" onclick="goAgenda()">
-    <span style="font-size:12px;">📅</span>
-    <span style="flex:1;">Agenda</span>
-    ${gcalToken?`<span style="width:6px;height:6px;border-radius:50%;background:var(--success);"></span>`:''}
   </button>`;
   areas.forEach(a=>{
     const aP=projects.filter(p=>p.area_id===a.id);
     const cnt=tasks.filter(t=>t.area_id===a.id&&!t.done).length;
     const isOpen=nav.areaId===a.id;
-    h+=`<div class="area-node"><div class="area-row ${nav.areaId===a.id&&nav.type!=='home'&&nav.type!=='agenda'?'active':''}" onclick="goArea('${a.id}')">
-      <span class="area-chevron ${isOpen?'open':''}"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 2l4 3-4 3"/></svg></span>
+    h+=`<div class="area-node"><div class="area-row ${nav.areaId===a.id&&nav.type!=='home'?'active':''}" onclick="goArea('${a.id}')">
+      <span class="chevron ${isOpen?'open':''}"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 2l4 3-4 3"/></svg></span>
       <span class="area-dot" style="background:${a.color}"></span>
       <span class="area-name">${a.name}</span>
       <span class="area-count">${cnt}</span>
@@ -895,63 +983,46 @@ function buildSidebarHTML(){
     </div></div>`;
   });
   if(!areas.length&&CU)h+=`<div style="padding:16px 8px;font-size:12px;color:var(--text3);text-align:center;line-height:1.7;">Nenhuma área.<br><span style="color:var(--accent);cursor:pointer;" onclick="openAreaModal()">Criar primeira área →</span></div>`;
-  // GCal events sidebar
-  if(gcalToken){
-    const today=new Date().toISOString().split('T')[0];
-    const todayEvs=gcalEvents.filter(e=>e.date===today);
-    if(todayEvs.length){
-      h+=`<div style="padding:10px 8px 4px;"><div style="font-size:10px;font-weight:600;color:var(--info);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Agenda hoje</div>`;
-      todayEvs.forEach(e=>{h+=`<div class="gcal-ev"><div class="gcal-ev-title">${e.title}</div><div class="gcal-ev-time">${e.time||'Dia todo'}</div></div>`;});
-      h+='</div>';
-    }
-  }
   h+='</div>';
   return h;
 }
 
 // ─── CENTER ──────────────────────────────────────────────
 function renderCenter(){
-  const bar=document.getElementById('contextBar');
+  const bar=document.getElementById('ctxBar');
   const content=document.getElementById('centerContent');
-
   if(nav.type==='home'){renderDashboard(bar,content);return;}
-  if(nav.type==='agenda'){renderAgenda(bar,content);return;}
-
-  content.style.overflow='hidden';
-  content.style.display='flex';
-  content.style.flexDirection='column';
-
+  content.style.overflow='hidden';content.style.display='flex';content.style.flexDirection='column';
   if(nav.type==='area'){
     const area=areas.find(a=>a.id===nav.areaId);
     if(!area){goHome();return;}
+    lastAreaId=area.id;
     const aP=projects.filter(p=>p.area_id===nav.areaId);
     const pnd=tasks.filter(t=>t.area_id===nav.areaId&&!t.done).length;
-    bar.innerHTML=`<div class="ctx-header">
+    bar.innerHTML=`<div class="ctx-hdr">
       <div class="ctx-left"><div class="ctx-title">${area.name}</div><div class="ctx-sub">${aP.length} projeto${aP.length!==1?'s':''} · ${pnd} pendente${pnd!==1?'s':''}</div></div>
       <div class="ctx-actions">
         <button class="act-btn" onclick="openProjectModalFor('${area.id}')">+ Projeto</button>
         <button class="act-btn primary" onclick="openTaskModal('${area.id}','')">+ Tarefa</button>
-        <button class="act-btn mic" onclick="toggleVoice('desktop')" id="micBtnArea" title="Criar tarefa por voz">🎙</button>
       </div>
     </div>`;
     let h='<div class="task-list">';
     if(!aP.length){h+=`<div class="empty-state"><strong>Nenhum projeto ainda</strong>Clique em "+ Projeto" para criar o primeiro</div>`;}
     else{aP.forEach(p=>{const pT=tasks.filter(t=>t.project_id===p.id),pP=pT.filter(t=>!t.done).length;
-      h+=`<div class="tl-section"><span style="cursor:pointer;color:${area.color}" onclick="goProject('${area.id}','${p.id}')">${PROJ_ICONS[p.type||'list']} ${p.name}</span><span class="tl-hr"></span><span>${pP} pendente${pP!==1?'s':''}</span></div>`;
+      h+=`<div class="tl-sec"><span style="cursor:pointer;color:${area.color}" onclick="goProject('${area.id}','${p.id}')">${PROJ_ICONS[p.type||'list']} ${p.name}</span><span class="tl-hr"></span><span>${pP} pendente${pP!==1?'s':''}</span></div>`;
       pT.slice(0,3).forEach(t=>{h+=taskCardHTML(t);});
       if(pT.length>3)h+=`<div style="padding:4px 12px;font-size:11px;color:var(--text3);cursor:pointer;" onclick="goProject('${area.id}','${p.id}')">+ ${pT.length-3} mais →</div>`;
     });}
     h+='</div>';content.innerHTML=h;return;
   }
-
   if(nav.type==='project'){
     const area=areas.find(a=>a.id===nav.areaId);
     const proj=projects.find(p=>p.id===nav.projectId);
     if(!proj){goArea(nav.areaId);return;}
+    lastAreaId=nav.areaId;
     const pT=tasks.filter(t=>t.project_id===nav.projectId);
     const pType=proj.type||'list';
-
-    bar.innerHTML=`<div class="ctx-header">
+    bar.innerHTML=`<div class="ctx-hdr">
       <div class="ctx-left"><div class="ctx-title">${PROJ_ICONS[pType]} ${proj.name}</div>
         <div class="ctx-sub" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
           <span style="color:${area?.color};font-size:11px;">● ${area?.name}</span>
@@ -960,30 +1031,25 @@ function renderCenter(){
       </div>
       <div class="ctx-actions">
         <button class="act-btn primary" onclick="openTaskModal('${nav.areaId}','${nav.projectId}')">+ Tarefa</button>
-        <button class="act-btn mic" onclick="toggleVoice('desktop')" title="Criar tarefa por voz">🎙</button>
-        ${pType==='kanban'?`<button class="act-btn" onclick="addKanbanCol('${proj.id}')">+ Coluna</button>`:''}
+        ${pType==='kanban'?`<button class="act-btn" onclick="focusKanbanNewCol()">+ Coluna</button>`:''}
       </div>
     </div>`;
-
-    if(pType==='kanban'){renderKanban(proj,pT,content);}
-    else if(pType==='financial'){renderFinancial(proj,pT,bar,content);}
-    else{renderTaskList(proj,pT,content);}
+    if(pType==='kanban')renderKanban(proj,pT,content);
+    else if(pType==='financial')renderFinancial(proj,pT,content);
+    else renderTaskList(pT,content);
   }
 }
 
-function renderTaskList(proj,pT,content){
+function renderTaskList(pT,content){
   const ordered=orderByDeps(pT);
   const urgent=ordered.filter(t=>t.priority==='urgent'&&!t.done);
   const normal=ordered.filter(t=>t.priority!=='urgent'&&!t.done);
   const done=ordered.filter(t=>t.done);
-  const today=new Date().toISOString().split('T')[0];
-  const todayGcal=gcalToken?gcalEvents.filter(e=>e.date===today):[];
   let h='<div class="task-list">';
-  if(todayGcal.length){h+=`<div class="tl-section"><span style="color:var(--info)">Google Agenda</span><span class="tl-hr"></span></div>`;todayGcal.forEach(e=>{h+=gcalCardHTML(e);});}
-  if(urgent.length){h+=`<div class="tl-section"><span>Urgente</span><span class="tl-hr"></span></div>`;urgent.forEach(t=>{h+=taskCardHTML(t);});}
-  if(normal.length){h+=`<div class="tl-section"><span>Pendente</span><span class="tl-hr"></span></div>`;normal.forEach(t=>{h+=taskCardHTML(t);});}
-  if(done.length){h+=`<div class="tl-section"><span>Concluído</span><span class="tl-hr"></span></div>`;done.forEach(t=>{h+=taskCardHTML(t);});}
-  if(!ordered.length&&!todayGcal.length)h+=`<div class="empty-state"><strong>Projeto sem tarefas</strong>Clique em "+ Tarefa" para começar</div>`;
+  if(urgent.length){h+=`<div class="tl-sec"><span>Urgente</span><span class="tl-hr"></span></div>`;urgent.forEach(t=>{h+=taskCardHTML(t);});}
+  if(normal.length){h+=`<div class="tl-sec"><span>Pendente</span><span class="tl-hr"></span></div>`;normal.forEach(t=>{h+=taskCardHTML(t);});}
+  if(done.length){h+=`<div class="tl-sec"><span>Concluído</span><span class="tl-hr"></span></div>`;done.forEach(t=>{h+=taskCardHTML(t);});}
+  if(!ordered.length)h+=`<div class="empty-state"><strong>Projeto sem tarefas</strong>Clique em "+ Tarefa" para começar</div>`;
   h+='</div>';content.innerHTML=h;
 }
 
@@ -992,179 +1058,201 @@ function renderKanban(proj,pT,content){
   const cols=Array.isArray(proj.kanban_columns)?proj.kanban_columns:['A fazer','Em andamento','Concluído'];
   let h='<div class="kanban-board">';
   cols.forEach((col,ci)=>{
-    const colTasks=pT.filter(t=>t.kanban_column===col||(ci===0&&(!t.kanban_column||t.kanban_column==='')));
-    h+=`<div class="kanban-col" ondragover="event.preventDefault()" ondrop="dropKanban(event,'${proj.id}','${col}')">
-      <div class="kanban-col-header">
-        <span class="kanban-col-title">${col}</span>
-        <span class="kanban-col-count">${colTasks.length}</span>
-      </div>
+    const colT=pT.filter(t=>t.kanban_column===col||(ci===0&&(!t.kanban_column||t.kanban_column==='')));
+    h+=`<div class="kanban-col" ondragover="event.preventDefault()" ondrop="dropKanban(event,'${proj.id}','${col.replace(/'/g,"\\'")}')">
+      <div class="kanban-col-hdr"><span class="kanban-col-title">${col}</span><span class="kanban-col-cnt">${colT.length}</span></div>
       <div class="kanban-col-body">
-        ${colTasks.map(t=>`<div class="kanban-card" draggable="true" ondragstart="dragKanban(event,${t.id})" id="kc-${t.id}">
+        ${colT.map(t=>`<div class="kanban-card" draggable="true" ondragstart="dragKanban(event,${t.id})" onclick="openTaskDetail(${t.id})">
           <div class="kanban-card-title">${t.title}</div>
           <div class="kanban-card-meta">
-            ${t.priority==='urgent'?`<span class="t-tag" style="background:var(--danger-bg);color:var(--danger);">Urgente</span>`:''}
-            ${t.date?`<span class="t-time ${t.date<new Date().toISOString().split('T')[0]&&!t.done?'overdue':''}">${formatDate(t.date)}</span>`:''}
-            ${t.done?`<span class="t-tag" style="background:var(--success-bg);color:var(--success);">✓ Feito</span>`:''}
-            <button style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:0 2px;margin-left:auto;" onclick="toggleTask(${t.id})">✓</button>
-            <button style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:0 2px;" onclick="deleteTask(${t.id})">×</button>
+            ${t.priority==='urgent'?`<span class="t-tag" style="background:var(--danger-bg);color:var(--danger);font-size:10px;">Urgente</span>`:''}
+            ${t.date?`<span class="t-time ${t.date<new Date().toISOString().split('T')[0]&&!t.done?'overdue':''};font-size:10px;">${formatDate(t.date)}</span>`:''}
+            ${t.done?`<span class="t-tag" style="background:var(--success-bg);color:var(--success);font-size:10px;">✓</span>`:''}
+            ${t.notes?`<span style="font-size:10px;color:var(--text3);">📝</span>`:''}
           </div>
         </div>`).join('')}
-        <button class="kanban-add" onclick="openTaskModal('${nav.areaId}','${proj.id}','${col}')">+ Adicionar tarefa</button>
+        <button class="kanban-add" onclick="openTaskModal('${nav.areaId}','${proj.id}','${col.replace(/'/g,"\\'")}')">+ Adicionar tarefa</button>
       </div>
     </div>`;
   });
-  h+=`<div class="kanban-new-col">
+  h+=`<div class="kanban-new-col" id="kanbanNewColPanel">
     <input type="text" id="newColInput" placeholder="Nome da coluna..." onkeydown="if(event.key==='Enter')addKanbanColFromInput('${proj.id}')"/>
     <button class="act-btn" onclick="addKanbanColFromInput('${proj.id}')">+ Adicionar coluna</button>
   </div>`;
-  h+='</div>';
-  content.innerHTML=h;
+  h+='</div>';content.innerHTML=h;
 }
 
+function renderFinancial(proj,pT,content){
+  const income=pT.filter(t=>t.financial_type==='income');
+  const expense=pT.filter(t=>t.financial_type==='expense'||t.financial_type==='other');
+  const totalInc=income.reduce((s,t)=>s+(parseFloat(t.amount)||0),0);
+  const totalExp=expense.reduce((s,t)=>s+(parseFloat(t.amount)||0),0);
+  const bal=totalInc-totalExp;
+  const fmtR=v=>'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2});
+  content.innerHTML=`<div class="fin-header">
+    <div class="fin-stat"><div class="fin-label">Receitas</div><div class="fin-val inc">${fmtR(totalInc)}</div></div>
+    <div class="fin-stat"><div class="fin-label">Despesas</div><div class="fin-val exp">${fmtR(totalExp)}</div></div>
+    <div class="fin-stat"><div class="fin-label">Saldo</div><div class="fin-val ${bal>=0?'pos':'neg'}">${fmtR(bal)}</div></div>
+  </div>
+  <div class="task-list" style="padding-top:0;">
+    ${income.length?`<div class="tl-sec"><span style="color:var(--success)">Receitas</span><span class="tl-hr"></span></div>${income.map(t=>finCardHTML(t)).join('')}`:''}
+    ${expense.filter(t=>!t.done).length?`<div class="tl-sec"><span style="color:var(--danger)">Contas a pagar</span><span class="tl-hr"></span></div>${expense.filter(t=>!t.done).map(t=>finCardHTML(t)).join('')}`:''}
+    ${expense.filter(t=>t.done).length?`<div class="tl-sec"><span>Pagas</span><span class="tl-hr"></span></div>${expense.filter(t=>t.done).map(t=>finCardHTML(t)).join('')}`:''}
+    ${!pT.length?`<div class="empty-state"><strong>Projeto financeiro vazio</strong>Adicione receitas e despesas clicando em "+ Tarefa"</div>`:''}
+  </div>`;
+}
+
+// ─── TASK DETAIL PANEL ───────────────────────────────────
+function openTaskDetail(id){
+  const t=tasks.find(x=>x.id==id);
+  if(!t)return;
+  currentDetailTaskId=id;
+  // Fill panel
+  const titleEl=document.getElementById('tdTitle');
+  titleEl.value=t.title||'';
+  autoResize(titleEl);
+  document.getElementById('tdNotes').value=t.notes||'';
+  // Meta bar
+  const area=areas.find(a=>a.id===t.area_id);
+  const proj=projects.find(p=>p.id===t.project_id);
+  document.getElementById('tdMetaBar').innerHTML=`
+    <div class="td-meta-item">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <input type="date" value="${t.date||''}" onchange="updateDetailField('date',this.value)" style="background:transparent;border:none;color:inherit;font-size:12px;outline:none;cursor:pointer;"/>
+    </div>
+    <div class="td-meta-item">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <input type="time" value="${t.time||''}" onchange="updateDetailField('time',this.value)" style="background:transparent;border:none;color:inherit;font-size:12px;outline:none;cursor:pointer;"/>
+    </div>
+    <div class="td-meta-item">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <select onchange="updateDetailField('priority',this.value)" style="background:transparent;border:none;color:inherit;font-size:12px;outline:none;cursor:pointer;">
+        <option value="normal" ${t.priority==='normal'?'selected':''}>Normal</option>
+        <option value="urgent" ${t.priority==='urgent'?'selected':''}>Urgente</option>
+      </select>
+    </div>
+    ${area?`<div class="td-meta-item" style="border-color:${area.color}44;background:${area.color}12;">
+      <span style="width:7px;height:7px;border-radius:50%;background:${area.color};display:inline-block;"></span>
+      <span style="color:${area.color}">${area.name}</span>
+    </div>`:''}
+    ${proj?`<div class="td-meta-item"><span>${PROJ_ICONS[proj.type||'list']}</span><span>${proj.name}</span></div>`:''}
+    ${t.recurrence?`<div class="td-meta-item" style="border-color:rgba(96,165,250,.3);background:var(--info-bg);color:var(--info);">↻ ${recurLabel(t.recurrence)}</div>`:''}
+  `;
+  // Open panel
+  document.getElementById('taskDetail').classList.add('open');
+  document.getElementById('tdOverlay').classList.add('open');
+}
+
+function updateDetailField(field,value){
+  const t=tasks.find(x=>x.id==currentDetailTaskId);
+  if(t){t[field]=value;}
+}
+
+async function saveTaskDetail(){
+  const t=tasks.find(x=>x.id==currentDetailTaskId);
+  if(!t)return;
+  const newTitle=document.getElementById('tdTitle').value.trim();
+  const newNotes=document.getElementById('tdNotes').value;
+  if(!newTitle){showNotif('O título não pode estar vazio');return;}
+  t.title=newTitle;t.notes=newNotes;
+  closeTaskDetail();render();
+  await sb.upd('tasks','id',currentDetailTaskId,{title:t.title,notes:t.notes,date:t.date,time:t.time,priority:t.priority,updated_at:new Date().toISOString()});
+  showNotif('Tarefa salva!');
+}
+
+async function deleteFromDetail(){
+  if(!confirm('Excluir esta tarefa permanentemente?'))return;
+  const id=currentDetailTaskId;
+  closeTaskDetail();
+  tasks=tasks.filter(t=>t.id!=id);render();
+  await sb.del('tasks','id',id);
+  showNotif('Tarefa excluída');
+}
+
+function closeTaskDetail(){
+  document.getElementById('taskDetail').classList.remove('open');
+  document.getElementById('tdOverlay').classList.remove('open');
+  currentDetailTaskId=null;
+}
+
+// ─── CARD HTML ───────────────────────────────────────────
+function taskCardHTML(t){
+  const area=areas.find(a=>a.id===t.area_id);
+  const today=new Date().toISOString().split('T')[0];
+  const isOverdue=t.date&&t.date<today&&!t.done;
+  const blocked=!t.done&&isBlocked(t);
+  const blocker=blocked?getBlocker(t):null;
+  const ord=depOrder(t);
+  return`<div class="task-card ${t.priority==='urgent'?'urgent':''} ${t.done?'done':''} ${blocked?'blocked':''}" onclick="openTaskDetail(${t.id})">
+    ${ord?`<div class="dep-order-badge">${ord}</div>`:''}
+    <div class="t-check ${t.done?'checked':''} ${blocked?'t-blocked':''}" onclick="event.stopPropagation();${blocked?`showNotif('Conclua primeiro: \\"${(blocker?.title||'').substring(0,20)}...\\"')`:`toggleTask(${t.id})`}"></div>
+    <div class="t-body">
+      <div class="t-title">${t.title}</div>
+      ${t.notes?`<div class="t-notes-preview">📝 ${t.notes.replace(/\n/g,' ').substring(0,60)}${t.notes.length>60?'…':''}</div>`:''}
+      <div class="t-meta">
+        ${area&&nav.type!=='project'?`<span class="t-tag" style="background:${area.color}18;color:${area.color}">${area.name}</span>`:''}
+        ${blocked&&blocker?`<span class="t-dep blocking">🔒 ${(blocker.title||'').substring(0,18)}…</span>`:''}
+        ${t.date?`<span class="t-time ${isOverdue?'overdue':''}">${isOverdue?'Atrasada — ':''}${formatDate(t.date)}${t.time?' às '+t.time:''}</span>`:''}
+        ${t.recurrence?`<span class="t-recur">↻ ${recurLabel(t.recurrence)}</span>`:''}
+      </div>
+    </div>
+    <div class="t-actions" onclick="event.stopPropagation()">
+      <button class="t-edit" onclick="openTaskDetail(${t.id})" title="Editar">✏️</button>
+      <button class="t-del" onclick="deleteTask(${t.id})" title="Excluir">×</button>
+    </div>
+  </div>`;
+}
+
+function finCardHTML(t){
+  const isInc=t.financial_type==='income';
+  const amt=parseFloat(t.amount)||0;
+  const today=new Date().toISOString().split('T')[0];
+  const isOverdue=t.date&&t.date<today&&!t.done&&!isInc;
+  return`<div class="task-card ${isInc?'income':'expense'} ${t.done?'done':''}" onclick="openTaskDetail(${t.id})">
+    <div class="t-check ${t.done?'checked':''}" onclick="event.stopPropagation();toggleTask(${t.id})"></div>
+    <div class="t-body">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+        <div class="t-title">${t.title}</div>
+        <div class="t-amount ${isInc?'income':'expense'}" style="font-size:13px;font-weight:500;color:${isInc?'var(--success)':'var(--danger)'};white-space:nowrap;">${isInc?'+':'-'} R$ ${amt.toLocaleString('pt-BR',{minimumFractionDigits:2})}</div>
+      </div>
+      ${t.notes?`<div class="t-notes-preview">📝 ${t.notes.substring(0,50)}${t.notes.length>50?'…':''}</div>`:''}
+      <div class="t-meta">
+        <span class="t-tag" style="background:${isInc?'var(--success-bg)':'var(--danger-bg)'};color:${isInc?'var(--success)':'var(--danger)'};">${isInc?'Receita':t.financial_type==='expense'?'Despesa':'Outro'}</span>
+        ${t.date?`<span class="t-time ${isOverdue?'overdue':''}">${isOverdue?'Vencida — ':''}${formatDate(t.date)}</span>`:''}
+      </div>
+    </div>
+    <div class="t-actions" onclick="event.stopPropagation()">
+      <button class="t-del" onclick="deleteTask(${t.id})">×</button>
+    </div>
+  </div>`;
+}
+
+function recurLabel(r){if(!r||r.type==='none')return'';const m={daily:'Diária',weekly:'Semanal',monthly:'Mensal'};return m[r.type]||r.type;}
+function formatDate(d){
+  const today=new Date().toISOString().split('T')[0],tom=new Date(Date.now()+86400000).toISOString().split('T')[0];
+  if(d===today)return'Hoje';if(d===tom)return'Amanhã';
+  const[y,m,day]=d.split('-');return`${day}/${m}`;
+}
+
+// ─── KANBAN DRAG ─────────────────────────────────────────
 let dragTaskId=null;
 function dragKanban(e,id){dragTaskId=id;e.dataTransfer.effectAllowed='move';}
 async function dropKanban(e,projId,col){
-  e.preventDefault();
-  if(!dragTaskId)return;
+  e.preventDefault();if(!dragTaskId)return;
   const t=tasks.find(x=>x.id==dragTaskId);
   if(t){t.kanban_column=col;render();}
   await sb.upd('tasks','id',dragTaskId,{kanban_column:col});
   dragTaskId=null;
 }
 async function addKanbanColFromInput(projId){
-  const inp=document.getElementById('newColInput');
-  if(!inp||!inp.value.trim())return;
+  const inp=document.getElementById('newColInput');if(!inp||!inp.value.trim())return;
   const col=inp.value.trim();
-  const proj=projects.find(p=>p.id===projId);
-  if(!proj)return;
-  const cols=Array.isArray(proj.kanban_columns)?[...proj.kanban_columns]:[...['A fazer','Em andamento','Concluído']];
+  const proj=projects.find(p=>p.id===projId);if(!proj)return;
+  const cols=Array.isArray(proj.kanban_columns)?[...proj.kanban_columns]:['A fazer','Em andamento','Concluído'];
   if(!cols.includes(col)){cols.push(col);proj.kanban_columns=cols;render();await sb.upd('projects','id',projId,{kanban_columns:JSON.stringify(cols)});}
   inp.value='';
 }
-function addKanbanCol(projId){const inp=document.getElementById('newColInput');if(inp)inp.focus();}
-
-function renderFinancial(proj,pT,bar,content){
-  const income=pT.filter(t=>t.financial_type==='income');
-  const expense=pT.filter(t=>t.financial_type==='expense'||t.financial_type==='other');
-  const totalIncome=income.reduce((s,t)=>s+(parseFloat(t.amount)||0),0);
-  const totalExpense=expense.reduce((s,t)=>s+(parseFloat(t.amount)||0),0);
-  const balance=totalIncome-totalExpense;
-  const fmtR=(v)=>'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2});
-  let h=`<div class="fin-header">
-    <div class="fin-stat"><div class="fin-label">Receitas</div><div class="fin-value income">${fmtR(totalIncome)}</div></div>
-    <div class="fin-stat"><div class="fin-label">Despesas</div><div class="fin-value expense">${fmtR(totalExpense)}</div></div>
-    <div class="fin-stat"><div class="fin-label">Saldo</div><div class="fin-value balance ${balance>=0?'positive':'negative'}">${fmtR(balance)}</div></div>
-  </div>
-  <div class="task-list" style="padding-top:0;">`;
-  const unpaidExp=expense.filter(t=>!t.done);
-  const paidExp=expense.filter(t=>t.done);
-  const incomeItems=income;
-  if(incomeItems.length){h+=`<div class="tl-section"><span style="color:var(--success)">Receitas / Entradas</span><span class="tl-hr"></span></div>`;incomeItems.forEach(t=>{h+=finCardHTML(t);});}
-  if(unpaidExp.length){h+=`<div class="tl-section"><span style="color:var(--danger)">Contas a pagar</span><span class="tl-hr"></span></div>`;unpaidExp.forEach(t=>{h+=finCardHTML(t);});}
-  if(paidExp.length){h+=`<div class="tl-section"><span>Contas pagas</span><span class="tl-hr"></span></div>`;paidExp.forEach(t=>{h+=finCardHTML(t);});}
-  if(!pT.length)h+=`<div class="empty-state"><strong>Projeto financeiro vazio</strong>Adicione receitas e despesas clicando em "+ Tarefa"</div>`;
-  h+='</div>';
-  content.innerHTML=h;
-}
-
-function finCardHTML(t){
-  const isIncome=t.financial_type==='income';
-  const amt=parseFloat(t.amount)||0;
-  const today=new Date().toISOString().split('T')[0];
-  const isOverdue=t.date&&t.date<today&&!t.done&&!isIncome;
-  return`<div class="task-card ${isIncome?'income':'expense'} ${t.done?'done':''}">
-    <div class="t-check ${t.done?'checked':''}" onclick="toggleTask(${t.id})"></div>
-    <div class="t-body">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
-        <div class="t-title">${t.title}</div>
-        <div class="t-amount ${isIncome?'income':'expense'}">${isIncome?'+':'-'} R$ ${amt.toLocaleString('pt-BR',{minimumFractionDigits:2})}</div>
-      </div>
-      <div class="t-meta">
-        <span class="t-tag" style="background:${isIncome?'var(--success-bg)':'var(--danger-bg)'};color:${isIncome?'var(--success)':'var(--danger)'};">${isIncome?'Receita':t.financial_type==='expense'?'Despesa':'Outro gasto'}</span>
-        ${t.date?`<span class="t-time ${isOverdue?'overdue':''}">${isOverdue?'Vencida — ':''}${formatDate(t.date)}</span>`:''}
-        ${t.recurrence?`<span class="t-recur">↻ ${recurLabel(t.recurrence)}</span>`:''}
-      </div>
-    </div>
-    <span class="t-del" onclick="deleteTask(${t.id})">×</span>
-  </div>`;
-}
-
-// ─── AGENDA VIEW ─────────────────────────────────────────
-function goAgenda(){nav={type:'agenda'};render();}
-
-function renderAgenda(bar,content){
-  bar.innerHTML=`<div class="ctx-header">
-    <div class="ctx-left"><div class="ctx-title">📅 Agenda</div><div class="ctx-sub">Suas tarefas e eventos dos próximos dias</div></div>
-    <div class="ctx-actions">
-      <button class="topbtn gcal ${gcalToken?'connected':''}" onclick="openGcalModal()" style="padding:6px 12px;font-size:12px;">
-        ${gcalToken?'✓ Google conectado':'Conectar Google Agenda'}
-      </button>
-    </div>
-  </div>`;
-
-  content.style.overflow='auto';
-  content.style.display='block';
-
-  const today=new Date();
-  const days=[];
-  for(let i=0;i<14;i++){
-    const d=new Date(today);d.setDate(today.getDate()+i);days.push(d);
-  }
-
-  const dayNames=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-  const monthNames=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-
-  let h='<div class="agenda-view">';
-  days.forEach(d=>{
-    const ds=d.toISOString().split('T')[0];
-    const isToday=ds===today.toISOString().split('T')[0];
-    const dayTasks=tasks.filter(t=>t.date===ds&&!t.done);
-    const dayGcal=gcalToken?gcalEvents.filter(e=>e.date===ds):[];
-    if(!dayTasks.length&&!dayGcal.length&&!isToday)return;
-
-    h+=`<div class="agenda-day">
-      <div class="agenda-day-header ${isToday?'today':''}">
-        <span class="agenda-day-dot ${isToday?'today':''}"></span>
-        ${isToday?'Hoje — ':''}${dayNames[d.getDay()]}, ${d.getDate()} de ${monthNames[d.getMonth()]}
-      </div>`;
-
-    // GCal events first
-    dayGcal.sort((a,b)=>(a.time||'00:00').localeCompare(b.time||'00:00')).forEach(e=>{
-      h+=`<div class="agenda-event gcal">
-        <div class="agenda-event-time">${e.time||'Dia todo'}</div>
-        <div class="agenda-event-body">
-          <div class="agenda-event-title">${e.title}</div>
-          <div class="agenda-event-sub" style="color:var(--info);">Google Agenda</div>
-        </div>
-      </div>`;
-    });
-
-    // Tasks
-    dayTasks.sort((a,b)=>(a.time||'23:59').localeCompare(b.time||'23:59')).forEach(t=>{
-      const area=areas.find(a=>a.id===t.area_id);
-      const proj=projects.find(p=>p.id===t.project_id);
-      h+=`<div class="agenda-event task ${t.priority==='urgent'?'urgent':''}">
-        <div class="agenda-event-time">${t.time||'—'}</div>
-        <div class="agenda-event-body">
-          <div class="agenda-event-title">${t.title}</div>
-          <div class="agenda-event-sub">
-            ${area?`<span style="color:${area.color}">${area.name}</span>`:''}
-            ${proj?` › ${proj.name}`:''}
-            ${t.priority==='urgent'?' · <span style="color:var(--danger);">Urgente</span>':''}
-          </div>
-        </div>
-        <div class="t-check ${t.done?'checked':''}" onclick="toggleTask(${t.id})" style="margin-top:4px;"></div>
-      </div>`;
-    });
-
-    if(!dayTasks.length&&!dayGcal.length&&isToday){
-      h+=`<div style="font-size:12px;color:var(--text3);padding:8px 0;">Nenhuma tarefa para hoje.</div>`;
-    }
-    h+='</div>';
-  });
-  h+='</div>';
-  content.innerHTML=h;
-}
+function focusKanbanNewCol(){const inp=document.getElementById('newColInput');if(inp){inp.scrollIntoView({behavior:'smooth'});inp.focus();}}
 
 // ─── DASHBOARD ───────────────────────────────────────────
 function renderDashboard(bar,content){
@@ -1182,60 +1270,55 @@ function renderDashboard(bar,content){
   const greet=n.getHours()<12?'Bom dia':n.getHours()<18?'Boa tarde':'Boa noite';
   const days=['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
   const months=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-
-  bar.innerHTML=`<div class="ctx-header">
+  bar.innerHTML=`<div class="ctx-hdr">
     <div class="ctx-left">
       <div class="ctx-title">${greet}${CU?', '+CU.name:''}!</div>
       <div class="ctx-sub">${days[n.getDay()]}, ${n.getDate()} de ${months[n.getMonth()]} · ${total} pendente${total!==1?'s':''}</div>
     </div>
     ${CU?`<div class="ctx-actions"><button class="act-btn primary" onclick="openAreaModal()">+ Área</button></div>`:''}
   </div>`;
-
   content.style.overflow='auto';content.style.display='block';content.style.flexDirection='';
-
   let h=`<div style="padding:14px 16px;display:flex;flex-direction:column;gap:16px;">
     <div class="dash-tabs">
       <button class="dash-tab ${_dashTab==='day'?'active':''}" onclick="_dashTab='day';renderCenter()">Hoje</button>
       <button class="dash-tab ${_dashTab==='week'?'active':''}" onclick="_dashTab='week';renderCenter()">Semana</button>
       <button class="dash-tab ${_dashTab==='month'?'active':''}" onclick="_dashTab='month';renderCenter()">Mês</button>
     </div>`;
-
   if(overdue.length){
     h+=`<div class="overdue-block">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--danger)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
         <span style="font-size:12px;font-weight:600;color:var(--danger);text-transform:uppercase;letter-spacing:.05em;">${overdue.length} tarefa${overdue.length!==1?'s':''} atrasada${overdue.length!==1?'s':''}</span>
       </div>
-      ${overdue.map(t=>{const a=areas.find(x=>x.id===t.area_id);return`<div class="task-card urgent" style="background:var(--bg3);margin-bottom:5px;">
-        <div class="t-check ${isBlocked(t)?'t-blocked':''}" onclick="${isBlocked(t)?`showNotif('Conclua as dependências primeiro!')`:`toggleTask(${t.id})`}"></div>
-        <div class="t-body"><div class="t-title">${t.title}</div>
-          <div class="t-meta">${a?`<span class="t-tag" style="background:${a.color}18;color:${a.color}">${a.name}</span>`:''}
-            <span class="t-time overdue">Atrasada desde ${formatDate(t.date)}</span></div>
-        </div><span class="t-del" onclick="deleteTask(${t.id})">×</span>
-      </div>`;}).join('')}
+      ${overdue.map(t=>{const a=areas.find(x=>x.id===t.area_id);
+        return`<div class="task-card urgent" style="background:var(--bg3);margin-bottom:5px;" onclick="openTaskDetail(${t.id})">
+          <div class="t-check ${isBlocked(t)?'t-blocked':''}" onclick="event.stopPropagation();${isBlocked(t)?`showNotif('Conclua dependências primeiro!')`:`toggleTask(${t.id})`}"></div>
+          <div class="t-body"><div class="t-title">${t.title}</div>
+            <div class="t-meta">${a?`<span class="t-tag" style="background:${a.color}18;color:${a.color}">${a.name}</span>`:''}
+              <span class="t-time overdue">Atrasada desde ${formatDate(t.date)}</span></div>
+          </div><span class="t-del" onclick="event.stopPropagation();deleteTask(${t.id})">×</span>
+        </div>`;}).join('')}
     </div>`;
   }
-
   // DAY
-  h+=`<div id="dash-day" ${_dashTab!=='day'?'style="display:none"':''}>
+  h+=`<div ${_dashTab!=='day'?'style="display:none"':''}>
     <div class="stats-grid">
       <div class="stat-card"><div class="stat-label">Para hoje</div><div class="stat-val">${todayT.length}</div></div>
       <div class="stat-card"><div class="stat-label">Concluídas</div><div class="stat-val success">${todayDone.length}</div></div>
       <div class="stat-card" style="${overdue.length?'background:var(--danger-bg);border-color:rgba(248,113,113,.3);':''}"><div class="stat-label">Atrasadas</div><div class="stat-val ${overdue.length?'danger':''}">${overdue.length}</div></div>
       <div class="stat-card"><div class="stat-label">Progresso</div><div class="stat-val accent">${pct}%</div><div class="mini-bar"><div class="mini-bar-fill" style="width:${pct}%"></div></div></div>
     </div>`;
-  const urgT=todayT.filter(t=>t.priority==='urgent'),normT=todayT.filter(t=>t.priority!=='urgent');
   if(!todayT.length&&!overdue.length)h+=`<div class="empty-state"><strong>Nenhuma tarefa para hoje</strong>Adicione datas às suas tarefas nos projetos</div>`;
   else{
-    if(urgT.length){h+=`<div class="tl-section"><span style="color:var(--danger)">Urgente — hoje</span><span class="tl-hr"></span></div>`;urgT.forEach(t=>{h+=taskCardHTML(t);});}
-    if(normT.length){h+=`<div class="tl-section"><span>Para hoje</span><span class="tl-hr"></span></div>`;normT.forEach(t=>{h+=taskCardHTML(t);});}
-    if(todayDone.length){h+=`<div class="tl-section"><span>Concluído hoje</span><span class="tl-hr"></span></div>`;todayDone.forEach(t=>{h+=taskCardHTML(t);});}
+    const urgT=todayT.filter(t=>t.priority==='urgent'),normT=todayT.filter(t=>t.priority!=='urgent');
+    if(urgT.length){h+=`<div class="tl-sec"><span style="color:var(--danger)">Urgente — hoje</span><span class="tl-hr"></span></div>`;urgT.forEach(t=>{h+=taskCardHTML(t);});}
+    if(normT.length){h+=`<div class="tl-sec"><span>Para hoje</span><span class="tl-hr"></span></div>`;normT.forEach(t=>{h+=taskCardHTML(t);});}
+    if(todayDone.length){h+=`<div class="tl-sec"><span>Concluído hoje</span><span class="tl-hr"></span></div>`;todayDone.forEach(t=>{h+=taskCardHTML(t);});}
   }
   h+='</div>';
-
   // WEEK
   const wD=weekT.filter(t=>t.done).length,wP=weekT.length?Math.round((wD/weekT.length)*100):0;
-  h+=`<div id="dash-week" ${_dashTab!=='week'?'style="display:none"':''}>
+  h+=`<div ${_dashTab!=='week'?'style="display:none"':''}>
     <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
       <div class="stat-card"><div class="stat-label">Total semana</div><div class="stat-val">${weekT.length}</div></div>
       <div class="stat-card"><div class="stat-label">Concluídas</div><div class="stat-val success">${wD}</div></div>
@@ -1251,16 +1334,15 @@ function renderDashboard(bar,content){
   });
   if(!weekT.length)h+=`<div class="empty-state"><strong>Nenhuma tarefa esta semana</strong></div>`;
   h+='</div>';
-
   // MONTH
   const mD=monthT.filter(t=>t.done).length,mP=monthT.length?Math.round((mD/monthT.length)*100):0;
-  h+=`<div id="dash-month" ${_dashTab!=='month'?'style="display:none"':''}>
+  h+=`<div ${_dashTab!=='month'?'style="display:none"':''}>
     <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
       <div class="stat-card"><div class="stat-label">Total mês</div><div class="stat-val">${monthT.length}</div></div>
       <div class="stat-card"><div class="stat-label">Concluídas</div><div class="stat-val success">${mD}</div></div>
       <div class="stat-card"><div class="stat-label">Progresso</div><div class="stat-val accent">${mP}%</div><div class="mini-bar"><div class="mini-bar-fill" style="width:${mP}%"></div></div></div>
     </div>
-    <div class="area-breakdown">`;
+    <div class="area-grid">`;
   areas.forEach(a=>{const aT=monthT.filter(t=>t.area_id===a.id),aD=aT.filter(t=>t.done).length,aP2=aT.length?Math.round((aD/aT.length)*100):0;
     h+=`<div class="area-card" onclick="goArea('${a.id}')">
       <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:${a.color};border-radius:3px 0 0 3px;"></div>
@@ -1274,76 +1356,29 @@ function renderDashboard(bar,content){
   content.innerHTML=h;
 }
 
-// ─── CARD HTML ───────────────────────────────────────────
-function taskCardHTML(t){
-  const area=areas.find(a=>a.id===t.area_id);
-  const today=new Date().toISOString().split('T')[0];
-  const isOverdue=t.date&&t.date<today&&!t.done;
-  const blocked=!t.done&&isBlocked(t);
-  const blocker=blocked?getBlocker(t):null;
-  const ord=depOrder(t);
-  return`<div class="task-card ${t.priority==='urgent'?'urgent':''} ${t.done?'done':''} ${blocked?'blocked':''}">
-    ${ord?`<div class="dep-order-badge">${ord}</div>`:''}
-    <div class="t-check ${t.done?'checked':''} ${blocked?'t-blocked':''}" onclick="${blocked?`showNotif('Conclua primeiro: \\"${(blocker?.title||'').substring(0,20)}...\\"')`:`toggleTask(${t.id})`}"></div>
-    <div class="t-body">
-      <div class="t-title">${t.title}</div>
-      <div class="t-meta">
-        ${area&&nav.type!=='project'?`<span class="t-tag" style="background:${area.color}18;color:${area.color}">${area.name}</span>`:''}
-        ${blocked&&blocker?`<span class="t-dep blocking">🔒 Aguarda: ${(blocker.title||'').substring(0,18)}…</span>`:''}
-        ${t.date?`<span class="t-time ${isOverdue?'overdue':''}">${isOverdue?'Atrasada — ':''}${formatDate(t.date)}${t.time?' às '+t.time:''}</span>`:''}
-        ${t.recurrence?`<span class="t-recur">↻ ${recurLabel(t.recurrence)}</span>`:''}
-      </div>
-    </div>
-    <div class="t-actions">
-      <span class="t-del" onclick="deleteTask(${t.id})">×</span>
-      <button class="t-dep-btn" onclick="openDepModal(${t.id})">deps</button>
-    </div>
-  </div>`;
-}
-
-function gcalCardHTML(e){return`<div class="task-card gcal-card"><div class="t-body"><div class="t-title">${e.title}</div><div class="t-meta"><span class="gcal-badge">Google Agenda</span>${e.time?`<span class="t-time">${e.time}</span>`:''}</div></div></div>`;}
-
-function recurLabel(r){
-  if(!r||r.type==='none')return'';
-  const map={daily:'Diária',weekly:'Semanal',monthly:'Mensal'};
-  return map[r.type]||r.type;
-}
-
-function formatDate(d){
-  const today=new Date().toISOString().split('T')[0],tom=new Date(Date.now()+86400000).toISOString().split('T')[0];
-  if(d===today)return'Hoje';if(d===tom)return'Amanhã';
-  const[y,m,day]=d.split('-');return`${day}/${m}`;
-}
-
 // ─── NAV ─────────────────────────────────────────────────
 function goHome(){nav={type:'home'};render();}
-function goArea(id){nav={type:'area',areaId:id};render();}
-function goProject(aId,pId){nav={type:'project',areaId:aId,projectId:pId};closeAllDrawers();render();}
-
-function mobileNav(view){
-  mobileView=view;
+function goArea(id){nav={type:'area',areaId:id};lastAreaId=id;render();}
+function goProject(aId,pId){nav={type:'project',areaId:aId,projectId:pId};lastAreaId=aId;closeAllDrawers();render();}
+function mobileNav(v){
   document.querySelectorAll('.bn-item').forEach(b=>b.classList.remove('active'));
-  document.getElementById('bn-'+view)?.classList.add('active');
-  if(view==='home')goHome();
-  else if(view==='areas')toggleDrawer();
-  else if(view==='agenda')goAgenda();
-  else if(view==='metrics'){/* show metrics */}
+  document.getElementById('bn-'+v)?.classList.add('active');
+  if(v==='home')goHome();
+  else if(v==='areas')toggleDrawer();
 }
 
 // ─── DRAWERS ─────────────────────────────────────────────
-function toggleDrawer(forceClose=false){
+function toggleDrawer(){
   const d=document.getElementById('mobileDrawer'),o=document.getElementById('drawerOverlay');
-  if(forceClose||d.classList.contains('open')){d.classList.remove('open');o.classList.remove('open');}
-  else{renderSidebar();d.classList.add('open');o.classList.add('open');document.getElementById('drawerOverlay').onclick=closeAllDrawers;}
+  if(d.classList.contains('open')){d.classList.remove('open');o.classList.remove('open');}
+  else{renderSidebar();d.classList.add('open');o.classList.add('open');}
 }
 function openClaudeDrawer(){
   document.getElementById('claudeDrawer').classList.add('open');
   document.getElementById('drawerOverlay').classList.add('open');
-  document.getElementById('drawerOverlay').onclick=closeAllDrawers;
 }
 function closeAllDrawers(){
-  document.getElementById('mobileDrawer').classList.remove('open');
-  document.getElementById('claudeDrawer').classList.remove('open');
+  ['mobileDrawer','claudeDrawer'].forEach(id=>document.getElementById(id).classList.remove('open'));
   document.getElementById('drawerOverlay').classList.remove('open');
 }
 
@@ -1433,7 +1468,7 @@ async function saveProject(){
     kanbanCols=raw.split('\n').map(s=>s.trim()).filter(Boolean);
     if(!kanbanCols.length)kanbanCols=['A fazer','Em andamento','Concluído'];
   }
-  const obj={id,name,area_id:areaId,user_email:CU.email,type:projType,kanban_columns:JSON.stringify(kanbanCols),financial_config:JSON.stringify({})};
+  const obj={id,name,area_id:areaId,user_email:CU.email,type:projType,kanban_columns:JSON.stringify(kanbanCols)};
   projects.push({...obj,kanban_columns:kanbanCols});
   closeModal('projectModal');goProject(areaId,id);
   await sb.ins('projects',obj);showNotif(`Projeto "${name}" criado!`);
@@ -1445,6 +1480,7 @@ async function deleteProject(id,e){
 }
 
 // ─── TASK MODAL ──────────────────────────────────────────
+let recurWDs=[];
 function openTaskModal(areaId,projectId,kanbanCol=''){
   if(!CU){showModal('loginModal');return;}
   taskCtx={areaId,projectId,kanbanCol};taskDepSel=[];recurType='none';recurWDs=[];
@@ -1468,16 +1504,15 @@ function openTaskModal(areaId,projectId,kanbanCol=''){
   document.getElementById('weekdayConfig').style.display='none';
   document.getElementById('recurEndConfig').style.display='none';
   document.querySelectorAll('.wd-btn').forEach(b=>b.classList.remove('sel'));
-  const candidates=tasks.filter(t=>(!projectId||t.project_id===projectId)&&!t.done);
-  document.getElementById('depList').innerHTML=candidates.length===0?'<div style="font-size:12px;color:var(--text3);padding:4px 0;">Nenhuma tarefa disponível para dependência</div>':
-    candidates.map(t=>{const a=areas.find(x=>x.id===t.area_id);return`<div class="dep-item" onclick="toggleDepSel(this,${t.id},'task')"><div class="dep-check"></div><div class="dep-item-title">${t.title}</div>${a?`<span class="t-tag" style="background:${a.color}18;color:${a.color};font-size:10px;">${a.name}</span>`:''}</div>`;}).join('');
+  const cands=tasks.filter(t=>(!projectId||t.project_id===projectId)&&!t.done);
+  document.getElementById('depList').innerHTML=cands.length===0?'<div style="font-size:12px;color:var(--text3);padding:4px 0;">Nenhuma tarefa disponível</div>':
+    cands.map(t=>{const a=areas.find(x=>x.id===t.area_id);return`<div class="dep-item" onclick="toggleDepSel(this,${t.id},'task')"><div class="dep-check"></div><div class="dep-item-title">${t.title}</div>${a?`<span class="t-tag" style="background:${a.color}18;color:${a.color};font-size:10px;">${a.name}</span>`:''}</div>`;}).join('');
   showModal('taskModal');setTimeout(()=>document.getElementById('taskTitleInput').focus(),100);
 }
 
 function selectRecur(el,type){
   recurType=type;
-  document.querySelectorAll('.recur-opt').forEach(o=>o.classList.remove('selected'));
-  el.classList.add('selected');
+  document.querySelectorAll('.recur-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');
   document.getElementById('weekdayConfig').style.display=type==='weekly'?'block':'none';
   document.getElementById('recurEndConfig').style.display=type!=='none'?'block':'none';
 }
@@ -1497,38 +1532,46 @@ async function saveTask(){
   const pType=proj?.type||'list';
   const recur=recurType==='none'?null:{type:recurType,weekdays:recurWDs,endDate:document.getElementById('recurEndDate')?.value||'',count:parseInt(document.getElementById('recurCount')?.value)||0};
   const id=Date.now();
-  const obj={id,title,area_id:taskCtx?.areaId||areas[0]?.id||'',project_id:taskCtx?.projectId||'',priority:document.getElementById('taskPriorityInput').value,date:document.getElementById('taskDateInput').value,time:document.getElementById('taskTimeInput').value,deps:[...taskDepSel],done:false,user_email:CU.email,recurrence:recur,kanban_column:pType==='kanban'?(document.getElementById('kanbanColInput')?.value||taskCtx?.kanbanCol||''):'',financial_type:pType==='financial'?document.getElementById('finTypeInput').value:'',amount:pType==='financial'?parseFloat(document.getElementById('amountInput').value)||0:0};
-  tasks.push(normalizeTask({...obj}));closeModal('taskModal');render();
+  const obj={id,title,area_id:taskCtx?.areaId||areas[0]?.id||'',project_id:taskCtx?.projectId||'',priority:document.getElementById('taskPriorityInput').value,date:document.getElementById('taskDateInput').value,time:document.getElementById('taskTimeInput').value,deps:[...taskDepSel],done:false,notes:'',user_email:CU.email,recurrence:recur,kanban_column:pType==='kanban'?(document.getElementById('kanbanColInput')?.value||taskCtx?.kanbanCol||''):'',financial_type:pType==='financial'?document.getElementById('finTypeInput').value:'',amount:pType==='financial'?parseFloat(document.getElementById('amountInput').value)||0:0};
+  tasks.push(normalizeTask({...obj}));
+  closeModal('taskModal');render();
   await sb.ins('tasks',{...obj,deps:JSON.stringify(obj.deps),recurrence:JSON.stringify(recur)});
-  // Generate recurring instances
   if(recur&&recur.type!=='none')await generateRecurring(obj);
   showNotif('Tarefa criada!');
 }
 
 async function generateRecurring(base){
-  const maxInstances=recurrence_count(base);
+  const max=calcRecurCount(base);
   const startDate=new Date(base.date);
-  for(let i=1;i<maxInstances;i++){
+  for(let i=1;i<max;i++){
     const nd=new Date(startDate);
     if(base.recurrence.type==='daily')nd.setDate(nd.getDate()+i);
     else if(base.recurrence.type==='weekly')nd.setDate(nd.getDate()+7*i);
     else if(base.recurrence.type==='monthly')nd.setMonth(nd.getMonth()+i);
     const ds=nd.toISOString().split('T')[0];
     if(base.recurrence.endDate&&ds>base.recurrence.endDate)break;
-    const newTask={...base,id:Date.now()+i,date:ds,deps:[],done:false,recurrence:{...base.recurrence,instanceOf:base.id}};
-    tasks.push(normalizeTask({...newTask}));
-    await sb.ins('tasks',{...newTask,deps:'[]',recurrence:JSON.stringify(newTask.recurrence)});
+    const nt={...base,id:Date.now()+i,date:ds,deps:[],done:false,recurrence:{...base.recurrence,instanceOf:base.id}};
+    tasks.push(normalizeTask({...nt}));
+    await sb.ins('tasks',{...nt,deps:'[]',recurrence:JSON.stringify(nt.recurrence)});
     await new Promise(r=>setTimeout(r,50));
   }
 }
-function recurrence_count(t){if(!t.recurrence)return 1;if(t.recurrence.count>0)return Math.min(t.recurrence.count,52);if(t.recurrence.endDate){const d=new Date(t.recurrence.endDate),s=new Date(t.date),diff=(d-s)/(1000*60*60*24);if(t.recurrence.type==='daily')return Math.min(diff,90);if(t.recurrence.type==='weekly')return Math.min(Math.floor(diff/7),52);if(t.recurrence.type==='monthly')return Math.min(Math.floor(diff/30),24);}return t.recurrence.type==='monthly'?12:t.recurrence.type==='weekly'?8:7;}
+function calcRecurCount(t){
+  if(!t.recurrence)return 1;
+  if(t.recurrence.count>0)return Math.min(t.recurrence.count,52);
+  if(t.recurrence.endDate){const d=new Date(t.recurrence.endDate),s=new Date(t.date),diff=(d-s)/(1000*60*60*24);if(t.recurrence.type==='daily')return Math.min(diff,90);if(t.recurrence.type==='weekly')return Math.min(Math.floor(diff/7),52);if(t.recurrence.type==='monthly')return Math.min(Math.floor(diff/30),24);}
+  return t.recurrence.type==='monthly'?12:t.recurrence.type==='weekly'?8:7;
+}
 
 async function toggleTask(id){
   const t=tasks.find(t=>t.id==id);if(!t)return;
   if(!t.done&&isBlocked(t)){showNotif('Conclua as dependências primeiro!');return;}
   t.done=!t.done;render();await sb.upd('tasks','id',id,{done:t.done});
 }
-async function deleteTask(id){tasks=tasks.filter(t=>t.id!=id);render();await sb.del('tasks','id',id);}
+async function deleteTask(id){
+  if(!confirm('Excluir esta tarefa?'))return;
+  tasks=tasks.filter(t=>t.id!=id);render();await sb.del('tasks','id',id);
+}
 
 // ─── DEP MODAL ───────────────────────────────────────────
 function openDepModal(id){
@@ -1542,189 +1585,6 @@ async function saveDependency(){
   const t=tasks.find(x=>x.id==depModalTaskId);if(t){t.deps=[...depModalSel];render();}
   closeModal('depModal');await sb.upd('tasks','id',depModalTaskId,{deps:JSON.stringify(depModalSel)});showNotif('Dependências salvas!');
 }
-
-// ─── VOICE INPUT ─────────────────────────────────────────
-function toggleVoice(ctx){
-  if(isRecording){stopRecording(ctx);}else{startRecording(ctx);}
-}
-
-function startRecording(ctx){
-  if(!navigator.mediaDevices){showNotif('Microfone não disponível neste navegador');return;}
-  navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
-    isRecording=true;audioChunks=[];
-    mediaRecorder=new MediaRecorder(stream);
-    mediaRecorder.ondataavailable=e=>{if(e.data.size>0)audioChunks.push(e.data);};
-    mediaRecorder.onstop=()=>{stream.getTracks().forEach(t=>t.stop());processVoice(ctx);};
-    mediaRecorder.start();
-    updateVoiceBtns(true);
-    showNotif('Gravando... fale sua tarefa e clique novamente para parar');
-  }).catch(()=>showNotif('Permita o acesso ao microfone para usar esta funcionalidade'));
-}
-
-function stopRecording(ctx){
-  if(mediaRecorder&&isRecording){isRecording=false;mediaRecorder.stop();updateVoiceBtns(false);}
-}
-
-function updateVoiceBtns(recording){
-  document.querySelectorAll('.voice-btn').forEach(b=>{b.classList.toggle('recording',recording);});
-  document.getElementById('bn-voice')?.classList.toggle('active',recording);
-}
-
-async function processVoice(ctx){
-  showNotif('Processando áudio...');
-  const blob=new Blob(audioChunks,{type:'audio/webm'});
-  // Convert to base64 and send to Claude for transcription + task extraction
-  const reader=new FileReader();
-  reader.onloadend=async()=>{
-    const base64=reader.result.split(',')[1];
-    const apiKey=getApiKey();
-    if(!apiKey){showModal('apiModal');return;}
-    try{
-      const prompt=`O usuário gravou um áudio descrevendo uma tarefa para o app de produtividade Foco. O áudio foi convertido para texto e é: "[AUDIO BASE64 - ${blob.size} bytes]".
-Por enquanto, simule que o usuário disse algo sobre tarefas. Analise o contexto atual e sugira uma tarefa.
-Contexto atual: ${getCtx()}
-
-Responda APENAS com um JSON no formato:
-{"title":"título da tarefa","priority":"normal ou urgent","date":"YYYY-MM-DD ou vazio","time":"HH:MM ou vazio","area":"nome da área mais relevante"}`;
-
-      const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:200,system:'Você extrai informações de tarefas de comandos de voz. Responda APENAS com JSON válido, sem markdown.',messages:[{role:'user',content:prompt}]})});
-      const d=await r.json();
-      if(!d.error){
-        try{
-          const task=JSON.parse(d.content[0].text.replace(/```json?|```/g,'').trim());
-          prefillTaskFromVoice(task,ctx);
-        }catch{
-          // Fallback: open Claude chat with the prompt
-          const msgsId=ctx==='mobile'?'claudeMsgsMobile':'claudeMsgsDesktop';
-          addMsg(msgsId,'assistant','Não consegui extrair a tarefa do áudio. Por favor, descreva a tarefa por texto no campo abaixo.');
-        }
-      }
-    }catch(e){showNotif('Erro ao processar áudio. Descreva a tarefa por texto.');}
-  };
-  reader.readAsDataURL(blob);
-}
-
-function prefillTaskFromVoice(task,ctx){
-  const area=areas.find(a=>a.name.toLowerCase().includes((task.area||'').toLowerCase()))||areas[0];
-  openTaskModal(area?.id||'','');
-  setTimeout(()=>{
-    document.getElementById('taskTitleInput').value=task.title||'';
-    document.getElementById('taskPriorityInput').value=task.priority||'normal';
-    if(task.date)document.getElementById('taskDateInput').value=task.date;
-    if(task.time)document.getElementById('taskTimeInput').value=task.time;
-    showNotif('Tarefa extraída do áudio! Revise e salve.');
-  },200);
-}
-
-// ─── CLAUDE ──────────────────────────────────────────────
-function getCtx(){
-  const today=new Date().toISOString().split('T')[0];
-  const pend=tasks.filter(t=>!t.done),over=tasks.filter(t=>!t.done&&t.date&&t.date<today);
-  const urg=tasks.filter(t=>t.priority==='urgent'&&!t.done),blk=tasks.filter(t=>!t.done&&isBlocked(t));
-  const bd=areas.map(a=>`${a.name}=${pend.filter(t=>t.area_id===a.id).length}`).join(', ');
-  return`Foco — ${new Date().toLocaleDateString('pt-BR')} — ${CU?.email||''}
-${areas.length} áreas → ${projects.length} projetos → ${tasks.length} tarefas
-Pendentes: ${pend.length} | ${bd}
-Urgentes: ${urg.map(t=>`"${t.title}"`).join(', ')||'nenhuma'}
-Atrasadas: ${over.map(t=>`"${t.title}"`).join(', ')||'nenhuma'}
-Bloqueadas: ${blk.map(t=>`"${t.title}"`).join(', ')||'nenhuma'}
-Lista: ${pend.slice(0,12).map(t=>`"${t.title}" [${areas.find(a=>a.id===t.area_id)?.name||'?'}${t.recurrence?' ↻':''}]`).join('; ')}
-Perfil: Gerente CS/Suporte, Influenciador digital (vendas/atendimento/CS), Sócio software house (comercial).`;
-}
-
-async function sendClaude(ctx='desktop'){
-  if(isLoading)return;
-  const inputId=ctx==='mobile'?'claudeInputMobile':'claudeInputDesktop';
-  const msgsId=ctx==='mobile'?'claudeMsgsMobile':'claudeMsgsDesktop';
-  const inp=document.getElementById(inputId);if(!inp)return;
-  const msg=inp.value.trim();if(!msg)return;
-  const apiKey=getApiKey();if(!apiKey){showModal('apiModal');return;}
-  inp.value='';autoResize(inp);
-  addMsg(msgsId,'user',msg);claudeHist.push({role:'user',content:msg});
-  const qa=document.getElementById(ctx==='mobile'?'mobileQA':'desktopQA');if(qa)qa.style.display='none';
-  isLoading=true;document.querySelectorAll('.claude-send').forEach(b=>b.disabled=true);
-  const lEl=addMsg(msgsId,'loading','Pensando...');
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:`Você é assistente pessoal de produtividade no Foco. Responda em português do Brasil, direto e prático.\n${getCtx()}`,messages:claudeHist.slice(-10)})});
-    const d=await r.json();lEl.remove();
-    const reply=d.error?`Erro: ${d.error.message}`:d.content[0].text;
-    addMsg(msgsId,'assistant',reply);if(!d.error)claudeHist.push({role:'assistant',content:reply});
-  }catch{lEl.remove();addMsg(msgsId,'assistant','Erro de conexão.');}
-  isLoading=false;document.querySelectorAll('.claude-send').forEach(b=>b.disabled=false);
-}
-
-function addMsg(cid,type,txt){const c=document.getElementById(cid);if(!c)return null;const el=document.createElement('div');el.className=`msg ${type}`;el.textContent=txt;c.appendChild(el);c.scrollTop=c.scrollHeight;return el;}
-function sendQuick(msg,ctx){const id=ctx==='mobile'?'claudeInputMobile':'claudeInputDesktop';const el=document.getElementById(id);if(el){el.value=msg;sendClaude(ctx);}}
-function clearChat(ctx){claudeHist=[];const id=ctx==='mobile'?'claudeMsgsMobile':'claudeMsgsDesktop';const c=document.getElementById(id);if(c)c.innerHTML='<div class="msg assistant">Conversa reiniciada. Como posso ajudar?</div>';const qa=document.getElementById(ctx==='mobile'?'mobileQA':'desktopQA');if(qa)qa.style.display='flex';}
-function handleClaudeKey(e,ctx){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendClaude(ctx);}}
-function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,90)+'px';}
-
-// ─── API KEY ─────────────────────────────────────────────
-async function saveApiKey(){
-  const k=document.getElementById('apiKeyInput').value.trim();
-  if(!k.startsWith('sk-ant-')){showNotif('Chave inválida. Deve começar com sk-ant-');return;}
-  if(CU)CU.api_key=k;
-  localStorage.setItem('foco_api_key',k);
-  closeModal('apiModal');
-  if(CU)await sb.upd('users','email',CU.email,{api_key:k});
-  showNotif('Chave salva em todos os dispositivos!');
-}
-function getApiKey(){return(CU?.api_key)||localStorage.getItem('foco_api_key')||'';}
-
-// ─── GOOGLE CALENDAR ────────────────────────────────────
-function updateGcalBtn(){document.getElementById('gcalBtn').classList.toggle('connected',!!gcalToken);document.getElementById('gcalBtnLbl').textContent=gcalToken?'Conectada':'Agenda';}
-function openGcalModal(){
-  showModal('gcalModal');
-  if(gcalToken){
-    document.getElementById('gcalModalTitle').textContent='Google Agenda conectada';
-    document.getElementById('gcalModalBody').innerHTML=`<p class="m-desc" style="color:var(--success)">Agenda conectada! Eventos aparecem na lista e na aba Agenda.</p>
-      <button class="btn-primary" style="width:100%;margin-bottom:10px;" onclick="fetchGcalEvents()">Atualizar eventos</button>
-      <button onclick="disconnectGcal()" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:13px;display:block;margin-bottom:8px;">Desconectar</button>
-      <button onclick="closeModal('gcalModal')" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:13px;display:block;width:100%;text-align:center;">Fechar</button>`;
-  } else {
-    document.getElementById('gcalModalTitle').textContent='Conectar Google Agenda';
-    document.getElementById('gcalModalBody').innerHTML=`<p class="m-desc">Crie um Client ID gratuito no Google Cloud (~5 min).</p>
-      <div class="gcal-step"><div class="gcal-sn">1</div><div class="gcal-st">Acesse <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a> → crie um projeto</div></div>
-      <div class="gcal-step"><div class="gcal-sn">2</div><div class="gcal-st"><strong style="color:var(--text)">APIs → Biblioteca</strong> → ative <strong style="color:var(--text)">Google Calendar API</strong></div></div>
-      <div class="gcal-step"><div class="gcal-sn">3</div><div class="gcal-st"><strong style="color:var(--text)">Credenciais → Criar → ID OAuth</strong>. Tipo: Aplicativo da Web. Adicione a URL do app em origens autorizadas</div></div>
-      <div class="gcal-step"><div class="gcal-sn">4</div><div class="gcal-st">Cole o Client ID abaixo</div></div>
-      <input type="text" class="m-input" id="gcalCidInput" placeholder="...apps.googleusercontent.com" value="${gcalClientId}" style="margin-bottom:12px;"/>
-      <button class="btn-primary" style="width:100%;margin-bottom:8px;" onclick="startGcalOAuth()">Conectar com Google</button>
-      <button onclick="closeModal('gcalModal')" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:13px;display:block;width:100%;text-align:center;">Cancelar</button>`;
-  }
-}
-function startGcalOAuth(){const c=document.getElementById('gcalCidInput').value.trim();if(!c){showNotif('Cole o Client ID');return;}gcalClientId=c;localStorage.setItem('foco_gcal_client_id',c);window.location.href=`https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(c)}&redirect_uri=${encodeURIComponent(location.origin+location.pathname)}&response_type=token&scope=${encodeURIComponent('https://www.googleapis.com/auth/calendar.readonly')}&prompt=consent`;}
-function handleOAuthCallback(){const p=new URLSearchParams(location.hash.substring(1)),t=p.get('access_token');if(t){gcalToken=t;localStorage.setItem('foco_gcal_token',t);history.replaceState(null,null,location.pathname);showNotif('Google Agenda conectada!');fetchGcalEvents();}}
-async function fetchGcalEvents(){if(!gcalToken)return;closeModal('gcalModal');showNotif('Carregando eventos...');
-  try{const s=new Date(new Date().setHours(0,0,0,0)).toISOString(),e=new Date(Date.now()+14*86400000).toISOString();
-    const r=await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${encodeURIComponent(s)}&timeMax=${encodeURIComponent(e)}&singleEvents=true&orderBy=startTime`,{headers:{Authorization:`Bearer ${gcalToken}`}});
-    if(r.status===401){disconnectGcal();showNotif('Sessão expirada. Reconecte.');return;}
-    const d=await r.json();
-    gcalEvents=(d.items||[]).map(e=>({id:e.id,title:e.summary||'(sem título)',date:(e.start.dateTime||e.start.date||'').split('T')[0],time:e.start.dateTime?new Date(e.start.dateTime).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):null,description:e.description||''}));
-    localStorage.setItem('foco_gcal_events',JSON.stringify(gcalEvents));render();showNotif(`${gcalEvents.length} evento(s) carregado(s)!`);}catch{showNotif('Erro ao carregar eventos.');}}
-function disconnectGcal(){gcalToken='';gcalEvents=[];localStorage.removeItem('foco_gcal_token');localStorage.removeItem('foco_gcal_events');closeModal('gcalModal');render();showNotif('Agenda desconectada');}
-
-// ─── METRICS ─────────────────────────────────────────────
-function renderMetrics(){
-  const today=new Date().toISOString().split('T')[0];
-  const wk=new Date(Date.now()-7*86400000).toISOString().split('T')[0];
-  const mo=new Date(Date.now()-30*86400000).toISOString().split('T')[0];
-  let sc=tasks;
-  if(nav.type==='area')sc=tasks.filter(t=>t.area_id===nav.areaId);
-  if(nav.type==='project')sc=tasks.filter(t=>t.project_id===nav.projectId);
-  let pt=sc;
-  if(metricPeriod==='day')pt=sc.filter(t=>t.date===today||!t.date);
-  else if(metricPeriod==='week')pt=sc.filter(t=>!t.date||t.date>=wk);
-  else pt=sc.filter(t=>!t.date||t.date>=mo);
-  const total=pt.length,done=pt.filter(t=>t.done).length,pct=total?Math.round((done/total)*100):0;
-  const overdue=sc.filter(t=>!t.done&&t.date&&t.date<today).length;
-  const blocked=sc.filter(t=>!t.done&&isBlocked(t)).length;
-  document.getElementById('metricsGrid').innerHTML=`
-    <div class="metric-card" style="grid-column:span 2"><div class="m-label">Progresso</div><div class="m-val">${done}/${total}</div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div><div class="m-sub">${pct}%</div></div>
-    <div class="metric-card"><div class="m-label">Atrasadas</div><div class="m-val ${overdue>0?'danger':''}">${overdue}</div></div>
-    <div class="metric-card"><div class="m-label">Bloqueadas</div><div class="m-val ${blocked>0?'danger':''}">${blocked}</div></div>`;
-}
-function setMetricPeriod(p,btn){metricPeriod=p;document.querySelectorAll('.m-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMetrics();}
 
 // ─── HELPERS ─────────────────────────────────────────────
 function isBlocked(t){return(t.deps||[]).some(d=>{const dep=tasks.find(x=>x.id==d);return dep&&!dep.done;});}
@@ -1748,7 +1608,84 @@ function showCtxMenu(anchor,items){
   setTimeout(()=>document.addEventListener('click',()=>menu.classList.add('hidden'),{once:true}),0);
 }
 
+// ─── CLAUDE ──────────────────────────────────────────────
+function getCtx(){
+  const today=new Date().toISOString().split('T')[0];
+  const pend=tasks.filter(t=>!t.done),over=tasks.filter(t=>!t.done&&t.date&&t.date<today);
+  const urg=tasks.filter(t=>t.priority==='urgent'&&!t.done),blk=tasks.filter(t=>!t.done&&isBlocked(t));
+  const bd=areas.map(a=>`${a.name}=${pend.filter(t=>t.area_id===a.id).length}`).join(', ');
+  return`Foco — ${new Date().toLocaleDateString('pt-BR')} — ${CU?.email||''}
+${areas.length} áreas → ${projects.length} projetos → ${tasks.length} tarefas
+Pendentes: ${pend.length} | ${bd}
+Urgentes: ${urg.map(t=>`"${t.title}"`).join(', ')||'nenhuma'}
+Atrasadas: ${over.map(t=>`"${t.title}"`).join(', ')||'nenhuma'}
+Bloqueadas: ${blk.map(t=>`"${t.title}"`).join(', ')||'nenhuma'}
+Lista: ${pend.slice(0,12).map(t=>`"${t.title}" [${areas.find(a=>a.id===t.area_id)?.name||'?'}]`).join('; ')}
+Perfil: Gerente CS/Suporte, Influenciador digital (vendas/atendimento/CS), Sócio software house (comercial).`;
+}
+
+async function sendClaude(ctx='desktop'){
+  if(isLoading)return;
+  const inputId=ctx==='mobile'?'claudeInputMobile':'claudeInputDesktop';
+  const msgsId=ctx==='mobile'?'claudeMsgsMobile':'claudeMsgsDesktop';
+  const inp=document.getElementById(inputId);if(!inp)return;
+  const msg=inp.value.trim();if(!msg)return;
+  const apiKey=getApiKey();if(!apiKey){showModal('apiModal');return;}
+  inp.value='';autoResize(inp);
+  addMsg(msgsId,'user',msg);claudeHist.push({role:'user',content:msg});
+  const qa=document.getElementById(ctx==='mobile'?'mobileQA':'desktopQA');if(qa)qa.style.display='none';
+  isLoading=true;document.querySelectorAll('.claude-send').forEach(b=>b.disabled=true);
+  const lEl=addMsg(msgsId,'loading','Pensando...');
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:`Você é assistente pessoal de produtividade no Foco. Responda em português do Brasil, direto e prático.\n${getCtx()}`,messages:claudeHist.slice(-10)})});
+    const d=await r.json();lEl.remove();
+    const reply=d.error?`Erro: ${d.error.message}`:d.content[0].text;
+    addMsg(msgsId,'assistant',reply);if(!d.error)claudeHist.push({role:'assistant',content:reply});
+  }catch{lEl.remove();addMsg(msgsId,'assistant','Erro de conexão.');}
+  isLoading=false;document.querySelectorAll('.claude-send').forEach(b=>b.disabled=false);
+}
+function addMsg(cid,type,txt){const c=document.getElementById(cid);if(!c)return null;const el=document.createElement('div');el.className=`msg ${type}`;el.textContent=txt;c.appendChild(el);c.scrollTop=c.scrollHeight;return el;}
+function sendQuick(msg,ctx){const id=ctx==='mobile'?'claudeInputMobile':'claudeInputDesktop';const el=document.getElementById(id);if(el){el.value=msg;sendClaude(ctx);}}
+function clearChat(ctx){claudeHist=[];const id=ctx==='mobile'?'claudeMsgsMobile':'claudeMsgsDesktop';const c=document.getElementById(id);if(c)c.innerHTML='<div class="msg assistant">Conversa reiniciada. Como posso ajudar?</div>';const qa=document.getElementById(ctx==='mobile'?'mobileQA':'desktopQA');if(qa)qa.style.display='flex';}
+function handleClaudeKey(e,ctx){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendClaude(ctx);}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,90)+'px';}
+
+// ─── API KEY ─────────────────────────────────────────────
+async function saveApiKey(){
+  const k=document.getElementById('apiKeyInput').value.trim();
+  if(!k.startsWith('sk-ant-')){showNotif('Chave inválida. Deve começar com sk-ant-');return;}
+  if(CU)CU.api_key=k;
+  localStorage.setItem('foco_api_key',k);
+  closeModal('apiModal');
+  if(CU)await sb.upd('users','email',CU.email,{api_key:k});
+  showNotif('Chave salva em todos os dispositivos!');
+}
+function getApiKey(){return(CU?.api_key)||localStorage.getItem('foco_api_key')||'';}
+
+// ─── METRICS ─────────────────────────────────────────────
+function renderMetrics(){
+  const today=new Date().toISOString().split('T')[0];
+  const wk=new Date(Date.now()-7*86400000).toISOString().split('T')[0];
+  const mo=new Date(Date.now()-30*86400000).toISOString().split('T')[0];
+  let sc=tasks;
+  if(nav.type==='area')sc=tasks.filter(t=>t.area_id===nav.areaId);
+  if(nav.type==='project')sc=tasks.filter(t=>t.project_id===nav.projectId);
+  let pt=sc;
+  if(metricPeriod==='day')pt=sc.filter(t=>t.date===today||!t.date);
+  else if(metricPeriod==='week')pt=sc.filter(t=>!t.date||t.date>=wk);
+  else pt=sc.filter(t=>!t.date||t.date>=mo);
+  const total=pt.length,done=pt.filter(t=>t.done).length,pct=total?Math.round((done/total)*100):0;
+  const overdue=sc.filter(t=>!t.done&&t.date&&t.date<today).length;
+  const blocked=sc.filter(t=>!t.done&&isBlocked(t)).length;
+  document.getElementById('metricsGrid').innerHTML=`
+    <div class="metric-card" style="grid-column:span 2"><div class="m-label">Progresso</div><div class="m-val">${done}/${total}</div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div><div class="m-sub">${pct}%</div></div>
+    <div class="metric-card"><div class="m-label">Atrasadas</div><div class="m-val ${overdue>0?'danger':''}">${overdue}</div></div>
+    <div class="metric-card"><div class="m-label">Bloqueadas</div><div class="m-val ${blocked>0?'danger':''}">${blocked}</div></div>`;
+}
+function setMetricPeriod(p,btn){metricPeriod=p;document.querySelectorAll('.m-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMetrics();}
 function checkOverdue(){if(!CU)return;const today=new Date().toISOString().split('T')[0],n=tasks.filter(t=>!t.done&&t.date&&t.date<today).length;if(n>0)showNotif(`${n} tarefa${n>1?'s':''} atrasada${n>1?'s':''}!`);}
+
+// ─── UTILS ───────────────────────────────────────────────
 function showNotif(msg){const el=document.getElementById('notif');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3500);}
 function showModal(id){document.getElementById(id)?.classList.remove('hidden');}
 function closeModal(id){document.getElementById(id)?.classList.add('hidden');}
