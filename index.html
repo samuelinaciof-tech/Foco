@@ -1480,7 +1480,7 @@ async function deleteProject(id,e){
 }
 
 // ─── TASK MODAL ──────────────────────────────────────────
-let recurWDs=[];
+
 function openTaskModal(areaId,projectId,kanbanCol=''){
   if(!CU){showModal('loginModal');return;}
   taskCtx={areaId,projectId,kanbanCol};taskDepSel=[];recurType='none';recurWDs=[];
