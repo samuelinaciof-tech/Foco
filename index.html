@@ -829,7 +829,10 @@ function startPolling(){
       const np=Array.isArray(p)?p:[];
       const nt=Array.isArray(t)?t.map(normalizeTask):[];
       if(JSON.stringify(na)!==JSON.stringify(areas)||JSON.stringify(np)!==JSON.stringify(projects)||JSON.stringify(nt)!==JSON.stringify(tasks)){
-        areas=na;projects=np;tasks=nt;render();
+        areas=na;projects=np;tasks=nt;
+        // Don't close task detail panel during polling
+        if(!currentDetailTaskId) render();
+        else { renderSidebar();renderBreadcrumb();renderMetrics(); }
       }
     }catch{}
   },10000);
@@ -1566,7 +1569,10 @@ function calcRecurCount(t){
 async function toggleTask(id){
   const t=tasks.find(t=>t.id==id);if(!t)return;
   if(!t.done&&isBlocked(t)){showNotif('Conclua as dependências primeiro!');return;}
-  t.done=!t.done;render();await sb.upd('tasks','id',id,{done:t.done});
+  t.done=!t.done;
+  if(!currentDetailTaskId||currentDetailTaskId==id) render();
+  else { renderSidebar();renderMetrics(); }
+  await sb.upd('tasks','id',id,{done:t.done});
 }
 async function deleteTask(id){
   if(!confirm('Excluir esta tarefa?'))return;
